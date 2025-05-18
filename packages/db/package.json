@@ -1,0 +1,24 @@
+{
+  "name": "@auxarmory/db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@t3-oss/env-core": "0.13.4",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@auxarmory/eslint-config": "workspace:*",
+    "@auxarmory/typescript-config": "workspace:*",
+    "@types/node": "^20.17.47",
+    "prisma": "^6.8.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.2"
+  }
+}

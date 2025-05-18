@@ -1,18 +1,6 @@
-import { env } from "./env.js"
+import "./env.js"
+import { PrismaClient } from "../generated/prisma"
 
-function main(){
-    switch (env.NODE_ENV) {
-        case "development":
-        case "test":
-            console.log("Running in development/test mode");
-            break;
-        case "production":
-            console.log("Running in production mode");
-            break;
-        default:
-            console.error("Unknown NODE_ENV value");
-            process.exit(1);
-    }
-}
+const dbClient = new PrismaClient()
 
-main()
+export default dbClient

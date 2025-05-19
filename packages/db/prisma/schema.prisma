@@ -7,6 +7,108 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
+}
+
+enum RegionEnum {
+  US
+  EU
+}
+
+model Realm {
+  id     Int        @id
+  name   String
+  slug   String
+  region RegionEnum
+
+  guilds Guild[]
+
+  characters Character[]
+}
+
+model Guild {
+  id      Int    @id
+  name    String
+  slug    String
+
+  realm   Realm  @relation(fields: [realmId], references: [id])
+  realmId Int
+
+  members Character[]
+}
+
+model Character {
+  id     Int    @id
+  name   String
+  gender String
+  level  Int
+  averageItemLevel Int
+  equippedItemLevel Int
+
+  faction FactionEnum
+  class ClassEnum
+  race  RaceEnum
+
+  realm   Realm @relation(fields: [realmId], references: [id])
+  realmId Int
+
+  guild   Guild? @relation(fields: [guildId], references: [id])
+  guildId Int?
+}
+
+enum FactionEnum {
+  ALLIANCE
+  HORDE
+}
+
+enum RaceEnum {
+  // Alliance
+  HUMAN
+  DWARF
+  NIGHT_ELF
+  GNOME
+  DRAENEI
+  WORGEN
+  // Alliance Allied races
+  VOID_ELF
+  LIGHTFORGED_DRAENEI
+  DARK_IRON_DWARF
+  KUL_TIRAN
+  MECHAGNOME
+  
+  // Horde
+  ORC
+  UNDEAD
+  TAUREN
+  TROLL
+  BLOOD_ELF
+  GOBLIN
+
+  // Horde Allied races
+  NIGHTBORNE
+  HIGHMOUNTAIN_TAUREN
+  MAGHAR_ORC
+  ZANDALARI_TROLL
+  VULPERA
+  
+  PANDAREN
+  DRACTHYR
+  EARTHEN
+}
+
+enum ClassEnum {
+  WARRIOR
+  PALADIN
+  HUNTER
+  ROGUE
+  PRIEST
+  SHAMAN
+  MAGE
+  WARLOCK
+  MONK
+  DRUID
+  DEMON_HUNTER
+  DEATH_KNIGHT
+  EVOKER
 }

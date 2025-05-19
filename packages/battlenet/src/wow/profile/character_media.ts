@@ -1,0 +1,12 @@
+import { WoWClient } from "..";
+
+export function CharacterMediaSummary(
+	this: WoWClient,
+	realmSlug: string,
+	characterName: string,
+) {
+	return this.request({
+		endpoint: `profile/wow/character/${realmSlug}/${characterName}/character-media`,
+		namespace: "profile",
+	});
+}

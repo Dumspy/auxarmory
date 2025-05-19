@@ -1,0 +1,17 @@
+{
+  "name": "@auxarmory/battlenet",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@auxarmory/eslint-config": "workspace:*",
+    "@auxarmory/typescript-config": "workspace:*",
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "zod": "^3.24.4"
+  }
+}

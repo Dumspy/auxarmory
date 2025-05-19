@@ -1,0 +1,27 @@
+{
+  "name": "@auxarmory/trpc-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@trpc/server": "^11.1.2",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@auxarmory/eslint-config": "workspace:*",
+    "@auxarmory/typescript-config": "workspace:*",
+    "@types/node": "^20.17.47"
+  }
+}

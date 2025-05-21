@@ -13,6 +13,8 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as WishlistPersonalImport } from './routes/wishlist/personal'
+import { Route as WishlistOverviewImport } from './routes/wishlist/overview'
 
 // Create/Update Routes
 
@@ -25,6 +27,18 @@ const AboutRoute = AboutImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const WishlistPersonalRoute = WishlistPersonalImport.update({
+  id: '/wishlist/personal',
+  path: '/wishlist/personal',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const WishlistOverviewRoute = WishlistOverviewImport.update({
+  id: '/wishlist/overview',
+  path: '/wishlist/overview',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -46,6 +60,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/wishlist/overview': {
+      id: '/wishlist/overview'
+      path: '/wishlist/overview'
+      fullPath: '/wishlist/overview'
+      preLoaderRoute: typeof WishlistOverviewImport
+      parentRoute: typeof rootRoute
+    }
+    '/wishlist/personal': {
+      id: '/wishlist/personal'
+      path: '/wishlist/personal'
+      fullPath: '/wishlist/personal'
+      preLoaderRoute: typeof WishlistPersonalImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +82,46 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/wishlist/overview': typeof WishlistOverviewRoute
+  '/wishlist/personal': typeof WishlistPersonalRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/wishlist/overview': typeof WishlistOverviewRoute
+  '/wishlist/personal': typeof WishlistPersonalRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/wishlist/overview': typeof WishlistOverviewRoute
+  '/wishlist/personal': typeof WishlistPersonalRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths: '/' | '/about' | '/wishlist/overview' | '/wishlist/personal'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to: '/' | '/about' | '/wishlist/overview' | '/wishlist/personal'
+  id: '__root__' | '/' | '/about' | '/wishlist/overview' | '/wishlist/personal'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  WishlistOverviewRoute: typeof WishlistOverviewRoute
+  WishlistPersonalRoute: typeof WishlistPersonalRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  WishlistOverviewRoute: WishlistOverviewRoute,
+  WishlistPersonalRoute: WishlistPersonalRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +135,9 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about"
+        "/about",
+        "/wishlist/overview",
+        "/wishlist/personal"
       ]
     },
     "/": {
@@ -105,6 +145,12 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/wishlist/overview": {
+      "filePath": "wishlist/overview.tsx"
+    },
+    "/wishlist/personal": {
+      "filePath": "wishlist/personal.tsx"
     }
   }
 }

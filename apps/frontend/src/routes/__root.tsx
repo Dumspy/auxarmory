@@ -1,13 +1,11 @@
-import { QueryClientProvider } from '@tanstack/react-query'
 import { createRootRoute, Outlet, useRouterState, Link } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { queryClient } from '../utils/trpc'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@auxarmory/ui/components/sidebar'
+import { SidebarInset, SidebarTrigger } from '@auxarmory/ui/components/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
 import { Separator } from '@auxarmory/ui/components/separator'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@auxarmory/ui/components/breadcrumb'
 import { Fragment } from 'react'
-import { ThemeProvider } from '@/components/theme-provider'
+import { ContextProvider } from '@/components/contexts'
 
 function BreadcrumbNav() {
   const state = useRouterState()
@@ -52,28 +50,22 @@ function BreadcrumbNav() {
 
 export const Route = createRootRoute({
   component: () => (
-    <>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset className='text-foreground'>
-              <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-                <div className="flex items-center gap-2 px-4">
-                  <SidebarTrigger className="-ml-1" />
-                  <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-                  <BreadcrumbNav />
-                </div>
-              </header>
-              <Separator />
-              <main className='p-4'>
-                <Outlet />
-              </main>
-            </SidebarInset>
-            <TanStackRouterDevtools position='bottom-right' />
-          </SidebarProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </>
+    <ContextProvider>
+      <AppSidebar />
+      <SidebarInset className='text-foreground'>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+            <BreadcrumbNav />
+          </div>
+        </header>
+        <Separator />
+        <main className='p-4'>
+          <Outlet />
+        </main>
+      </SidebarInset>
+      <TanStackRouterDevtools position='bottom-right' />
+    </ContextProvider>
   ),
 })

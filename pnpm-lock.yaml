@@ -115,6 +115,9 @@ importers:
       '@types/node':
         specifier: ^20.17.47
         version: 20.17.47
+      tsx:
+        specifier: ^4.19.4
+        version: 4.19.4
 
   packages/battlenet:
     dependencies:

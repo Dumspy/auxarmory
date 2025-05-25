@@ -27,6 +27,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@auxarmory/ui/components/sidebar"
+import { useAuth } from "./contexts/auth-provider"
 
 export function NavUser({
   user,
@@ -37,6 +38,7 @@ export function NavUser({
     avatar: string
   }
 }) {
+  const { loggedIn, login, logout } = useAuth()
   const { isMobile } = useSidebar()
 
   return (
@@ -100,9 +102,17 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                if (loggedIn) {
+                  logout()
+                } else {
+                  login()
+                }
+              }}
+            >
               <LogOut />
-              Log out
+              {loggedIn ? "Log out" : "Log in"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

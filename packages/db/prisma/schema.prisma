@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -9,11 +6,6 @@ generator client {
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
-}
-
-enum RegionEnum {
-  US
-  EU
 }
 
 model Realm {
@@ -28,33 +20,38 @@ model Realm {
 }
 
 model Guild {
-  id      Int    @id
-  name    String
-  slug    String
+  id   Int    @id
+  name String
+  slug String
 
-  realm   Realm  @relation(fields: [realmId], references: [id])
+  realm   Realm @relation(fields: [realmId], references: [id])
   realmId Int
 
   members Character[]
 }
 
 model Character {
-  id     Int    @id
-  name   String
-  gender String
-  level  Int
-  averageItemLevel Int
+  id                Int    @id
+  name              String
+  gender            String
+  level             Int
+  averageItemLevel  Int
   equippedItemLevel Int
 
   faction FactionEnum
-  class ClassEnum
-  race  RaceEnum
+  class   ClassEnum
+  race    RaceEnum
 
   realm   Realm @relation(fields: [realmId], references: [id])
   realmId Int
 
   guild   Guild? @relation(fields: [guildId], references: [id])
   guildId Int?
+}
+
+enum RegionEnum {
+  US
+  EU
 }
 
 enum FactionEnum {
@@ -76,7 +73,7 @@ enum RaceEnum {
   DARK_IRON_DWARF
   KUL_TIRAN
   MECHAGNOME
-  
+
   // Horde
   ORC
   UNDEAD
@@ -91,7 +88,7 @@ enum RaceEnum {
   MAGHAR_ORC
   ZANDALARI_TROLL
   VULPERA
-  
+
   PANDAREN
   DRACTHYR
   EARTHEN

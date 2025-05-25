@@ -1,15 +1,9 @@
 {
-  "name": "@auxarmory/trpc-api",
+  "name": "@auxarmory/auth-service",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    }
-  },
+  "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts"
   },
@@ -18,15 +12,14 @@
   "license": "ISC",
   "dependencies": {
     "@auxarmory/auth-subjects": "workspace:*",
+    "@hono/node-server": "^1.14.2",
     "@openauthjs/openauth": "^0.4.3",
-    "@trpc/server": "^11.1.2",
-    "cors": "^2.8.5",
+    "hono": "^4.7.10",
     "zod": "^3.24.4"
   },
   "devDependencies": {
     "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
-    "@types/cors": "^2.8.18",
     "@types/node": "^20.17.47",
     "tsx": "^4.19.4"
   }

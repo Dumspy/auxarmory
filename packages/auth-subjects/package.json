@@ -1,0 +1,27 @@
+{
+  "name": "@auxarmory/auth-subjects",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@openauthjs/openauth": "^0.4.3",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@auxarmory/eslint-config": "workspace:*",
+    "@auxarmory/typescript-config": "workspace:*",
+    "typescript": "^5.8.2"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}

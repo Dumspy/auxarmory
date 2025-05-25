@@ -5,6 +5,9 @@ import { serve } from "@hono/node-server"
 import { cors } from 'hono/cors'
 import { subjects } from "@auxarmory/auth-subjects"
 import { PasswordProvider } from "@openauthjs/openauth/provider/password"
+import { env } from "./env.js"
+import { Oauth2Provider } from "@openauthjs/openauth/provider/oauth2"
+import { GithubProvider } from "@openauthjs/openauth/provider/github"
 
 async function getUser(email: string) {
   return "123"
@@ -23,14 +26,37 @@ const app = issuer({
         },
       }),
     ),
+    battlenet: Oauth2Provider({
+      clientID: env.BATTLENET_CLIENT_ID,
+      clientSecret: env.BATTLENET_CLIENT_SECRET,
+      endpoint: {
+        authorization: "https://eu.battle.net/oauth/authorize ",
+        token: "https://eu.battle.net/oauth/token",
+      },
+      scopes: ["wow.profile"],
+      query: {
+        "grant_type": "authorization_code",
+        "response_type": "code",
+      }
+    }),
   },
   success: async (ctx, value) => {
-    if (value.provider === "password") {
-      return ctx.subject("user", {
-        id: await getUser(value.email),
-      })
+    switch (value.provider) {
+      case "battlenet": {
+        console.log(value)
+
+        return await ctx.subject("user", {
+          id: await getUser(value.clientID),
+        })
+      }
+      case "password": {
+        return await ctx.subject("user", {
+          id: await getUser(value.email),
+        })
+      }
+      default:
+        throw new Error("Invalid provider")
     }
-    throw new Error("Invalid provider")
   },
 })
 

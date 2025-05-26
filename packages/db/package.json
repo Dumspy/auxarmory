@@ -2,9 +2,11 @@
   "name": "@auxarmory/db",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
-    "generate": "prisma generate"
+    "generate": "node prisma/generate-schema.js && prisma generate --schema=./prisma/schema.generated",
+    "db:push" : "prisma db push --schema=./prisma/schema.generated",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -21,5 +23,11 @@
     "prisma": "^6.8.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.2"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
   }
 }

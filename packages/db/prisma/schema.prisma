@@ -8,6 +8,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Account {
+  id        Int    @id @unique
+  battletag String @unique
+  bnet_access_token String
+  bnet_expires_at DateTime
+
+  characters Character[]
+}
+
 model Realm {
   id     Int        @id
   name   String
@@ -47,6 +56,8 @@ model Character {
 
   guild   Guild? @relation(fields: [guildId], references: [id])
   guildId Int?
+
+  Account Account[]
 }
 
 enum RegionEnum {

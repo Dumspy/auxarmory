@@ -20,9 +20,11 @@ export async function createContext({
             const verified = await client.verify(subjects, token)
 
             if (verified.err) {
+                console.error('Token verification failed:', verified.err);
                 return null;
             }
             
+            console.log('Token verified:', verified);
             return verified.subject.properties.id;
         }
         return null;

@@ -1,31 +1,57 @@
 import { issuer } from "@openauthjs/openauth"
-import { MemoryStorage } from "@openauthjs/openauth/storage/memory"
-import { PasswordUI } from "@openauthjs/openauth/ui/password"
 import { serve } from "@hono/node-server"
 import { cors } from 'hono/cors'
 import { subjects } from "@auxarmory/auth-subjects"
-import { PasswordProvider } from "@openauthjs/openauth/provider/password"
 import { env } from "./env.js"
-import { Oauth2Provider } from "@openauthjs/openauth/provider/oauth2"
-import { GithubProvider } from "@openauthjs/openauth/provider/github"
+import { Oauth2Provider, Oauth2Token } from "@openauthjs/openauth/provider/oauth2"
+import { RedisStorage } from "./adapter/redis.js"
+import { dbClient } from "@auxarmory/db"
 
-async function getUser(email: string) {
-  return "123"
+type UserInfoResponse = {
+  sub: string,
+  id: number,
+  battletag: string,
+}
+
+async function upsertAccount(oauth: Oauth2Token) {
+  const res = await fetch("https://eu.battle.net/oauth/userinfo", {
+    headers: {
+      Authorization: `Bearer ${oauth.access}`,
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch user info from Battle.net")
+  }
+
+  const userInfo = await res.json() as UserInfoResponse
+
+
+  const account = await dbClient.account.upsert({
+    where: { id: userInfo.id },
+    update: {
+      battletag: userInfo.battletag,
+      bnet_access_token: oauth.access,
+      bnet_expires_at: new Date(oauth.expiry * 1000),
+    },
+    create: {
+      id: userInfo.id,
+      battletag: userInfo.battletag,
+      bnet_access_token: oauth.access,
+      bnet_expires_at: new Date(oauth.expiry * 1000),
+    }
+  })
+
+  return {
+    id: account.id.toString(),
+    battletag: account.battletag,
+  }
 }
 
 const app = issuer({
   subjects,
-  storage: MemoryStorage({
-    persist: "./persist.json",
-  }),
+  storage: await RedisStorage(),
   providers: {
-    password: PasswordProvider(
-      PasswordUI({
-        sendCode: async (email, code) => {
-          console.log(email, code)
-        },
-      }),
-    ),
     battlenet: Oauth2Provider({
       clientID: env.BATTLENET_CLIENT_ID,
       clientSecret: env.BATTLENET_CLIENT_SECRET,
@@ -37,21 +63,17 @@ const app = issuer({
       query: {
         "grant_type": "authorization_code",
         "response_type": "code",
-      }
+      },
     }),
   },
   success: async (ctx, value) => {
     switch (value.provider) {
       case "battlenet": {
-        console.log(value)
+        const upserted = await upsertAccount(value.tokenset)
 
         return await ctx.subject("user", {
-          id: await getUser(value.clientID),
-        })
-      }
-      case "password": {
-        return await ctx.subject("user", {
-          id: await getUser(value.email),
+          id: upserted.id, 
+          battletag: upserted.battletag,
         })
       }
       default:

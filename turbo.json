@@ -24,7 +24,16 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "DATABASE_URL",
+        "BATTLENET_CLIENT_ID",
+        "BATTLENET_CLIENT_SECRET",
+        "PRISMA_SCHEMA_ENGINE_BINARY",
+        "PRISMA_QUERY_ENGINE_BINARY",
+        "PRISMA_QUERY_ENGINE_LIBRARY",
+        "PRISMA_FMT_BINARY"
+      ]
     }
   }
 }

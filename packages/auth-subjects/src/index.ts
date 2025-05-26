@@ -4,5 +4,6 @@ import { createSubjects } from "@openauthjs/openauth/subject"
 export const subjects = createSubjects({
     user: z.object({
         id: z.string(),
+        battletag: z.string(),
     }),
 })

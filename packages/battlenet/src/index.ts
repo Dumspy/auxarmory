@@ -1,60 +1,96 @@
-import { WoWClient } from "./wow";
-import {
-	AchievementCategoryIndexResponse,
-	AchievementCategoryResponse,
-	AchievementIndexResponse,
-	AchievementMediaResponse,
-	AchievementResponse,
-	AchievementsIndex,
-} from "./wow/game_data/achievements";
+import { WoWGameDataClient, WoWProfileClient } from "./wow";
 
-type Region = "us" | "eu" | "kr" | "tw"; // | "cn"
+type Region = "us" | "eu" | "kr" | "tw" | "cn";
 
-type Locale =
-	| "en_US"
-	| "es_MX"
-	| "pt_BR"
-	| "en_GB"
-	| "es_ES"
-	| "fr_FR"
-	| "ru_RU"
-	| "de_DE"
-	| "pt_PT"
-	| "it_IT"
-	| "ko_KR"
-	| "zh_TW"
-	| "zh_CN";
+interface BaseClientOptions {
+	region: Region;
+}
 
-export interface BattleNetClientOptions {
+interface BaseRequestOptions {
+	endpoint: string;
+	params?: URLSearchParams;
+	method?: "POST" | "GET";
+	namespace?: "static" | "dynamic" | "profile";
+	authorization: string;
+}
+
+class BaseClient {
+	protected region: Region;
+
+	protected baseUrl: string;
+
+	constructor(options: BaseClientOptions) {
+		this.region = options.region;
+
+		this.baseUrl =
+			this.region === "cn"
+				? "https://gateway.battlenet.com.cn"
+				: `https://${this.region}.api.blizzard.com`;
+	}
+
+	public async request<T>(opt: BaseRequestOptions): Promise<T> {
+		const { endpoint, params, method = "GET", namespace } = opt;
+
+		const url = new URL(`${this.baseUrl}/${endpoint}`);
+
+		if (params) {
+			url.search = params.toString();
+		}
+
+		const headers: HeadersInit = {
+			Authorization: `Bearer ${opt.authorization}`,
+			"Content-Type": "application/json",
+		};
+
+		if (namespace) {
+			headers["Battlenet-Namespace"] = `${namespace}-${this.region}`;
+		}
+
+		const res = await fetch(url, {
+			method,
+			headers,
+		});
+
+		if (res.ok) {
+			return await res.json();
+		}
+
+		// TODO: error handling i guess
+		console.log(res);
+		throw new Error("Failed to fetch data from Battle.net API");
+	}
+}
+
+interface ApplicationOptions {
 	region: Region;
 	clientId: string;
 	clientSecret: string;
 }
 
-interface BattleNetRequestOptions {
-	endpoint: string;
-	params?: URLSearchParams;
-	method?: "POST" | "GET";
-	namespace?: "static" | "dynamic" | "profile";
-}
+type ApplicationRequestOptions = Omit<BaseRequestOptions, "authorization">;
 
-export class BattleNetClient {
-	protected region: Region;
+export class ApplicationClient extends BaseClient {
+	protected clientId: string;
+	protected clientSecret: string;
 
-	private clientId: string;
-	private clientSecret: string;
+	protected accessToken: string | null = null;
+	protected accessTokenExpiresAt: number | null = null;
 
-	private accessToken: string | null = null;
-	private accessTokenExpiresAt: number | null = null;
+	protected authUrl: string;
 
-	public wow: WoWClient;
+	public wow: WoWGameDataClient;
 
-	constructor(options: BattleNetClientOptions) {
-		this.region = options.region;
+	constructor(options: ApplicationOptions) {
+		super(options);
 		this.clientId = options.clientId;
 		this.clientSecret = options.clientSecret;
 
-		this.wow = new WoWClient(this);
+		this.authUrl =
+			this.region === "cn"
+				? "https://www.battlenet.com.cn/oauth/token"
+				: `https://${this.region}.battle.net/oauth/token`;
+
+		this.wow = new WoWGameDataClient(this);
 	}
 
 	private async authenticate() {
@@ -66,7 +102,7 @@ export class BattleNetClient {
 			return;
 		}
 
-		const url = `https://${this.region}.battle.net/oauth/token`;
+		const url = this.authUrl;
 		const params = new URLSearchParams({
 			grant_type: "client_credentials",
 		});
@@ -92,65 +128,88 @@ export class BattleNetClient {
 		this.accessTokenExpiresAt = Date.now() + data.expires_in * 1000;
 	}
 
-	public async request(options: BattleNetRequestOptions) {
-		const { endpoint, params, method = "GET", namespace } = options;
-
+	public async request<T>(opt: ApplicationRequestOptions): Promise<T> {
 		await this.authenticate();
 
-		const url = new URL(
-			`https://${this.region}.api.blizzard.com/${endpoint}`,
-		);
-
-		if (params) {
-			url.search = params.toString();
-		}
-
-		const headers: HeadersInit = {
-			Authorization: `Bearer ${this.accessToken}`,
-			"Content-Type": "application/json",
-		};
-
-		if (namespace) {
-			headers["Battlenet-Namespace"] = `${namespace}-${this.region}`;
-		}
-
-		const res = await fetch(url, {
-			method,
-			headers,
+		const authorization = this.accessToken || "";
+		return super.request<T>({
+			...opt,
+			authorization,
+			namespace: opt.namespace,
 		});
-
-		if (res.ok) {
-			return await res.json();
-		}
-
-		// TODO: error handling i guess
-		console.log(res);
-		throw new Error("Failed to fetch data from Battle.net API");
 	}
 }
 
-// (async () => {
-// 	const client = new BattleNetClient({
-// 		region: "us",
-// 		clientId: "3ea6ae45f23a44efbf4c6a55ac88b608",
-// 		clientSecret: "zQ3jtQSy0RcRJnTOIAZYLbfL7ZxqlmGU",
-// 	})
+interface AccountOptions {
+	region: Region;
+	accessToken: string;
+}
 
-// 	const index = await client.wow.AchievementCategoryIndex()
+type AccountRequestOptions = Omit<BaseRequestOptions, "authorization" | "namespace">
 
-// 	AchievementCategoryIndexResponse.parse(index)
+export class AccountClient extends BaseClient {
+	protected accessToken: string;
 
-// 	console.log("AchievementsIndex ok")
+	public wow: WoWProfileClient;
 
-// 	for (const achievement of index.categories) {
-// 		const data = await client.wow.AchievementCategory(achievement.id)
-// 		try {
-// 			AchievementCategoryResponse.parse(data)
-// 		} catch (e) {
-// 			console.error("Achievement parse error", e)
-// 			console.log(data)
-// 		}
+	constructor(options: AccountOptions) {
+		super(options);
+		this.accessToken = options.accessToken;
 
-// 		console.log("Achievement ok", data.id)
-// 	}
-// })()
+		this.wow = new WoWProfileClient(this);
+	}
+
+	public async request<T>(opt: AccountRequestOptions): Promise<T> {
+		return super.request<T>({
+			...opt,
+			authorization: this.accessToken,
+			namespace: "profile",
+		});
+	}
+}
+
+import fs from "fs";
+import { CharacterDungeonsResponse, CharacterEncounterSummaryResponse, CharacterRaidResponse } from "./wow/profile/charecter_encounter";
+
+(async () => {
+	const client = new ApplicationClient({
+		region: "eu",
+		clientId: process.env.BNET_CLIENT_ID || "",
+		clientSecret: process.env.BNET_CLIENT_SECRET || "",
+	});
+
+	const index = await client.wow.CharacterRaid("azjolnerub", "dispy");
+
+	const res = CharacterRaidResponse.safeParse(index);
+	if (res.success) {
+		console.log("index ok");
+	} else {
+		console.error("Heirloom parse error", res.error);
+		console.log(index);
+
+		const errorFile = `./out/error.txt`;
+		const dataFile = `./out/data.json`;
+		fs.writeFileSync(errorFile, res.error.message);
+		fs.writeFileSync(dataFile, JSON.stringify(index, null, 2));
+		console.error(`Heirloom parse error, saved to ${errorFile} and ${dataFile}`);
+	}
+
+	// for (const obj of index.) {
+	// 	const data = await client.wow.Item(obj.data.id);
+	// 	//const data = await client.wow.Heirloom(obj.id)
+	// 	const res = ItemResponse.safeParse(data);
+	// 	if (res.success) {
+	// 		console.log("index ok", data.id);
+	// 	} else {
+	// 		//console.error("Heirloom parse error", res.error);
+	// 		//console.dir(data, { depth: null });
+
+	// 		const errorFile = `./out/error-${data.id}.txt`;
+	// 		const dataFile = `./out/data-${data.id}.json`;
+	// 		fs.writeFileSync(errorFile, res.error.message);
+	// 		fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
+
+	// 		console.error(`Heirloom parse error for ID ${data.id}, saved to ${errorFile} and ${dataFile}`);
+	// 	}
+	// }
+})();

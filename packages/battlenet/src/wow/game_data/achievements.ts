@@ -1,21 +1,20 @@
-import z from "zod";
-import { WoWClient } from "..";
+import { z } from "zod/v4";
+import { WoWGameDataClient } from "..";
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
+	MediaAssetArray,
 } from "../../types";
 import { Faction } from "../types";
 
-// TODO: Return types
-
 export const AchievementIndexResponse = LinkSelfResponse.extend({
 	achievements: z.array(KeyNameIdResponse),
-});
+})
 
 export function AchievementsIndex(
-	this: WoWClient,
+	this: WoWGameDataClient,
 ): Promise<z.infer<typeof AchievementIndexResponse>> {
 	return this.request({
 		endpoint: "data/wow/achievement/index",
@@ -31,19 +30,19 @@ export const AchievementResponse = LinkSelfResponse.extend({
 	points: z.number(),
 	is_account_wide: z.boolean(),
 	criteria: z
-		.object({
+		.strictObject({
 			id: z.number(),
 			description: LocaleResponse,
 			amount: z.number(),
 			operator: z
-				.object({
+				.strictObject({
 					type: z.enum(["COMPLETE_AT_LEAST", "AND"]),
 					name: LocaleResponse,
 				})
 				.optional(),
 			child_criteria: z
 				.array(
-					z.object({
+					z.strictObject({
 						id: z.number(),
 						description: LocaleResponse,
 						amount: z.number(),
@@ -53,22 +52,25 @@ export const AchievementResponse = LinkSelfResponse.extend({
 				.optional(),
 		})
 		.optional(),
-	media: z.object({
+	media: z.strictObject({
 		key: KeyResponse,
 		id: z.number(),
 	}),
 	display_order: z.number(),
 	requirements: z
-		.object({
+		.strictObject({
 			faction: Faction,
 		})
 		.optional(),
 	prerequisite_achievement: KeyNameIdResponse.optional(),
 	next_achievement: KeyNameIdResponse.optional(),
-});
+	reward_description: LocaleResponse.optional(),
+	reward_item: KeyNameIdResponse.optional(),
+	guild_reward_items: z.array(KeyNameIdResponse).optional(),
+})
 
 export function Achievement(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	id: number,
 ): Promise<z.infer<typeof AchievementResponse>> {
 	return this.request({
@@ -79,17 +81,11 @@ export function Achievement(
 
 export const AchievementMediaResponse = LinkSelfResponse.extend({
 	id: z.number(),
-	assets: z.array(
-		z.object({
-			key: z.enum(["icon"]),
-			value: z.string(),
-			file_data_id: z.number(),
-		}),
-	),
-});
+	assets: MediaAssetArray,
+})
 
 export function AchievementMedia(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	id: number,
 ): Promise<z.infer<typeof AchievementMediaResponse>> {
 	return this.request({
@@ -102,10 +98,10 @@ export const AchievementCategoryIndexResponse = LinkSelfResponse.extend({
 	categories: z.array(KeyNameIdResponse),
 	root_categories: z.array(KeyNameIdResponse),
 	guild_categories: z.array(KeyNameIdResponse),
-});
+})
 
 export function AchievementCategoryIndex(
-	this: WoWClient,
+	this: WoWGameDataClient,
 ): Promise<z.infer<typeof AchievementCategoryIndexResponse>> {
 	return this.request({
 		endpoint: "data/wow/achievement-category/index",
@@ -120,21 +116,21 @@ export const AchievementCategoryResponse = LinkSelfResponse.extend({
 	parent_category: KeyNameIdResponse.optional(),
 	subcategories: z.array(KeyNameIdResponse).optional(),
 	is_guild_category: z.boolean(),
-	aggregates_by_faction: z.object({
-		horde: z.object({
+	aggregates_by_faction: z.strictObject({
+		horde: z.strictObject({
 			quantity: z.number(),
 			points: z.number(),
 		}),
-		alliance: z.object({
+		alliance: z.strictObject({
 			quantity: z.number(),
 			points: z.number(),
 		}),
 	}),
 	display_order: z.number(),
-});
+})
 
 export function AchievementCategory(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	id: number,
 ): Promise<z.infer<typeof AchievementCategoryResponse>> {
 	return this.request({

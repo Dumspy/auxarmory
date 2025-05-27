@@ -1,7 +1,7 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
 export function CharacterHunterPetsSummary(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 ) {

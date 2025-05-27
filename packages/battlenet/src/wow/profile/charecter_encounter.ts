@@ -1,32 +1,145 @@
-import { WoWClient } from "..";
+import { z } from "zod/v4";
+import { WoWGameDataClient } from "..";
+import {
+	KeyNameIdResponse,
+	KeyResponse,
+	LinkSelfResponse,
+	LocaleResponse,
+} from "../../types";
 
+export const CharacterEncounterSummaryResponse = LinkSelfResponse.extend({
+	character: z.strictObject({
+		key: KeyResponse,
+		name: z.string(),
+		id: z.number(),
+		realm: KeyNameIdResponse.extend({
+			slug: z.string(),
+		}),
+	}),
+	dungeons: KeyResponse,
+	raids: KeyResponse,
+});
 export function CharacterEncounterSummary(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-) {
+): Promise<z.infer<typeof CharacterEncounterSummaryResponse>> {
 	return this.request({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/encounters`,
 		namespace: "profile",
 	});
 }
 
+export const CharacterDungeonsResponse = LinkSelfResponse.extend({
+	expansions: z.array(
+		z.strictObject({
+			expansion: KeyNameIdResponse,
+			instances: z.array(
+				z.strictObject({
+					instance: KeyNameIdResponse,
+					modes: z.array(
+						z.strictObject({
+							difficulty: z
+								.strictObject({
+									type: z.enum([
+										"NORMAL",
+										"HEROIC",
+										"MYTHIC",
+										"MYTHIC_KEYSTONE",
+									]),
+									name: LocaleResponse,
+								})
+								.or(z.strictObject({})),
+							status: z.strictObject({
+								type: z.enum(["COMPLETE", "IN_PROGRESS"]),
+								name: LocaleResponse,
+							}),
+							progress: z.strictObject({
+								completed_count: z.number(),
+								total_count: z.number(),
+								encounters: z.array(
+									z.strictObject({
+										encounter: KeyNameIdResponse,
+										completed_count: z.number(),
+										last_kill_timestamp: z.number(),
+									}),
+								),
+							}),
+						}),
+					),
+				}),
+			),
+		}),
+	),
+});
 export function CharacterDungeons(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-) {
+): Promise<z.infer<typeof CharacterDungeonsResponse>> {
 	return this.request({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/encounters/dungeons`,
 		namespace: "profile",
 	});
 }
 
+export const CharacterRaidResponse = LinkSelfResponse.extend({
+	character: z.strictObject({
+		key: KeyResponse,
+		name: z.string(),
+		id: z.number(),
+		realm: KeyNameIdResponse.extend({
+			slug: z.string(),
+		}),
+	}),
+	expansions: z.array(
+		z.strictObject({
+			expansion: KeyNameIdResponse,
+			instances: z.array(
+				z.strictObject({
+					instance: KeyNameIdResponse,
+					modes: z.array(
+						z.strictObject({
+							difficulty: z.strictObject({
+								type: z.enum([
+									"LFR",
+									"NORMAL",
+									"HEROIC",
+									"MYTHIC",
+									"LEGACY_25_MAN_HEROIC",
+									"LEGACY_10_MAN",
+									"LEGACY_10_MAN_HEROIC"
+								]),
+								name: LocaleResponse,
+							}),
+							status: z.strictObject({
+								type: z.enum(["COMPLETE", "IN_PROGRESS"]),
+								name: LocaleResponse,
+							}),
+							progress: z.strictObject({
+								completed_count: z.number(),
+								total_count: z.number(),
+								encounters: z.array(
+									z.strictObject({
+										encounter: KeyNameIdResponse,
+										completed_count: z.number(),
+										last_kill_timestamp: z.number(),
+									}),
+								),
+							}),
+						}),
+					),
+				}),
+			),
+		}),
+	),
+});
+
 export function CharacterRaid(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-) {
+): Promise<z.infer<typeof CharacterRaidResponse>> {
 	return this.request({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/encounters/raids`,
 		namespace: "profile",

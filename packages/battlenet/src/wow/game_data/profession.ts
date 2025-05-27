@@ -1,20 +1,20 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
-export function ProfessionIndex(this: WoWClient) {
+export function ProfessionIndex(this: WoWGameDataClient) {
 	return this.request({
 		endpoint: `data/wow/profession/index`,
 		namespace: "static",
 	});
 }
 
-export function Profession(this: WoWClient, professionId: number) {
+export function Profession(this: WoWGameDataClient, professionId: number) {
 	return this.request({
 		endpoint: `data/wow/profession/${professionId}`,
 		namespace: "static",
 	});
 }
 
-export function ProfessionMedia(this: WoWClient, professionId: number) {
+export function ProfessionMedia(this: WoWGameDataClient, professionId: number) {
 	return this.request({
 		endpoint: `data/wow/media/profession/${professionId}`,
 		namespace: "static",
@@ -22,7 +22,7 @@ export function ProfessionMedia(this: WoWClient, professionId: number) {
 }
 
 export function ProfessionSkillTier(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	professionId: number,
 	skillTierId: number,
 ) {
@@ -32,14 +32,14 @@ export function ProfessionSkillTier(
 	});
 }
 
-export function ProfessionRecipe(this: WoWClient, recipeId: number) {
+export function ProfessionRecipe(this: WoWGameDataClient, recipeId: number) {
 	return this.request({
 		endpoint: `data/wow/recipe/${recipeId}`,
 		namespace: "static",
 	});
 }
 
-export function ProfessionRecipeMedia(this: WoWClient, recipeId: number) {
+export function ProfessionRecipeMedia(this: WoWGameDataClient, recipeId: number) {
 	return this.request({
 		endpoint: `data/wow/media/recipe/${recipeId}`,
 		namespace: "static",

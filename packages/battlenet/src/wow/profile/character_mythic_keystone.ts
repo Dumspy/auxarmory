@@ -1,7 +1,7 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
 export function CharacterMythicKeystoneProfileIndex(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 ) {
@@ -12,7 +12,7 @@ export function CharacterMythicKeystoneProfileIndex(
 }
 
 export function CharacterMythicKeystoneSeason(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 	seasonId: number,

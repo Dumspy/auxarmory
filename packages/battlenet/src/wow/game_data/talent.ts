@@ -1,6 +1,6 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
-export function TalentTreeIndex(this: WoWClient) {
+export function TalentTreeIndex(this: WoWGameDataClient) {
 	return this.request({
 		endpoint: `data/wow/talent-tree/index`,
 		namespace: "static",
@@ -8,7 +8,7 @@ export function TalentTreeIndex(this: WoWClient) {
 }
 
 export function TalentTree(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	talentTreeId: number,
 	specId: number,
 ) {
@@ -18,35 +18,35 @@ export function TalentTree(
 	});
 }
 
-export function TalentTreeNodes(this: WoWClient, talentTreeId: number) {
+export function TalentTreeNodes(this: WoWGameDataClient, talentTreeId: number) {
 	return this.request({
 		endpoint: `data/wow/talent-tree/${talentTreeId}`,
 		namespace: "static",
 	});
 }
 
-export function TalentIndex(this: WoWClient) {
+export function TalentIndex(this: WoWGameDataClient) {
 	return this.request({
 		endpoint: `data/wow/talent/index`,
 		namespace: "static",
 	});
 }
 
-export function Talent(this: WoWClient, id: number) {
+export function Talent(this: WoWGameDataClient, id: number) {
 	return this.request({
 		endpoint: `data/wow/talent/${id}`,
 		namespace: "static",
 	});
 }
 
-export function PvPTalentIndex(this: WoWClient) {
+export function PvPTalentIndex(this: WoWGameDataClient) {
 	return this.request({
 		endpoint: `data/wow/pvp-talent/index`,
 		namespace: "static",
 	});
 }
 
-export function PvPTalent(this: WoWClient, pvpTalentId: number) {
+export function PvPTalent(this: WoWGameDataClient, pvpTalentId: number) {
 	return this.request({
 		endpoint: `data/wow/pvp-talent/${pvpTalentId}`,
 		namespace: "static",

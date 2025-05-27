@@ -1,7 +1,7 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
 export function CharacterQuests(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 ) {
@@ -12,7 +12,7 @@ export function CharacterQuests(
 }
 
 export function CharacterCompletedQuests(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 ) {

@@ -1,6 +1,6 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
-export function Guild(this: WoWClient, realmSlug: string, nameSlug: string) {
+export function Guild(this: WoWGameDataClient, realmSlug: string, nameSlug: string) {
 	return this.request({
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}`,
 		namespace: "profile",
@@ -8,7 +8,7 @@ export function Guild(this: WoWClient, realmSlug: string, nameSlug: string) {
 }
 
 export function GuildActivity(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	nameSlug: string,
 ) {
@@ -19,7 +19,7 @@ export function GuildActivity(
 }
 
 export function GuildAchievements(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	nameSlug: string,
 ) {
@@ -30,7 +30,7 @@ export function GuildAchievements(
 }
 
 export function GuildRoster(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	nameSlug: string,
 ) {

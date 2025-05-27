@@ -9,9 +9,11 @@
   "devDependencies": {
     "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "5.8.2",
+    "@types/node": "22.14.0"
   },
   "dependencies": {
-    "zod": "^3.24.4"
+    "zod": "^3.25.0"
   }
 }

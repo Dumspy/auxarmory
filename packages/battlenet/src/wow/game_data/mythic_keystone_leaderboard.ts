@@ -1,7 +1,7 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
 export function MythicKeystoneLeaderboardIndex(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	connectedRealmId: number,
 ) {
 	return this.request({
@@ -11,7 +11,7 @@ export function MythicKeystoneLeaderboardIndex(
 }
 
 export function MyhticKeystoneLeaderboard(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	connectedRealmId: number,
 	dungeonId: number,
 	seasonId: number,

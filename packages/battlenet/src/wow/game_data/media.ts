@@ -1,6 +1,6 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
-export function MediaSearch(this: WoWClient) {
+export function MediaSearch(this: WoWGameDataClient) {
 	// TODO:
 	return this.request({
 		endpoint: `data/wow/media/search`,

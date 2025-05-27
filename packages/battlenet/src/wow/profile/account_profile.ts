@@ -1,61 +1,53 @@
-import { WoWClient } from "..";
+import { WoWProfileClient } from "..";
 
-export function AccountProfileSummary(this: WoWClient) {
+export function AccountProfileSummary(this: WoWProfileClient) {
 	return this.request({
 		endpoint: `profile/user/wow`,
-		namespace: "profile",
 	});
 }
 
 export function ProtectedCharacterProfileSummary(
-	this: WoWClient,
+	this: WoWProfileClient,
 	realmId: number,
 	characterId: number,
 ) {
 	return this.request({
 		endpoint: `profile/user/wow/protected-character/${realmId}-${characterId}`,
-		namespace: "profile",
 	});
 }
 
-export function AccountCollectionIndex(this: WoWClient) {
+export function AccountCollectionIndex(this: WoWProfileClient) {
 	return this.request({
 		endpoint: `profile/user/wow/collections/index`,
-		namespace: "profile",
 	});
 }
 
-export function AccountHeirloomsCollectionSummary(this: WoWClient) {
+export function AccountHeirloomsCollectionSummary(this: WoWProfileClient) {
 	return this.request({
 		endpoint: `profile/user/wow/collections/heirlooms`,
-		namespace: "profile",
 	});
 }
 
-export function AccountMountsCollectionSummary(this: WoWClient) {
+export function AccountMountsCollectionSummary(this: WoWProfileClient) {
 	return this.request({
 		endpoint: `profile/user/wow/collections/mounts`,
-		namespace: "profile",
 	});
 }
 
-export function AccountPetsCollectionSummary(this: WoWClient) {
+export function AccountPetsCollectionSummary(this: WoWProfileClient) {
 	return this.request({
 		endpoint: `profile/user/wow/collections/pets`,
-		namespace: "profile",
 	});
 }
 
-export function AccountToysCollectionSummary(this: WoWClient) {
+export function AccountToysCollectionSummary(this: WoWProfileClient) {
 	return this.request({
 		endpoint: `profile/user/wow/collections/toys`,
-		namespace: "profile",
 	});
 }
 
-export function AccountTransmogCollectionSummary(this: WoWClient) {
+export function AccountTransmogCollectionSummary(this: WoWProfileClient) {
 	return this.request({
 		endpoint: `profile/user/wow/collections/transmogs`,
-		namespace: "profile",
 	});
 }

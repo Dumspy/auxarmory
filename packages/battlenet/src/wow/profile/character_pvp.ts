@@ -1,7 +1,7 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
 export function CharacterPvPBracketStatistics(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 	pvpBracket: string,
@@ -14,7 +14,7 @@ export function CharacterPvPBracketStatistics(
 }
 
 export function CharacterPvPSummary(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 ) {

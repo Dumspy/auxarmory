@@ -1,7 +1,7 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
 export function CharacterCollectionIndex(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 ) {
@@ -12,7 +12,7 @@ export function CharacterCollectionIndex(
 }
 
 export function CharacterHeirloomsCollectionSummary(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 ) {
@@ -23,7 +23,7 @@ export function CharacterHeirloomsCollectionSummary(
 }
 
 export function CharacterMountsCollectionSummary(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 ) {
@@ -34,7 +34,7 @@ export function CharacterMountsCollectionSummary(
 }
 
 export function CharacterPetsCollectionSummary(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 ) {
@@ -45,7 +45,7 @@ export function CharacterPetsCollectionSummary(
 }
 
 export function CharacterToysCollectionSummary(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 ) {
@@ -56,7 +56,7 @@ export function CharacterToysCollectionSummary(
 }
 
 export function CharacterTransmogCollectionSummary(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
 ) {

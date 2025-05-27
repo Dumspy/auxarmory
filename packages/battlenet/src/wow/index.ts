@@ -1,4 +1,4 @@
-import { BattleNetClient } from "..";
+import { AccountClient, ApplicationClient } from "..";
 import {
 	Achievement,
 	AchievementCategory,
@@ -231,12 +231,11 @@ import {
 	GuildActivity,
 	GuildRoster,
 } from "./profile/guild";
+class WoWGameDataClient {
+	protected client: ApplicationClient;
+	protected request: ApplicationClient["request"];
 
-class WoWClient {
-	protected client: BattleNetClient;
-	protected request: BattleNetClient["request"];
-
-	constructor(client: BattleNetClient) {
+	constructor(client: ApplicationClient) {
 		this.client = client;
 		this.request = client.request.bind(client);
 	}
@@ -424,16 +423,6 @@ class WoWClient {
 
 	WoWTokenIndex = WoWTokenIndex.bind(this);
 
-	AccountCollectionIndex = AccountCollectionIndex.bind(this);
-	AccountHeirloomsCollectionSummary =
-		AccountHeirloomsCollectionSummary.bind(this);
-	AccountMountsCollectionSummary = AccountMountsCollectionSummary.bind(this);
-	AccountPetsCollectionSummary = AccountPetsCollectionSummary.bind(this);
-	AccountProfileSummary = AccountProfileSummary.bind(this);
-	AccountToysCollectionSummary = AccountToysCollectionSummary.bind(this);
-	ProtectedCharacterProfileSummary =
-		ProtectedCharacterProfileSummary.bind(this);
-
 	CharacterAchievementsStatistics =
 		CharacterAchievementsStatistics.bind(this);
 	CharacterAchievementsSummary = CharacterAchievementsSummary.bind(this);
@@ -490,4 +479,26 @@ class WoWClient {
 	GuildRoster = GuildRoster.bind(this);
 }
 
-export { WoWClient };
+class WoWProfileClient {
+	protected client: AccountClient;
+	protected request: AccountClient["request"];
+
+	constructor(client: AccountClient) {
+		this.client = client;
+		this.request = client.request.bind(client);
+	}
+
+	AccountCollectionIndex = AccountCollectionIndex.bind(this);
+	AccountHeirloomsCollectionSummary =
+		AccountHeirloomsCollectionSummary.bind(this);
+	AccountMountsCollectionSummary = AccountMountsCollectionSummary.bind(this);
+	AccountPetsCollectionSummary = AccountPetsCollectionSummary.bind(this);
+	AccountProfileSummary = AccountProfileSummary.bind(this);
+	AccountToysCollectionSummary = AccountToysCollectionSummary.bind(this);
+	AccountTransmogCollectionSummary =
+		AccountTransmogCollectionSummary.bind(this);
+	ProtectedCharacterProfileSummary =
+		ProtectedCharacterProfileSummary.bind(this);
+}
+
+export { WoWGameDataClient, WoWProfileClient };

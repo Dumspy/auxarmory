@@ -1,13 +1,13 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
-export function ToyIndex(this: WoWClient) {
+export function ToyIndex(this: WoWGameDataClient) {
 	return this.request({
 		endpoint: `data/wow/toy/index`,
 		namespace: "static",
 	});
 }
 
-export function Toy(this: WoWClient, id: number) {
+export function Toy(this: WoWGameDataClient, id: number) {
 	return this.request({
 		endpoint: `data/wow/toy/${id}`,
 		namespace: "static",

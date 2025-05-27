@@ -1,7 +1,7 @@
-import { WoWClient } from "..";
+import { WoWGameDataClient } from "..";
 
 export function MyhticRaidLeaderboard(
-	this: WoWClient,
+	this: WoWGameDataClient,
 	raid: string,
 	faction: "horde" | "alliance",
 ) {

@@ -1,29 +1,22 @@
 import { z } from "zod/v4";
 import { WoWGameDataClient } from "..";
 import { KeyNameIdResponse, KeyResponse, LinkSelfResponse, LocaleResponse } from "../../types";
-import { Faction } from "../types";
+import { Faction, Gender, Realm } from "../types";
 
 export const CharacterProfileSummaryResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	name: z.string(),
-	gender: z.strictObject({
-		type: z.enum(["MALE", "FEMALE"]),
-		name: LocaleResponse,
-	}),
+	gender: Gender,
 	faction: Faction,
 	race: KeyNameIdResponse,
 	character_class: KeyNameIdResponse,
 	active_spec: KeyNameIdResponse,
-	realm: KeyNameIdResponse.extend({
-		slug: z.string(),
-	}),
+	realm: Realm,
 	guild: z.strictObject({
 		key: KeyResponse,
 		name: LocaleResponse,
 		id: z.number(),
-		realm: KeyNameIdResponse.extend({
-			slug: z.string(),
-		}),
+		realm: Realm,
 		faction: Faction,
 	}),
 	level: z.number(),

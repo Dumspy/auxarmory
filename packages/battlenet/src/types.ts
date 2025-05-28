@@ -29,8 +29,18 @@ export const LinkSelfResponse = z.strictObject({
 	}),
 })
 
+export const KeyIdResponse = z.strictObject({
+	key: KeyResponse,
+	id: z.number(),
+})
+
 export const KeyNameIdResponse = z.strictObject({
 	key: KeyResponse,
+	name: LocaleResponse,
+	id: z.number(),
+})
+
+export const NameIdResponse = z.strictObject({
 	name: LocaleResponse,
 	id: z.number(),
 })

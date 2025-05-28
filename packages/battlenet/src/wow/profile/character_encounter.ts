@@ -6,16 +6,10 @@ import {
 	LinkSelfResponse,
 	LocaleResponse,
 } from "../../types";
+import { CharacterResponse } from "../types/character";
 
 export const CharacterEncounterSummaryResponse = LinkSelfResponse.extend({
-	character: z.strictObject({
-		key: KeyResponse,
-		name: z.string(),
-		id: z.number(),
-		realm: KeyNameIdResponse.extend({
-			slug: z.string(),
-		}),
-	}),
+	character: CharacterResponse,
 	dungeons: KeyResponse,
 	raids: KeyResponse,
 });
@@ -84,14 +78,7 @@ export function CharacterDungeons(
 }
 
 export const CharacterRaidResponse = LinkSelfResponse.extend({
-	character: z.strictObject({
-		key: KeyResponse,
-		name: z.string(),
-		id: z.number(),
-		realm: KeyNameIdResponse.extend({
-			slug: z.string(),
-		}),
-	}),
+	character: CharacterResponse,
 	expansions: z.array(
 		z.strictObject({
 			expansion: KeyNameIdResponse,

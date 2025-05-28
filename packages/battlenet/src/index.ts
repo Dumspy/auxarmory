@@ -169,18 +169,18 @@ export class AccountClient extends BaseClient {
 }
 
 import fs from "fs";
-import { CharacterDungeonsResponse, CharacterEncounterSummaryResponse, CharacterRaidResponse } from "./wow/profile/charecter_encounter";
+import { CharacterStatisticsSummaryResponse } from "./wow/profile/character_statistics";
 
 (async () => {
 	const client = new ApplicationClient({
 		region: "eu",
-		clientId: process.env.BNET_CLIENT_ID || "",
-		clientSecret: process.env.BNET_CLIENT_SECRET || "",
+		clientId: process.env.BATTLENET_CLIENT_ID || "",
+		clientSecret: process.env.BATTLENET_CLIENT_SECRET || "",
 	});
 
-	const index = await client.wow.CharacterRaid("azjolnerub", "dispy");
+	const index = await client.wow.CharacterStatisticsSummary("azjolnerub", "dispy");
 
-	const res = CharacterRaidResponse.safeParse(index);
+	const res = CharacterStatisticsSummaryResponse.safeParse(index);
 	if (res.success) {
 		console.log("index ok");
 	} else {
@@ -194,22 +194,22 @@ import { CharacterDungeonsResponse, CharacterEncounterSummaryResponse, Character
 		console.error(`Heirloom parse error, saved to ${errorFile} and ${dataFile}`);
 	}
 
-	// for (const obj of index.) {
-	// 	const data = await client.wow.Item(obj.data.id);
-	// 	//const data = await client.wow.Heirloom(obj.id)
-	// 	const res = ItemResponse.safeParse(data);
+	// for (const obj of index.seasons) {
+	// 	const data = await client.wow.CharacterMythicKeystoneSeason("azjolnerub", "dispy", obj.id);
+	// 	const id = data.season.id
+	// 	const res = CharacterMythicKeystoneSeasonResponse.safeParse(data);
 	// 	if (res.success) {
-	// 		console.log("index ok", data.id);
+	// 		console.log("index ok", id);
 	// 	} else {
 	// 		//console.error("Heirloom parse error", res.error);
 	// 		//console.dir(data, { depth: null });
 
-	// 		const errorFile = `./out/error-${data.id}.txt`;
-	// 		const dataFile = `./out/data-${data.id}.json`;
+	// 		const errorFile = `./out/error-${id}.txt`;
+	// 		const dataFile = `./out/data-${id}.json`;
 	// 		fs.writeFileSync(errorFile, res.error.message);
 	// 		fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
 
-	// 		console.error(`Heirloom parse error for ID ${data.id}, saved to ${errorFile} and ${dataFile}`);
+	// 		console.error(`Heirloom parse error for ID ${id}, saved to ${errorFile} and ${dataFile}`);
 	// 	}
 	// }
 })();

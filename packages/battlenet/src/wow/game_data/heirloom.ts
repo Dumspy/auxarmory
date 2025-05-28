@@ -1,7 +1,7 @@
 import { z } from "zod/v4"
 import { WoWGameDataClient } from ".."
 import { KeyNameIdResponse, LinkSelfResponse, LocaleResponse, MediaKeyResponse } from "../../types"
-import { HeirloomItem } from "../types";
+import { HeirloomItem } from "../types/item";
 
 export const HeirloomIndexResponse = LinkSelfResponse.extend({
 	heirlooms: z.array(KeyNameIdResponse)

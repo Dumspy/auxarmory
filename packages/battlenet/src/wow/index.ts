@@ -186,8 +186,8 @@ import {
 import {
 	CharacterAchievementsStatistics,
 	CharacterAchievementsSummary,
-} from "./profile/charecter_achievements";
-import { CharacterAppearanceSummary } from "./profile/charecter_appearance";
+} from "./profile/character_achievements";
+import { CharacterAppearanceSummary } from "./profile/character_appearance";
 import {
 	CharacterCollectionIndex,
 	CharacterHeirloomsCollectionSummary,
@@ -195,12 +195,12 @@ import {
 	CharacterPetsCollectionSummary,
 	CharacterToysCollectionSummary,
 	CharacterTransmogCollectionSummary,
-} from "./profile/charecter_collections";
+} from "./profile/character_collections";
 import {
 	CharacterEncounterSummary,
 	CharacterDungeons,
 	CharacterRaid,
-} from "./profile/charecter_encounter";
+} from "./profile/character_encounter";
 import { CharacterEquipmentSummary } from "./profile/character_equipment";
 import { CharacterHunterPetsSummary } from "./profile/character_hunter_pets";
 import { CharacterMediaSummary } from "./profile/character_media";
@@ -224,6 +224,7 @@ import {
 import { CharacterReputationSummary } from "./profile/character_reputation";
 import { CharacterSoulbinds } from "./profile/character_soulbinds";
 import { CharacterSpecializationsSummary } from "./profile/character_specialization";
+import { CharacterStatisticsSummary } from "./profile/character_statistics";
 import { CharacterTitlesSummary } from "./profile/character_titles";
 import {
 	Guild,
@@ -470,6 +471,8 @@ class WoWGameDataClient {
 
 	CharacterSpecializationsSummary =
 		CharacterSpecializationsSummary.bind(this);
+
+	CharacterStatisticsSummary = CharacterStatisticsSummary.bind(this);
 
 	CharacterTitlesSummary = CharacterTitlesSummary.bind(this);
 

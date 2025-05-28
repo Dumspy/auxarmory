@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 import { WoWGameDataClient } from "..";
 import { KeyNameIdResponse, KeyResponse, LinkSelfResponse, LocaleResponse, MediaKeyResponse } from "../../types";
-import { ItemIventoryType, ItemQuality, PreviewItem } from "../types";
+import { ItemIventoryType, ItemQuality, PreviewItem } from "../types/item";
 
 export const ItemResponse = LinkSelfResponse.extend({
 	id: z.number(),

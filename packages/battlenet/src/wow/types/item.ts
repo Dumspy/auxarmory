@@ -5,7 +5,7 @@ import {
 	LocaleResponse,
 	MediaKeyResponse,
 } from "../../types";
-import { ColorObject, Faction } from "./simple";
+import { ColorObject, Faction } from ".";
 
 export const ItemIventoryType = z.strictObject({
 	type: z.enum([

@@ -73,3 +73,10 @@ export const LocaleString = z.enum([
 	"zhTW",
 	"zhCN",
 ]);
+
+export const ApplicationAuthResponse = z.strictObject({
+	access_token: z.string(),
+	expires_in: z.number(),
+	token_type: z.string(),
+	sub: z.string(),
+});

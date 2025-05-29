@@ -14,12 +14,11 @@ export const AchievementIndexResponse = LinkSelfResponse.extend({
 	achievements: z.array(KeyNameIdResponse),
 });
 
-export function AchievementsIndex(
-	this: WoWGameDataClient,
-): Promise<z.infer<typeof AchievementIndexResponse>> {
-	return this.request({
+export function AchievementsIndex(this: WoWGameDataClient) {
+	return this.request<z.infer<typeof AchievementIndexResponse>>({
 		endpoint: "data/wow/achievement/index",
 		namespace: "static",
+		zod: AchievementIndexResponse,
 	});
 }
 
@@ -70,13 +69,11 @@ export const AchievementResponse = LinkSelfResponse.extend({
 	guild_reward_items: z.array(KeyNameIdResponse).optional(),
 });
 
-export function Achievement(
-	this: WoWGameDataClient,
-	id: number,
-): Promise<z.infer<typeof AchievementResponse>> {
-	return this.request({
+export function Achievement(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof AchievementResponse>>({
 		endpoint: `data/wow/achievement/${id}`,
 		namespace: "static",
+		zod: AchievementResponse,
 	});
 }
 
@@ -85,13 +82,11 @@ export const AchievementMediaResponse = LinkSelfResponse.extend({
 	assets: MediaAssetArray,
 });
 
-export function AchievementMedia(
-	this: WoWGameDataClient,
-	id: number,
-): Promise<z.infer<typeof AchievementMediaResponse>> {
-	return this.request({
+export function AchievementMedia(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof AchievementMediaResponse>>({
 		endpoint: `data/wow/media/achievement/${id}`,
 		namespace: "static",
+		zod: AchievementMediaResponse,
 	});
 }
 
@@ -101,12 +96,11 @@ export const AchievementCategoryIndexResponse = LinkSelfResponse.extend({
 	guild_categories: z.array(KeyNameIdResponse),
 });
 
-export function AchievementCategoryIndex(
-	this: WoWGameDataClient,
-): Promise<z.infer<typeof AchievementCategoryIndexResponse>> {
-	return this.request({
+export function AchievementCategoryIndex(this: WoWGameDataClient) {
+	return this.request<z.infer<typeof AchievementCategoryIndexResponse>>({
 		endpoint: "data/wow/achievement-category/index",
 		namespace: "static",
+		zod: AchievementCategoryIndexResponse,
 	});
 }
 
@@ -130,12 +124,10 @@ export const AchievementCategoryResponse = LinkSelfResponse.extend({
 	display_order: z.number(),
 });
 
-export function AchievementCategory(
-	this: WoWGameDataClient,
-	id: number,
-): Promise<z.infer<typeof AchievementCategoryResponse>> {
-	return this.request({
+export function AchievementCategory(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof AchievementCategoryResponse>>({
 		endpoint: `data/wow/achievement-category/${id}`,
 		namespace: "static",
+		zod: AchievementCategoryResponse,
 	});
 }

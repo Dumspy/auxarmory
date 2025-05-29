@@ -1,3 +1,5 @@
+import { z } from "zod/v4";
+
 import type { WoWGameDataClient } from "..";
 
 export function CharacterPvPBracketStatistics(
@@ -6,10 +8,10 @@ export function CharacterPvPBracketStatistics(
 	characterName: string,
 	pvpBracket: string,
 ) {
-	// TODO: Check if string could be union
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/pvp-bracket/${pvpBracket}`,
 		namespace: "profile",
+		zod: z.unknown(),
 	});
 }
 
@@ -18,8 +20,9 @@ export function CharacterPvPSummary(
 	realmSlug: string,
 	characterName: string,
 ) {
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/pvp-summary`,
 		namespace: "profile",
+		zod: z.unknown(),
 	});
 }

@@ -26,10 +26,13 @@ export function CharacterMythicKeystoneProfileIndex(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-): Promise<z.infer<typeof CharacterMythicKeystoneProfileIndexResponse>> {
-	return this.request({
+) {
+	return this.request<
+		z.infer<typeof CharacterMythicKeystoneProfileIndexResponse>
+	>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/mythic-keystone-profile`,
 		namespace: "profile",
+		zod: CharacterMythicKeystoneProfileIndexResponse,
 	});
 }
 
@@ -80,9 +83,10 @@ export function CharacterMythicKeystoneSeason(
 	realmSlug: string,
 	characterName: string,
 	seasonId: number,
-): Promise<z.infer<typeof CharacterMythicKeystoneSeasonResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof CharacterMythicKeystoneSeasonResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/mythic-keystone-profile/season/${seasonId}`,
 		namespace: "profile",
+		zod: CharacterMythicKeystoneSeasonResponse,
 	});
 }

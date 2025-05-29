@@ -35,9 +35,10 @@ export function CharacterEquipmentSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-): Promise<z.infer<typeof CharacterEquipmentSummaryResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof CharacterEquipmentSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/equipment`,
 		namespace: "profile",
+		zod: CharacterEquipmentSummaryResponse,
 	});
 }

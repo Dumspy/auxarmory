@@ -42,11 +42,10 @@ export const AccountProfileSummaryResponse = ProfileLinkSelf.extend({
 	),
 	collections: KeyResponse,
 });
-export function AccountProfileSummary(
-	this: WoWProfileClient,
-): Promise<z.infer<typeof AccountProfileSummaryResponse>> {
-	return this.request({
+export function AccountProfileSummary(this: WoWProfileClient) {
+	return this.request<z.infer<typeof AccountProfileSummaryResponse>>({
 		endpoint: `profile/user/wow`,
+		zod: AccountProfileSummaryResponse,
 	});
 }
 
@@ -87,9 +86,12 @@ export function ProtectedCharacterProfileSummary(
 	this: WoWProfileClient,
 	realmId: number,
 	characterId: number,
-): Promise<z.infer<typeof ProtectedCharacterProfileSummaryResponse>> {
-	return this.request({
+) {
+	return this.request<
+		z.infer<typeof ProtectedCharacterProfileSummaryResponse>
+	>({
 		endpoint: `profile/user/wow/protected-character/${realmId}-${characterId}`,
+		zod: ProtectedCharacterProfileSummaryResponse,
 	});
 }
 
@@ -100,11 +102,10 @@ export const AccountCollectionIndexResponse = ProfileLinkSelf.extend({
 	toys: KeyResponse,
 	transmogs: KeyResponse,
 });
-export function AccountCollectionIndex(
-	this: WoWProfileClient,
-): Promise<z.infer<typeof AccountCollectionIndexResponse>> {
-	return this.request({
+export function AccountCollectionIndex(this: WoWProfileClient) {
+	return this.request<z.infer<typeof AccountCollectionIndexResponse>>({
 		endpoint: `profile/user/wow/collections`,
+		zod: AccountCollectionIndexResponse,
 	});
 }
 
@@ -120,11 +121,12 @@ export const AccountHeirloomsCollectionSummaryResponse = ProfileLinkSelf.extend(
 		),
 	},
 );
-export function AccountHeirloomsCollectionSummary(
-	this: WoWProfileClient,
-): Promise<z.infer<typeof AccountHeirloomsCollectionSummaryResponse>> {
-	return this.request({
+export function AccountHeirloomsCollectionSummary(this: WoWProfileClient) {
+	return this.request<
+		z.infer<typeof AccountHeirloomsCollectionSummaryResponse>
+	>({
 		endpoint: `profile/user/wow/collections/heirlooms`,
+		zod: AccountHeirloomsCollectionSummaryResponse,
 	});
 }
 
@@ -136,12 +138,13 @@ export const AccountMountsCollectionSummaryResponse = ProfileLinkSelf.extend({
 		}),
 	),
 });
-export function AccountMountsCollectionSummary(
-	this: WoWProfileClient,
-): Promise<z.infer<typeof AccountMountsCollectionSummaryResponse>> {
-	return this.request({
-		endpoint: `profile/user/wow/collections/mounts`,
-	});
+export function AccountMountsCollectionSummary(this: WoWProfileClient) {
+	return this.request<z.infer<typeof AccountMountsCollectionSummaryResponse>>(
+		{
+			endpoint: `profile/user/wow/collections/mounts`,
+			zod: AccountMountsCollectionSummaryResponse,
+		},
+	);
 }
 
 export const AccountPetsCollectionSummaryResponse = ProfileLinkSelf.extend({
@@ -169,11 +172,10 @@ export const AccountPetsCollectionSummaryResponse = ProfileLinkSelf.extend({
 	),
 	unlocked_battle_pet_slots: z.number(),
 });
-export function AccountPetsCollectionSummary(
-	this: WoWProfileClient,
-): Promise<z.infer<typeof AccountPetsCollectionSummaryResponse>> {
-	return this.request({
+export function AccountPetsCollectionSummary(this: WoWProfileClient) {
+	return this.request<z.infer<typeof AccountPetsCollectionSummaryResponse>>({
 		endpoint: `profile/user/wow/collections/pets`,
+		zod: AccountPetsCollectionSummaryResponse,
 	});
 }
 
@@ -185,11 +187,10 @@ export const AccountToysCollectionSummaryResponse = ProfileLinkSelf.extend({
 		}),
 	),
 });
-export function AccountToysCollectionSummary(
-	this: WoWProfileClient,
-): Promise<z.infer<typeof AccountToysCollectionSummaryResponse>> {
-	return this.request({
+export function AccountToysCollectionSummary(this: WoWProfileClient) {
+	return this.request<z.infer<typeof AccountToysCollectionSummaryResponse>>({
 		endpoint: `profile/user/wow/collections/toys`,
+		zod: AccountToysCollectionSummaryResponse,
 	});
 }
 
@@ -227,10 +228,11 @@ export const AccountTransmogCollectionSummaryResponse = ProfileLinkSelf.extend({
 		}),
 	),
 });
-export function AccountTransmogCollectionSummary(
-	this: WoWProfileClient,
-): Promise<z.infer<typeof AccountTransmogCollectionSummaryResponse>> {
-	return this.request({
+export function AccountTransmogCollectionSummary(this: WoWProfileClient) {
+	return this.request<
+		z.infer<typeof AccountTransmogCollectionSummaryResponse>
+	>({
 		endpoint: `profile/user/wow/collections/transmogs`,
+		zod: AccountTransmogCollectionSummaryResponse,
 	});
 }

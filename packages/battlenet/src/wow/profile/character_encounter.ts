@@ -18,10 +18,11 @@ export function CharacterEncounterSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-): Promise<z.infer<typeof CharacterEncounterSummaryResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof CharacterEncounterSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/encounters`,
 		namespace: "profile",
+		zod: CharacterEncounterSummaryResponse,
 	});
 }
 
@@ -71,10 +72,11 @@ export function CharacterDungeons(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-): Promise<z.infer<typeof CharacterDungeonsResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof CharacterDungeonsResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/encounters/dungeons`,
 		namespace: "profile",
+		zod: CharacterDungeonsResponse,
 	});
 }
 
@@ -127,9 +129,10 @@ export function CharacterRaid(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-): Promise<z.infer<typeof CharacterRaidResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof CharacterRaidResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/encounters/raids`,
 		namespace: "profile",
+		zod: CharacterRaidResponse,
 	});
 }

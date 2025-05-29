@@ -12,12 +12,11 @@ import { HeirloomItem } from "../types/item";
 export const HeirloomIndexResponse = LinkSelfResponse.extend({
 	heirlooms: z.array(KeyNameIdResponse),
 });
-export function HeirloomIndex(
-	this: WoWGameDataClient,
-): Promise<z.infer<typeof HeirloomIndexResponse>> {
-	return this.request({
+export function HeirloomIndex(this: WoWGameDataClient) {
+	return this.request<z.infer<typeof HeirloomIndexResponse>>({
 		endpoint: `data/wow/heirloom/index`,
 		namespace: "static",
+		zod: HeirloomIndexResponse,
 	});
 }
 
@@ -37,12 +36,10 @@ export const HeirloomResponse = LinkSelfResponse.extend({
 	),
 	media: MediaKeyResponse,
 });
-export function Heirloom(
-	this: WoWGameDataClient,
-	id: number,
-): Promise<z.infer<typeof HeirloomResponse>> {
-	return this.request({
+export function Heirloom(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof HeirloomResponse>>({
 		endpoint: `data/wow/heirloom/${id}`,
 		namespace: "static",
+		zod: HeirloomResponse,
 	});
 }

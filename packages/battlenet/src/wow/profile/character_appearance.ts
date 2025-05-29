@@ -1,3 +1,5 @@
+import { z } from "zod/v4";
+
 import type { WoWGameDataClient } from "..";
 
 export function CharacterAppearanceSummary(
@@ -5,8 +7,9 @@ export function CharacterAppearanceSummary(
 	realmSlug: string,
 	characterName: string,
 ) {
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/appearance`,
 		namespace: "profile",
+		zod: z.unknown(),
 	});
 }

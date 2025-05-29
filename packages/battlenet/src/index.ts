@@ -1,3 +1,6 @@
+import type { z } from "zod/v4";
+
+import { ApplicationAuthResponse } from "./types";
 import { WoWGameDataClient, WoWProfileClient } from "./wow";
 
 export * from "./util";
@@ -10,17 +13,17 @@ interface BaseClientOptions {
 	locale?: string;
 }
 
-interface BaseRequestOptions {
+interface BaseRequestOptions<T> {
 	endpoint: string;
 	params?: URLSearchParams;
 	method?: "POST" | "GET";
 	namespace?: "static" | "dynamic" | "profile";
 	authorization: string;
+	zod: z.Schema<T>;
 }
 
 class BaseClient {
 	protected region: Region;
-
 	protected baseUrl: string;
 	protected locale?: string;
 
@@ -34,12 +37,13 @@ class BaseClient {
 				: `https://${this.region}.api.blizzard.com`;
 	}
 
-	public async request<T>(opt: BaseRequestOptions): Promise<T> {
+	public async request<T>(opt: BaseRequestOptions<T>): Promise<T> {
 		const {
 			endpoint,
 			params = new URLSearchParams(),
 			method = "GET",
 			namespace,
+			zod,
 		} = opt;
 
 		const url = new URL(`${this.baseUrl}/${endpoint}`);
@@ -52,7 +56,7 @@ class BaseClient {
 			url.search = params.toString();
 		}
 
-		const headers: HeadersInit = {
+		const headers: Record<string, string> = {
 			Authorization: `Bearer ${opt.authorization}`,
 			"Content-Type": "application/json",
 		};
@@ -67,12 +71,24 @@ class BaseClient {
 		});
 
 		if (res.ok) {
-			return await res.json() as Promise<T>;
+			const json = await res.json();
+			const { data, success, error } = zod.safeParse(json);
+			if (!success) {
+				throw new Error(
+					`Failed to parse api response with zod validator.
+					This usually means the API response has changed or the zod schema is incorrect.
+					${error.message || "Unknown zod error"}
+					`,
+				);
+			}
+			return data;
 		}
 
 		// TODO: error handling i guess
 		console.log(res);
-		throw new Error("Failed to fetch data from Battle.net API");
+		throw new Error(
+			`Failed to fetch data from Battle.net API: ${res.status} ${res.statusText}`,
+		);
 	}
 }
 
@@ -82,29 +98,27 @@ interface ApplicationOptions {
 	clientSecret: string;
 }
 
-type ApplicationRequestOptions = Omit<BaseRequestOptions, "authorization">;
+type ApplicationRequestOptions<T> = Omit<
+	BaseRequestOptions<T>,
+	"authorization"
+>;
 
 export class ApplicationClient extends BaseClient {
 	protected clientId: string;
 	protected clientSecret: string;
-
 	protected accessToken: string | null = null;
 	protected accessTokenExpiresAt: number | null = null;
-
 	protected authUrl: string;
-
 	public wow: WoWGameDataClient;
 
 	constructor(options: ApplicationOptions) {
 		super(options);
 		this.clientId = options.clientId;
 		this.clientSecret = options.clientSecret;
-
 		this.authUrl =
 			this.region === "cn"
 				? "https://www.battlenet.com.cn/oauth/token"
 				: `https://${this.region}.battle.net/oauth/token`;
-
 		this.wow = new WoWGameDataClient(this);
 	}
 
@@ -125,8 +139,7 @@ export class ApplicationClient extends BaseClient {
 		const res = await fetch(url, {
 			method: "POST",
 			headers: {
-				Authorization:
-					"Basic " + btoa(`${this.clientId}:${this.clientSecret}`),
+				Authorization: `Basic ${btoa(`${this.clientId}:${this.clientSecret}`)}`,
 				"Content-Type": "application/x-www-form-urlencoded",
 			},
 			body: params,
@@ -137,20 +150,26 @@ export class ApplicationClient extends BaseClient {
 				`Failed to authenticate: ${res.status} ${res.statusText}`,
 			);
 		}
-		const data = await res.json() as { access_token: string; expires_in: number };
+		const json = await res.json();
+		const { error, data, success } =
+			ApplicationAuthResponse.safeParse(json);
+
+		if (!success) {
+			throw new Error(
+				`Failed to parse authentication response: ${error.message || "Unknown error"}`,
+			);
+		}
 
 		this.accessToken = data.access_token;
 		this.accessTokenExpiresAt = Date.now() + data.expires_in * 1000;
 	}
 
-	public async request<T>(opt: ApplicationRequestOptions): Promise<T> {
+	public async request<T>(opt: ApplicationRequestOptions<T>): Promise<T> {
 		await this.authenticate();
-
 		const authorization = this.accessToken ?? "";
-		return super.request<T>({
+		return super.request({
 			...opt,
 			authorization,
-			namespace: opt.namespace,
 		});
 	}
 }
@@ -160,25 +179,23 @@ interface AccountOptions {
 	accessToken: string;
 }
 
-type AccountRequestOptions = Omit<
-	BaseRequestOptions,
+type AccountRequestOptions<T> = Omit<
+	BaseRequestOptions<T>,
 	"authorization" | "namespace"
 >;
 
 export class AccountClient extends BaseClient {
 	protected accessToken: string;
-
 	public wow: WoWProfileClient;
 
 	constructor(options: AccountOptions) {
 		super(options);
 		this.accessToken = options.accessToken;
-
 		this.wow = new WoWProfileClient(this);
 	}
 
-	public async request<T>(opt: AccountRequestOptions): Promise<T> {
-		return super.request<T>({
+	public async request<T>(opt: AccountRequestOptions<T>): Promise<T> {
+		return super.request({
 			...opt,
 			authorization: this.accessToken,
 			namespace: "profile",

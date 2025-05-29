@@ -27,9 +27,9 @@ import {
 	CovenantSoulbindIndex,
 } from "./game_data/covenant";
 import {
-	CreatueFamily,
-	CreatueFamilyIndex,
-	CreatueFamilyMedia,
+	CreatureFamily,
+	CreatureFamilyIndex,
+	CreatureFamilyMedia,
 	Creature,
 	CreatureMedia,
 	CreatureSearch,
@@ -270,9 +270,9 @@ class WoWGameDataClient {
 	Creature = Creature.bind(this);
 	CreatureSearch = CreatureSearch.bind(this);
 	CreatureMedia = CreatureMedia.bind(this);
-	CreatueFamilyIndex = CreatueFamilyIndex.bind(this);
-	CreatueFamily = CreatueFamily.bind(this);
-	CreatueFamilyMedia = CreatueFamilyMedia.bind(this);
+	CreatueFamilyIndex = CreatureFamilyIndex.bind(this);
+	CreatueFamily = CreatureFamily.bind(this);
+	CreatueFamilyMedia = CreatureFamilyMedia.bind(this);
 	CreatureTypeIndex = CreatureTypeIndex.bind(this);
 	CreatureType = CreatureType.bind(this);
 

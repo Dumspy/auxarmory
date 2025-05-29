@@ -1,3 +1,5 @@
+import { z } from "zod/v4";
+
 import type { WoWGameDataClient } from "..";
 
 export function MyhticRaidLeaderboard(
@@ -5,8 +7,9 @@ export function MyhticRaidLeaderboard(
 	raid: string,
 	faction: "horde" | "alliance",
 ) {
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `data/wow/leaderboard/hall-of-fame/${raid}/${faction}`,
 		namespace: "dynamic",
+		zod: z.unknown(),
 	});
 }

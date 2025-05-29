@@ -36,56 +36,59 @@ export const ItemResponse = LinkSelfResponse.extend({
 		)
 		.optional(),
 });
-export function Item(
-	this: WoWGameDataClient,
-	id: number,
-): Promise<z.infer<typeof ItemResponse>> {
-	return this.request({
+export function Item(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof ItemResponse>>({
 		endpoint: `data/wow/item/${id}`,
 		namespace: "static",
+		zod: ItemResponse,
 	});
 }
 
 export function ItemSearch(this: WoWGameDataClient) {
-	// TODO:
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `data/wow/search/item`,
 		namespace: "static",
+		zod: z.unknown(),
 	});
 }
 
 export function ItemMedia(this: WoWGameDataClient, id: number) {
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `data/wow/media/item/${id}`,
 		namespace: "static",
+		zod: z.unknown(),
 	});
 }
 
 export function ItemClassIndex(this: WoWGameDataClient) {
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `data/wow/item-class/index`,
 		namespace: "static",
+		zod: z.unknown(),
 	});
 }
 
 export function ItemClass(this: WoWGameDataClient, id: number) {
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `data/wow/item-class/${id}`,
 		namespace: "static",
+		zod: z.unknown(),
 	});
 }
 
 export function ItemSetIndex(this: WoWGameDataClient) {
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `data/wow/item-set/index`,
 		namespace: "static",
+		zod: z.unknown(),
 	});
 }
 
 export function ItemSet(this: WoWGameDataClient, id: number) {
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `data/wow/item-set/${id}`,
 		namespace: "static",
+		zod: z.unknown(),
 	});
 }
 
@@ -94,8 +97,9 @@ export function ItemSubClass(
 	itemClassId: number,
 	itemSubClassId: number,
 ) {
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `data/wow/item-class/${itemClassId}/item-subclass/${itemSubClassId}`,
 		namespace: "static",
+		zod: z.unknown(),
 	});
 }

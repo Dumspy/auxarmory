@@ -62,10 +62,11 @@ export function Guild(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	nameSlug: string,
-): Promise<z.infer<typeof GuildResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof GuildResponse>>({
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}`,
 		namespace: "profile",
+		zod: GuildResponse,
 	});
 }
 
@@ -103,10 +104,11 @@ export function GuildActivity(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	nameSlug: string,
-): Promise<z.infer<typeof GuildActivityResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof GuildActivityResponse>>({
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}/activity`,
 		namespace: "profile",
+		zod: GuildActivityResponse,
 	});
 }
 
@@ -153,10 +155,11 @@ export function GuildAchievements(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	nameSlug: string,
-): Promise<z.infer<typeof GuildAchievementsResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof GuildAchievementsResponse>>({
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}/achievements`,
 		namespace: "profile",
+		zod: GuildAchievementsResponse,
 	});
 }
 
@@ -180,9 +183,10 @@ export function GuildRoster(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	nameSlug: string,
-): Promise<z.infer<typeof GuildRosterResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof GuildRosterResponse>>({
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}/roster`,
 		namespace: "profile",
+		zod: GuildRosterResponse,
 	});
 }

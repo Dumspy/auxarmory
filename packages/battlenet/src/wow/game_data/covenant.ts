@@ -12,12 +12,11 @@ import {
 export const CovenantIndexResponse = LinkSelfResponse.extend({
 	covenants: z.array(KeyNameIdResponse),
 });
-export function CovenantIndex(
-	this: WoWGameDataClient,
-): Promise<z.infer<typeof CovenantIndexResponse>> {
-	return this.request({
+export function CovenantIndex(this: WoWGameDataClient) {
+	return this.request<z.infer<typeof CovenantIndexResponse>>({
 		endpoint: `data/wow/covenant/index`,
 		namespace: "static",
+		zod: CovenantIndexResponse,
 	});
 }
 
@@ -57,13 +56,11 @@ export const CovenantResponese = LinkSelfResponse.extend({
 	),
 	media: MediaKeyResponse.optional(),
 });
-export function Covenant(
-	this: WoWGameDataClient,
-	covenantId: number,
-): Promise<z.infer<typeof CovenantResponese>> {
-	return this.request({
+export function Covenant(this: WoWGameDataClient, covenantId: number) {
+	return this.request<z.infer<typeof CovenantResponese>>({
 		endpoint: `data/wow/covenant/${covenantId}`,
 		namespace: "static",
+		zod: CovenantResponese,
 	});
 }
 
@@ -71,25 +68,22 @@ export const CovenantMediaResponse = LinkSelfResponse.extend({
 	id: z.number().optional(),
 	assets: MediaAssetArray.optional(),
 });
-export function CovenantMedia(
-	this: WoWGameDataClient,
-	covenantId: number,
-): Promise<z.infer<typeof CovenantMediaResponse>> {
-	return this.request({
+export function CovenantMedia(this: WoWGameDataClient, covenantId: number) {
+	return this.request<z.infer<typeof CovenantMediaResponse>>({
 		endpoint: `data/wow/media/covenant/${covenantId}`,
 		namespace: "static",
+		zod: CovenantMediaResponse,
 	});
 }
 
 export const CovenantSoulbindIndexReponse = LinkSelfResponse.extend({
 	soulbinds: z.array(KeyNameIdResponse),
 });
-export function CovenantSoulbindIndex(
-	this: WoWGameDataClient,
-): Promise<z.infer<typeof CovenantSoulbindIndexReponse>> {
-	return this.request({
+export function CovenantSoulbindIndex(this: WoWGameDataClient) {
+	return this.request<z.infer<typeof CovenantSoulbindIndexReponse>>({
 		endpoint: `data/wow/covenant/soulbind/index`,
 		namespace: "static",
+		zod: CovenantSoulbindIndexReponse,
 	});
 }
 
@@ -104,25 +98,22 @@ export const CovenantSoulbindResponse = LinkSelfResponse.extend({
 	}),
 	talent_tree: KeyNameIdResponse,
 });
-export function CovenantSoulbind(
-	this: WoWGameDataClient,
-	soulbindId: number,
-): Promise<z.infer<typeof CovenantSoulbindResponse>> {
-	return this.request({
+export function CovenantSoulbind(this: WoWGameDataClient, soulbindId: number) {
+	return this.request<z.infer<typeof CovenantSoulbindResponse>>({
 		endpoint: `data/wow/covenant/soulbind/${soulbindId}`,
 		namespace: "static",
+		zod: CovenantSoulbindResponse,
 	});
 }
 
 export const CovenantConduitIndexResponse = LinkSelfResponse.extend({
 	conduits: z.array(KeyNameIdResponse),
 });
-export function CovenantConduitIndex(
-	this: WoWGameDataClient,
-): Promise<z.infer<typeof CovenantConduitIndexResponse>> {
-	return this.request({
+export function CovenantConduitIndex(this: WoWGameDataClient) {
+	return this.request<z.infer<typeof CovenantConduitIndexResponse>>({
 		endpoint: `data/wow/covenant/conduit/index`,
 		namespace: "static",
+		zod: CovenantConduitIndexResponse,
 	});
 }
 
@@ -142,12 +133,10 @@ export const CovenantConduitResponse = LinkSelfResponse.extend({
 		}),
 	),
 });
-export function CovenantConduit(
-	this: WoWGameDataClient,
-	conduitId: number,
-): Promise<z.infer<typeof CovenantConduitResponse>> {
-	return this.request({
+export function CovenantConduit(this: WoWGameDataClient, conduitId: number) {
+	return this.request<z.infer<typeof CovenantConduitResponse>>({
 		endpoint: `data/wow/covenant/conduit/${conduitId}`,
 		namespace: "static",
+		zod: CovenantConduitResponse,
 	});
 }

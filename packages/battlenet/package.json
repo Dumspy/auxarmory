@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "api:dev": "ts-node src/dev.ts",
+    "api:dev": "tsx src/dev.ts",
     "build": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint ."
@@ -18,7 +18,7 @@
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.19.4",
     "typescript": "catalog:"
   },
   "dependencies": {

@@ -15,12 +15,11 @@ import { Faction } from "../types";
 export const JournalExpansionsIndexResponse = LinkSelfResponse.extend({
 	tiers: z.array(KeyNameIdResponse),
 });
-export function JournalExpansionsIndex(
-	this: WoWGameDataClient,
-): Promise<z.infer<typeof JournalExpansionsIndexResponse>> {
-	return this.request({
+export function JournalExpansionsIndex(this: WoWGameDataClient) {
+	return this.request<z.infer<typeof JournalExpansionsIndexResponse>>({
 		endpoint: `data/wow/journal-expansion/index`,
 		namespace: "static",
+		zod: JournalExpansionsIndexResponse,
 	});
 }
 export const JournalExpansionsResponse = LinkSelfResponse.extend({
@@ -30,25 +29,22 @@ export const JournalExpansionsResponse = LinkSelfResponse.extend({
 	raids: z.array(KeyNameIdResponse),
 	world_bosses: z.array(KeyNameIdResponse).optional(),
 });
-export function JournalExpansions(
-	this: WoWGameDataClient,
-	id: number,
-): Promise<z.infer<typeof JournalExpansionsResponse>> {
-	return this.request({
+export function JournalExpansions(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof JournalExpansionsResponse>>({
 		endpoint: `data/wow/journal-expansion/${id}`,
 		namespace: "static",
+		zod: JournalExpansionsResponse,
 	});
 }
 
 export const JournalEncounterIndexResponse = LinkSelfResponse.extend({
 	encounters: z.array(KeyNameIdResponse),
 });
-export function JournalEncounterIndex(
-	this: WoWGameDataClient,
-): Promise<z.infer<typeof JournalEncounterIndexResponse>> {
-	return this.request({
+export function JournalEncounterIndex(this: WoWGameDataClient) {
+	return this.request<z.infer<typeof JournalEncounterIndexResponse>>({
 		endpoint: `data/wow/journal-encounter/index`,
 		namespace: "static",
+		zod: JournalEncounterIndexResponse,
 	});
 }
 
@@ -124,32 +120,30 @@ export const JournalEncounterResponse = LinkSelfResponse.extend({
 		.optional(),
 	faction: Faction.optional(),
 });
-export function JournalEncounter(
-	this: WoWGameDataClient,
-	id: number,
-): Promise<z.infer<typeof JournalEncounterResponse>> {
-	return this.request({
+export function JournalEncounter(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof JournalEncounterResponse>>({
 		endpoint: `data/wow/journal-encounter/${id}`,
 		namespace: "static",
+		zod: JournalEncounterResponse,
 	});
 }
 
 export function JournalEncounterSearch(this: WoWGameDataClient) {
-	return this.request({
+	return this.request<unknown>({
 		endpoint: `data/wow/search/journal-encounter`,
 		namespace: "static",
+		zod: z.unknown(),
 	});
 }
 
 export const JournalInstanceIndexResponse = LinkSelfResponse.extend({
 	instances: z.array(KeyNameIdResponse),
 });
-export function JournalInstanceIndex(
-	this: WoWGameDataClient,
-): Promise<z.infer<typeof JournalInstanceIndexResponse>> {
-	return this.request({
+export function JournalInstanceIndex(this: WoWGameDataClient) {
+	return this.request<z.infer<typeof JournalInstanceIndexResponse>>({
 		endpoint: `data/wow/journal-instance/index`,
 		namespace: "static",
+		zod: JournalInstanceIndexResponse,
 	});
 }
 
@@ -192,13 +186,11 @@ export const JournalInstanceResponse = LinkSelfResponse.extend({
 	}),
 	order_index: z.number(),
 });
-export function JournalInstance(
-	this: WoWGameDataClient,
-	id: number,
-): Promise<z.infer<typeof JournalInstanceResponse>> {
-	return this.request({
+export function JournalInstance(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof JournalInstanceResponse>>({
 		endpoint: `data/wow/journal-instance/${id}`,
 		namespace: "static",
+		zod: JournalInstanceResponse,
 	});
 }
 
@@ -206,12 +198,10 @@ export const JournalInstanceMediaResponse = LinkSelfResponse.extend({
 	assets: MediaAssetArray,
 });
 
-export function JournalInstanceMedia(
-	this: WoWGameDataClient,
-	id: number,
-): Promise<z.infer<typeof JournalInstanceMediaResponse>> {
-	return this.request({
+export function JournalInstanceMedia(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof JournalInstanceMediaResponse>>({
 		endpoint: `data/wow/media/journal-instance/${id}`,
 		namespace: "static",
+		zod: JournalInstanceMediaResponse,
 	});
 }

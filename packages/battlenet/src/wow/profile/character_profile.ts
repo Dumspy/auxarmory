@@ -58,10 +58,11 @@ export function CharacterProfileSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-): Promise<z.infer<typeof CharacterProfileSummaryResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof CharacterProfileSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}`,
 		namespace: "profile",
+		zod: CharacterProfileSummaryResponse,
 	});
 }
 
@@ -74,9 +75,10 @@ export function CharacterProfileStatus(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-): Promise<z.infer<typeof CharacterProfileStatusResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof CharacterProfileStatusResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/status`,
 		namespace: "profile",
+		zod: CharacterProfileStatusResponse,
 	});
 }

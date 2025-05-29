@@ -65,9 +65,10 @@ export function CharacterStatisticsSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-): Promise<z.infer<typeof CharacterStatisticsSummaryResponse>> {
-	return this.request({
+) {
+	return this.request<z.infer<typeof CharacterStatisticsSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/statistics`,
 		namespace: "profile",
+		zod: CharacterStatisticsSummaryResponse,
 	});
 }

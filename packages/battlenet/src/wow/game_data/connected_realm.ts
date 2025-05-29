@@ -12,12 +12,11 @@ import {
 export const ConnectedRealmIndexResponse = LinkSelfResponse.extend({
 	connected_realms: z.array(KeyResponse),
 });
-export function ConnectedRealmIndex(
-	this: WoWGameDataClient,
-): Promise<z.infer<typeof ConnectedRealmIndexResponse>> {
-	return this.request({
+export function ConnectedRealmIndex(this: WoWGameDataClient) {
+	return this.request<z.infer<typeof ConnectedRealmIndexResponse>>({
 		endpoint: `data/wow/connected-realm/index`,
 		namespace: "dynamic",
+		zod: ConnectedRealmIndexResponse,
 	});
 }
 
@@ -61,23 +60,18 @@ export const ConnectedRealmResponse = LinkSelfResponse.extend({
 	mythic_leaderboards: KeyResponse,
 	auctions: KeyResponse,
 });
-export function ConnectedRealm(
-	this: WoWGameDataClient,
-	id: number,
-): Promise<z.infer<typeof ConnectedRealmResponse>> {
-	return this.request({
+export function ConnectedRealm(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof ConnectedRealmResponse>>({
 		endpoint: `data/wow/connected-realm/${id}`,
 		namespace: "dynamic",
+		zod: ConnectedRealmResponse,
 	});
 }
 
-export function ConnectedRealmSearch(
-	this: WoWGameDataClient,
-	_status: "UP" | "DOWN",
-) {
-	// TODO: Do correctly
-	return this.request({
-		endpoint: `data/wow/search/connected-realm`,
+export function ConnectedRealmSearch(this: WoWGameDataClient) {
+	return this.request<unknown>({
+		endpoint: "data/wow/search/connected-realm",
 		namespace: "dynamic",
+		zod: z.unknown(),
 	});
 }

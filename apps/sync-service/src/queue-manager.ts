@@ -1,19 +1,21 @@
-import {
+import type {
 	JobsOptions,
-	Queue,
 	QueueOptions,
-	Worker,
-	WorkerOptions,
+	WorkerOptions} from "bullmq";
+import {
+	Queue,
+	Worker
 } from "bullmq";
 
 import { processCharacterDataSync } from "./processors/index.js";
 import { createRedisConnection } from "./redis.js";
-import { JobPayloads, JobPayloadSchemas, JobType, JobTypes } from "./types.js";
+import type { JobPayloads, JobType} from "./types.js";
+import { JobTypes } from "./types.js";
 
 export class QueueManager {
 	private redis = createRedisConnection();
-	private queues: Map<JobType, Queue> = new Map();
-	private workers: Map<JobType, Worker> = new Map();
+	private queues = new Map<JobType, Queue>();
+	private workers = new Map<JobType, Worker>();
 
 	constructor() {
 		this.setupQueues();
@@ -74,7 +76,7 @@ export class QueueManager {
 
 			worker.on("progress", (job, progress) => {
 				console.log(
-					`⏳ Job ${job.id} (${jobType}) progress: ${progress}%`,
+					`⏳ Job ${job.id} (${jobType}) progress: ${JSON.stringify(progress)}`,
 				);
 			});
 		});
@@ -122,9 +124,9 @@ export class QueueManager {
 
 	// Method to get all queue statistics
 	async getAllQueueStats() {
-		const stats: Record<string, any> = {};
+		const stats: Record<string, unknown> = {};
 
-		for (const [jobType, queue] of this.queues) {
+		for (const [jobType, _queue] of this.queues) {
 			stats[jobType] = await this.getQueueStats(jobType);
 		}
 

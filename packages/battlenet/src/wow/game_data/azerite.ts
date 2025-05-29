@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from "..";
 import {
 	KeyNameIdResponse,
 	KeyResponse,
@@ -53,7 +53,7 @@ export function Azerite(
 export function AzeriteSearch(
 	this: WoWGameDataClient,
 	specilizationId?: number,
-	page: number = 1,
+	_page = 1,
 ) {
 	// TODO: do order by properly
 	return this.request({

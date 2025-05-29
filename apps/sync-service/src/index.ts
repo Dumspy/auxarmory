@@ -12,7 +12,7 @@ class SyncService {
 		this.setupRecurringJobs();
 	}
 
-	async start() {
+	start() {
 		console.log("✅ Sync Service started successfully");
 	}
 
@@ -30,13 +30,13 @@ class SyncService {
 			}
 		};
 
-		process.on("SIGTERM", () => shutdown("SIGTERM"));
-		process.on("SIGINT", () => shutdown("SIGINT"));
+		process.on("SIGTERM", () => void shutdown("SIGTERM"));
+		process.on("SIGINT", () => void shutdown("SIGINT"));
 
 		// Handle uncaught exceptions
 		process.on("uncaughtException", (error) => {
 			console.error("❌ Uncaught Exception:", error);
-			shutdown("uncaughtException");
+			void shutdown("uncaughtException");
 		});
 
 		process.on("unhandledRejection", (reason, promise) => {
@@ -46,11 +46,11 @@ class SyncService {
 				"reason:",
 				reason,
 			);
-			shutdown("unhandledRejection");
+			void shutdown("unhandledRejection");
 		});
 	}
 
-	private async setupRecurringJobs() {
+	private setupRecurringJobs() {
 		console.log("⏰ Setting up recurring jobs...");
 
 		try {
@@ -75,10 +75,7 @@ class SyncService {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
 	const service = new SyncService();
-	service.start().catch((error) => {
-		console.error("❌ Failed to start sync service:", error);
-		process.exit(1);
-	});
+	service.start();
 }
 
 export { SyncService };

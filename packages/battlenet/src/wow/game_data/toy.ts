@@ -1,4 +1,4 @@
-import { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from "..";
 
 export function ToyIndex(this: WoWGameDataClient) {
 	return this.request({

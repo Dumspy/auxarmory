@@ -1,6 +1,6 @@
-import { IncomingMessage, ServerResponse } from "http";
+import type { IncomingMessage, ServerResponse } from "http";
 import { createClient } from "@openauthjs/openauth/client";
-import { NodeHTTPCreateContextFnOptions } from "@trpc/server/adapters/node-http";
+import type { NodeHTTPCreateContextFnOptions } from "@trpc/server/adapters/node-http";
 
 import { subjects } from "@auxarmory/auth-subjects";
 
@@ -11,7 +11,6 @@ const client = createClient({
 
 export async function createContext({
 	req,
-	res,
 }: NodeHTTPCreateContextFnOptions<
 	IncomingMessage,
 	ServerResponse<IncomingMessage>
@@ -19,7 +18,7 @@ export async function createContext({
 	async function getUserIdFromHeader() {
 		const authHeader = req.headers.authorization;
 		if (authHeader) {
-			const token = authHeader.split(" ")[1] || "";
+			const token = authHeader.split(" ")[1] ?? "";
 			const verified = await client.verify(subjects, token);
 
 			if (verified.err) {

@@ -1,10 +1,12 @@
-import { JobsOptions, Queue } from "bullmq";
+import type { JobsOptions} from "bullmq";
+import { Queue } from "bullmq";
 
 import { env } from "./env.js";
-import { JobPayloads, JobType, JobTypes } from "./types.js";
+import type { JobPayloads, JobType} from "./types.js";
+import { JobTypes } from "./types.js";
 
 export class SyncServiceClient {
-	private queues: Map<JobType, Queue> = new Map();
+	private queues = new Map<JobType, Queue>();
 
 	constructor() {
 		Object.values(JobTypes).forEach((jobType) => {

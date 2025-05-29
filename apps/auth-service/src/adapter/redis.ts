@@ -1,8 +1,9 @@
 import type { RedisOptions } from "ioredis";
+import type {
+	StorageAdapter} from "@openauthjs/openauth/storage/storage";
 import {
 	joinKey,
-	splitKey,
-	StorageAdapter,
+	splitKey
 } from "@openauthjs/openauth/storage/storage";
 import { Redis } from "ioredis";
 
@@ -12,10 +13,10 @@ import { Redis } from "ioredis";
  * Creates a Redis KV store.
  * @param options - The config for the adapter.
  */
-export async function RedisStorage(
+export function RedisStorage(
 	options?: RedisOptions,
 ): Promise<StorageAdapter> {
-	const client = new Redis(options || {});
+	const client = new Redis(options ?? {});
 	client.on("error", (err: Error) =>
 		console.error("Redis Client Error", err),
 	);
@@ -27,7 +28,7 @@ export async function RedisStorage(
 			return JSON.parse(value) as Record<string, any>;
 		},
 
-		async set(key: string[], value: any, expiry?: Date) {
+		async set(key: string[], value: unknown, expiry?: Date) {
 			if (expiry) {
 				const expirySeconds = Math.ceil(
 					(expiry.getTime() - Date.now()) / 1000,

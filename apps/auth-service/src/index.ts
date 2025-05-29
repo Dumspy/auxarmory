@@ -1,8 +1,9 @@
 import { serve } from "@hono/node-server";
 import { issuer } from "@openauthjs/openauth";
+import type {
+	Oauth2Token} from "@openauthjs/openauth/provider/oauth2";
 import {
-	Oauth2Provider,
-	Oauth2Token,
+	Oauth2Provider
 } from "@openauthjs/openauth/provider/oauth2";
 import { cors } from "hono/cors";
 
@@ -13,11 +14,11 @@ import { SyncServiceClient } from "@auxarmory/sync-service/client";
 import { RedisStorage } from "./adapter/redis.js";
 import { env } from "./env.js";
 
-type UserInfoResponse = {
+interface UserInfoResponse {
 	sub: string;
 	id: number;
 	battletag: string;
-};
+}
 
 async function upsertAccount(oauth: Oauth2Token) {
 	const res = await fetch("https://eu.battle.net/oauth/userinfo", {
@@ -75,10 +76,11 @@ const app = issuer({
 	},
 	success: async (ctx, value) => {
 		switch (value.provider) {
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			case "battlenet": {
 				const upserted = await upsertAccount(value.tokenset);
 
-				syncServiceClient.addJob("sync-account-data", {
+				void syncServiceClient.addJob("sync-account-data", {
 					accountId: upserted.id,
 					region: "eu",
 				});

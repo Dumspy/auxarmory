@@ -1,4 +1,4 @@
-import { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from "..";
 
 export function WoWTokenIndex(this: WoWGameDataClient) {
 	return this.request({

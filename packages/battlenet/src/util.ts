@@ -1,6 +1,6 @@
-import { z } from "zod/v4";
+import type { z } from "zod/v4";
 
-import { CompleteLocaleResponse, LocaleResponse } from "./types";
+import type { CompleteLocaleResponse, LocaleResponse } from "./types";
 
 type ActualLocaleObjectKey = keyof z.infer<typeof CompleteLocaleResponse>;
 

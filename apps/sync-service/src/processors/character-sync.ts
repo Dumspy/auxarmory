@@ -1,6 +1,7 @@
-import { Job } from "bullmq";
+import type { Job } from "bullmq";
 
-import { JobPayloads, JobPayloadSchemas, JobTypes } from "../types.js";
+import type { JobPayloads} from "../types.js";
+import { JobPayloadSchemas, JobTypes } from "../types.js";
 
 export async function processCharacterDataSync(
 	job: Job<JobPayloads[typeof JobTypes.SYNC_CHARACTER_DATA]>,

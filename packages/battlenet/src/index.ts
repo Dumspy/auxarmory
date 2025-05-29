@@ -67,7 +67,7 @@ class BaseClient {
 		});
 
 		if (res.ok) {
-			return await res.json();
+			return await res.json() as Promise<T>;
 		}
 
 		// TODO: error handling i guess
@@ -137,7 +137,7 @@ export class ApplicationClient extends BaseClient {
 				`Failed to authenticate: ${res.status} ${res.statusText}`,
 			);
 		}
-		const data = await res.json();
+		const data = await res.json() as { access_token: string; expires_in: number };
 
 		this.accessToken = data.access_token;
 		this.accessTokenExpiresAt = Date.now() + data.expires_in * 1000;
@@ -146,7 +146,7 @@ export class ApplicationClient extends BaseClient {
 	public async request<T>(opt: ApplicationRequestOptions): Promise<T> {
 		await this.authenticate();
 
-		const authorization = this.accessToken || "";
+		const authorization = this.accessToken ?? "";
 		return super.request<T>({
 			...opt,
 			authorization,

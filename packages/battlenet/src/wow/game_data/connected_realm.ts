@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from "..";
 import {
 	KeyNameIdResponse,
 	KeyResponse,
@@ -73,7 +73,7 @@ export function ConnectedRealm(
 
 export function ConnectedRealmSearch(
 	this: WoWGameDataClient,
-	status: "UP" | "DOWN",
+	_status: "UP" | "DOWN",
 ) {
 	// TODO: Do correctly
 	return this.request({

@@ -1,4 +1,4 @@
-import { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from "..";
 
 export function PlayableSpecializationIndex(this: WoWGameDataClient) {
 	return this.request({

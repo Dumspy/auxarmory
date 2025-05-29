@@ -1,9 +1,8 @@
 import { z } from "zod/v4";
 
-import { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from "..";
 import {
 	KeyNameIdResponse,
-	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
 	MediaAssetArray,

@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import { WoWProfileClient } from "..";
+import type { WoWProfileClient } from "..";
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,

@@ -1,4 +1,4 @@
-import { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from "..";
 
 export function ItemAppearance(this: WoWGameDataClient, id: number) {
 	return this.request({

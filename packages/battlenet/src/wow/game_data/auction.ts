@@ -1,4 +1,4 @@
-import { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from "..";
 
 export function Auctions(this: WoWGameDataClient, realm: number) {
 	return this.request({

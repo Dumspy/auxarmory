@@ -1,4 +1,4 @@
-import { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from "..";
 
 export function MyhticKeystoneAffixesIndex(this: WoWGameDataClient) {
 	return this.request({

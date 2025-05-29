@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from "..";
 import { KeyNameIdResponse, LinkSelfResponse } from "../../types";
 import { CharacterResponse } from "../types/character";
 

@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "generate": "node prisma/generate-schema.js && prisma generate --schema=./prisma/schema.generated",
+    "generate": "node prisma/generate-schema.cjs && prisma generate --schema=./prisma/schema.generated",
     "db:push" : "prisma db push --schema=./prisma/schema.generated",
     "build": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",

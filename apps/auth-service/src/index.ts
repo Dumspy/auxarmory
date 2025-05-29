@@ -1,10 +1,7 @@
+import type { Oauth2Token } from "@openauthjs/openauth/provider/oauth2";
 import { serve } from "@hono/node-server";
 import { issuer } from "@openauthjs/openauth";
-import type {
-	Oauth2Token} from "@openauthjs/openauth/provider/oauth2";
-import {
-	Oauth2Provider
-} from "@openauthjs/openauth/provider/oauth2";
+import { Oauth2Provider } from "@openauthjs/openauth/provider/oauth2";
 import { cors } from "hono/cors";
 
 import { subjects } from "@auxarmory/auth-subjects";

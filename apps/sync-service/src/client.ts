@@ -1,8 +1,8 @@
-import type { JobsOptions} from "bullmq";
+import type { JobsOptions } from "bullmq";
 import { Queue } from "bullmq";
 
+import type { JobPayloads, JobType } from "./types.js";
 import { env } from "./env.js";
-import type { JobPayloads, JobType} from "./types.js";
 import { JobTypes } from "./types.js";
 
 export class SyncServiceClient {

@@ -493,13 +493,16 @@ class WoWProfileClient {
 	}
 
 	AccountCollectionIndex = AccountCollectionIndex.bind(this);
-	AccountHeirloomsCollectionSummary = AccountHeirloomsCollectionSummary.bind(this);
+	AccountHeirloomsCollectionSummary =
+		AccountHeirloomsCollectionSummary.bind(this);
 	AccountMountsCollectionSummary = AccountMountsCollectionSummary.bind(this);
 	AccountPetsCollectionSummary = AccountPetsCollectionSummary.bind(this);
 	AccountProfileSummary = AccountProfileSummary.bind(this);
 	AccountToysCollectionSummary = AccountToysCollectionSummary.bind(this);
-	AccountTransmogCollectionSummary = AccountTransmogCollectionSummary.bind(this);
-	ProtectedCharacterProfileSummary = ProtectedCharacterProfileSummary.bind(this);
+	AccountTransmogCollectionSummary =
+		AccountTransmogCollectionSummary.bind(this);
+	ProtectedCharacterProfileSummary =
+		ProtectedCharacterProfileSummary.bind(this);
 }
 
 export { WoWGameDataClient, WoWProfileClient };

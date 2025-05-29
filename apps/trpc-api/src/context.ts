@@ -1,6 +1,6 @@
+import type { NodeHTTPCreateContextFnOptions } from "@trpc/server/adapters/node-http";
 import type { IncomingMessage, ServerResponse } from "http";
 import { createClient } from "@openauthjs/openauth/client";
-import type { NodeHTTPCreateContextFnOptions } from "@trpc/server/adapters/node-http";
 
 import { subjects } from "@auxarmory/auth-subjects";
 

@@ -1,10 +1,6 @@
+import type { StorageAdapter } from "@openauthjs/openauth/storage/storage";
 import type { RedisOptions } from "ioredis";
-import type {
-	StorageAdapter} from "@openauthjs/openauth/storage/storage";
-import {
-	joinKey,
-	splitKey
-} from "@openauthjs/openauth/storage/storage";
+import { joinKey, splitKey } from "@openauthjs/openauth/storage/storage";
 import { Redis } from "ioredis";
 
 // Source https://github.com/toolbeam/openauth/pull/237
@@ -13,9 +9,7 @@ import { Redis } from "ioredis";
  * Creates a Redis KV store.
  * @param options - The config for the adapter.
  */
-export function RedisStorage(
-	options?: RedisOptions,
-): StorageAdapter {
+export function RedisStorage(options?: RedisOptions): StorageAdapter {
 	const client = new Redis(options ?? {});
 	client.on("error", (err: Error) =>
 		console.error("Redis Client Error", err),

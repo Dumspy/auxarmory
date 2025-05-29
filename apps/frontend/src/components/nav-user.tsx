@@ -126,7 +126,7 @@ export function NavUser({
 								if (loggedIn) {
 									logout();
 								} else {
-									login();
+									void login();
 								}
 							}}
 						>

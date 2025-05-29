@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { createClient } from "@openauthjs/openauth/client";
+import { createClient  } from "@openauthjs/openauth/client";
+import type {Challenge} from "@openauthjs/openauth/client";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 
 import type { AppRouter } from "../../../../trpc-api/src/index.js";
@@ -39,11 +40,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		initializing.current = false;
 
 		if (code && state) {
-			callback(code, state);
+			void callback(code, state);
 			return;
 		}
 
-		auth();
+		void auth();
 	}, []);
 
 	async function auth() {
@@ -95,16 +96,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	async function callback(code: string, state: string) {
-		const challenge = JSON.parse(sessionStorage.getItem("challenge")!);
+		const challenge = JSON.parse(sessionStorage.getItem("challenge") ?? '') as Challenge | null;
 		if (code) {
-			if (state === challenge.state && challenge.verifier) {
+			if (state === challenge?.state && challenge.verifier) {
 				const exchanged = await authClient.exchange(
-					code!,
+					code,
 					location.origin,
 					challenge.verifier,
 				);
 				if (!exchanged.err) {
-					token.current = exchanged.tokens?.access;
+					token.current = exchanged.tokens.access;
 					localStorage.setItem("refresh", exchanged.tokens.refresh);
 				}
 			}

@@ -29,10 +29,6 @@ export function CharacterSwitcher({
 	const { isMobile } = useSidebar();
 	const [activeCharacter, setActiveCharacter] = React.useState(characters[0]);
 
-	if (!activeCharacter) {
-		return null;
-	}
-
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>

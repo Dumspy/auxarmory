@@ -26,12 +26,12 @@ const routeIcons: Record<string, LucideIcon> = {
 	"/wishlist": BookmarkIcon,
 };
 
-type NavItem = {
+interface NavItem {
 	title: string;
 	path: string;
 	icon?: LucideIcon;
 	items?: NavItem[];
-};
+}
 
 export function NavMain() {
 	const state = useRouterState();
@@ -68,7 +68,7 @@ export function NavMain() {
 				const parent = items.find((item) => item.path === parentPath);
 
 				if (parent) {
-					if (!parent.items) parent.items = [];
+					parent.items ??= [];
 					parent.items.push({
 						title:
 							segments[1].charAt(0).toUpperCase() +

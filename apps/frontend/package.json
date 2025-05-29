@@ -28,18 +28,16 @@
     "tailwindcss": "^4.1.7"
   },
   "devDependencies": {
+    "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/prettier-config": "workspace:*",
-    "@eslint/js": "^9.25.0",
     "@tanstack/router-plugin": "^1.120.5",
     "@types/node": "catalog:",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react-swc": "^3.9.0",
-    "eslint": "^9.25.0",
-    "eslint-plugin-react-hooks": "^6.0.0-rc.1",
-    "eslint-plugin-react-refresh": "^0.4.19",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
     "globals": "^16.0.0",
-    "typescript-eslint": "^8.31.1",
     "vite": "^6.3.5"
   },
   "prettier": "@auxarmory/prettier-config"

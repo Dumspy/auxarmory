@@ -1,4 +1,5 @@
-import { createClient, type RedisClientOptions } from 'redis'
+import { Redis } from 'ioredis'
+import type { RedisOptions } from 'ioredis'
 import { joinKey, splitKey, StorageAdapter } from '@openauthjs/openauth/storage/storage'
 
 // Source https://github.com/toolbeam/openauth/pull/237
@@ -7,10 +8,9 @@ import { joinKey, splitKey, StorageAdapter } from '@openauthjs/openauth/storage/
  * Creates a Redis KV store.
  * @param options - The config for the adapter.
  */
-export async function RedisStorage(options?: RedisClientOptions): Promise<StorageAdapter> {
-  const client = await createClient(options)
-    .on('error', (err) => console.error('Redis Client Error', err))
-    .connect()
+export async function RedisStorage(options?: RedisOptions): Promise<StorageAdapter> {
+  const client = new Redis(options || {})
+  client.on('error', (err: Error) => console.error('Redis Client Error', err))
 
   return {
     async get(key: string[]) {
@@ -20,8 +20,12 @@ export async function RedisStorage(options?: RedisClientOptions): Promise<Storag
     },
 
     async set(key: string[], value: any, expiry?: Date) {
-      const _opts = expiry ? { EXAT: expiry.getTime() } : {}
-      await client.set(joinKey(key), JSON.stringify(value), _opts)
+      if (expiry) {
+        const expirySeconds = Math.ceil((expiry.getTime() - Date.now()) / 1000)
+        await client.setex(joinKey(key), expirySeconds, JSON.stringify(value))
+      } else {
+        await client.set(joinKey(key), JSON.stringify(value))
+      }
     },
 
     async remove(key: string[]) {
@@ -32,9 +36,7 @@ export async function RedisStorage(options?: RedisClientOptions): Promise<Storag
       let cursor = "0"
 
       while (true) {
-        let { cursor: next, keys } = await client.scan(cursor, {
-          MATCH: `${joinKey(prefix)}*`,
-        })
+        const [next, keys] = await client.scan(cursor, "MATCH", `${joinKey(prefix)}*`)
 
         for (const key of keys) {
           const value = await client.get(key)
@@ -42,12 +44,6 @@ export async function RedisStorage(options?: RedisClientOptions): Promise<Storag
             yield [splitKey(key), JSON.parse(value)]
           }
         }
-
-        // Number(..) cant handle 64bit integer
-        if (BigInt(next) === BigInt(0)) {
-          break
-        }
-
         cursor = next
       }
     },

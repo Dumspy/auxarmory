@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
     "generate": "node prisma/generate-schema.js && prisma generate --schema=./prisma/schema.generated",
     "db:push" : "prisma db push --schema=./prisma/schema.generated",
     "build": "tsc",
@@ -18,6 +19,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@auxarmory/prettier-config": "workspace:*",
     "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
     "@types/node": "^20.17.47",

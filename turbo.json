@@ -6,6 +6,9 @@
       "dependsOn": ["generate", "^build"],
     "outputs": ["dist/**"]
     },
+    "clean": {
+      "cache": false
+    },
     "format": {
       "outputs": [".cache/.prettiercache"],
       "outputLogs": "new-only"

@@ -19,6 +19,7 @@
     }
   },
   "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -34,6 +35,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@auxarmory/prettier-config": "workspace:*",
     "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
     "@types/node": "catalog:",

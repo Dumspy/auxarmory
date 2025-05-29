@@ -17,12 +17,9 @@ coverage
 
 # Turbo
 .turbo
-
-# Vercel
-.vercel
+.cache
 
 # Build Outputs
-.next/
 out/
 build
 dist
@@ -39,3 +36,7 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Prisma
+generated/
+schema.generated

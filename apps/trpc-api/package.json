@@ -11,6 +11,7 @@
     }
   },
   "scripts": {
+    "clean": "git clean -xdf .cache .turbo node_modules",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -27,6 +28,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@auxarmory/prettier-config": "workspace:*",
     "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
     "@types/cors": "^2.8.18",

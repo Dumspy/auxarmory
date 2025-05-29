@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
     "build": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint ."
@@ -16,6 +17,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@auxarmory/prettier-config": "workspace:*",
     "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
     "typescript": "catalog:"

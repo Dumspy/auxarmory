@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -27,6 +28,7 @@
     "tailwindcss": "^4.1.7"
   },
   "devDependencies": {
+    "@auxarmory/prettier-config": "workspace:*",
     "@eslint/js": "^9.25.0",
     "@tanstack/router-plugin": "^1.120.5",
     "@types/node": "^20.17.47",

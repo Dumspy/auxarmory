@@ -4,8 +4,8 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint ."
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +37,5 @@
     "./lib/*": "./src/lib/*",
     "./components/*": "./src/components/*",
     "./hooks/*": "./src/hooks/*"
-  },
-  "prettier": "@auxarmory/prettier-config"
+  }
 }

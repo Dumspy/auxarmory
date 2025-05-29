@@ -18,6 +18,9 @@ catalogs:
     '@types/node':
       specifier: ^22.14.8
       version: 22.15.24
+    eslint:
+      specifier: ^9.26.0
+      version: 9.26.0
     ioredis:
       specifier: ^5.4.2
       version: 5.6.1
@@ -84,12 +87,21 @@ importers:
       '@auxarmory/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@auxarmory/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier-config
       '@auxarmory/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
       '@types/node':
         specifier: 'catalog:'
         version: 22.15.24
+      eslint:
+        specifier: 'catalog:'
+        version: 9.26.0(jiti@2.4.2)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.5.3
       tsx:
         specifier: ^4.19.4
         version: 4.19.4
@@ -139,6 +151,9 @@ importers:
         specifier: ^4.1.7
         version: 4.1.7
     devDependencies:
+      '@auxarmory/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier-config
       '@eslint/js':
         specifier: ^9.25.0
         version: 9.26.0
@@ -200,6 +215,9 @@ importers:
       '@auxarmory/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@auxarmory/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier-config
       '@auxarmory/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -234,6 +252,9 @@ importers:
       '@auxarmory/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@auxarmory/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier-config
       '@auxarmory/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -259,6 +280,9 @@ importers:
       '@auxarmory/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@auxarmory/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier-config
       '@auxarmory/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -275,6 +299,9 @@ importers:
       '@auxarmory/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@auxarmory/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier-config
       '@auxarmory/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -303,6 +330,9 @@ importers:
       '@auxarmory/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@auxarmory/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier-config
       '@auxarmory/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config

@@ -15,7 +15,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@auxarmory/auth-subjects": "workspace:*",
     "@openauthjs/openauth": "^0.4.3",

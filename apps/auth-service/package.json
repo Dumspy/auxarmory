@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@auxarmory/sync-service": "workspace:*",
     "@auxarmory/db": "workspace:*",
     "@auxarmory/auth-subjects": "workspace:*",
     "@hono/node-server": "^1.14.2",

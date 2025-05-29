@@ -6,6 +6,7 @@ import { env } from "./env.js"
 import { Oauth2Provider, Oauth2Token } from "@openauthjs/openauth/provider/oauth2"
 import { RedisStorage } from "./adapter/redis.js"
 import { dbClient } from "@auxarmory/db"
+import { SyncServiceClient } from "@auxarmory/sync-service/client"
 
 type UserInfoResponse = {
   sub: string,
@@ -25,7 +26,6 @@ async function upsertAccount(oauth: Oauth2Token) {
   }
 
   const userInfo = await res.json() as UserInfoResponse
-
 
   const account = await dbClient.account.upsert({
     where: { id: userInfo.id },
@@ -48,6 +48,8 @@ async function upsertAccount(oauth: Oauth2Token) {
   }
 }
 
+const syncServiceClient = new SyncServiceClient()
+
 const app = issuer({
   subjects,
   storage: await RedisStorage(),
@@ -59,7 +61,7 @@ const app = issuer({
         authorization: "https://eu.battle.net/oauth/authorize ",
         token: "https://eu.battle.net/oauth/token",
       },
-      scopes: ["wow.profile"],
+      scopes: ["openid", "wow.profile"],
       query: {
         "grant_type": "authorization_code",
         "response_type": "code",
@@ -70,6 +72,14 @@ const app = issuer({
     switch (value.provider) {
       case "battlenet": {
         const upserted = await upsertAccount(value.tokenset)
+
+        syncServiceClient.addJob("sync-character-data", {
+          characterId: "",
+          region: "us",
+          realm: "",
+          characterName: "",
+          priority: 0
+        })
 
         return await ctx.subject("user", {
           id: upserted.id, 

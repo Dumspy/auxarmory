@@ -1,0 +1,40 @@
+{
+  "name": "@auxarmory/sync-service",
+  "version": "1.0.0",
+  "description": "Background job processing service using BullMQ",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts", 
+      "default": "./src/client.ts"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./src/types.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@auxarmory/db": "workspace:*",
+    "@auxarmory/battlenet": "workspace:*",
+    "@t3-oss/env-core": "0.13.4",
+    "bullmq": "^5.36.1",
+    "ioredis": "^5.4.2",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@auxarmory/eslint-config": "workspace:*",
+    "@auxarmory/typescript-config": "workspace:*",
+    "@types/node": "^20.17.47",
+    "tsx": "^4.19.4",
+    "typescript": "5.8.2"
+  }
+}

@@ -1,4 +1,5 @@
 import "./env.js";
+
 import { QueueManager } from "./queue-manager.js";
 
 class SyncService {
@@ -18,7 +19,7 @@ class SyncService {
 	private setupGracefulShutdown() {
 		const shutdown = async (signal: string) => {
 			console.log(`\n🛑 Received ${signal}, shutting down gracefully...`);
-			
+
 			try {
 				await this.queueManager.shutdown();
 				console.log("✅ Graceful shutdown completed");
@@ -31,7 +32,7 @@ class SyncService {
 
 		process.on("SIGTERM", () => shutdown("SIGTERM"));
 		process.on("SIGINT", () => shutdown("SIGINT"));
-		
+
 		// Handle uncaught exceptions
 		process.on("uncaughtException", (error) => {
 			console.error("❌ Uncaught Exception:", error);
@@ -39,7 +40,12 @@ class SyncService {
 		});
 
 		process.on("unhandledRejection", (reason, promise) => {
-			console.error("❌ Unhandled Rejection at:", promise, "reason:", reason);
+			console.error(
+				"❌ Unhandled Rejection at:",
+				promise,
+				"reason:",
+				reason,
+			);
 			shutdown("unhandledRejection");
 		});
 	}

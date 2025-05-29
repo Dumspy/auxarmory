@@ -39,7 +39,10 @@ export function ProfessionRecipe(this: WoWGameDataClient, recipeId: number) {
 	});
 }
 
-export function ProfessionRecipeMedia(this: WoWGameDataClient, recipeId: number) {
+export function ProfessionRecipeMedia(
+	this: WoWGameDataClient,
+	recipeId: number,
+) {
 	return this.request({
 		endpoint: `data/wow/media/recipe/${recipeId}`,
 		namespace: "static",

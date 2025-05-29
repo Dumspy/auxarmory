@@ -1,11 +1,12 @@
 import { z } from "zod/v4";
+
+import { ColorObject, Faction } from ".";
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LocaleResponse,
 	MediaKeyResponse,
 } from "../../types";
-import { ColorObject, Faction } from ".";
 
 export const ItemIventoryType = z.strictObject({
 	type: z.enum([
@@ -237,9 +238,11 @@ export const PreviewItem = BaseItem.extend({
 					.optional(),
 			})
 			.optional(),
-		set: BaseItem.shape.set.extend({
-			legacy: LocaleResponse.optional(),
-		}).optional(),
+		set: BaseItem.shape.set
+			.extend({
+				legacy: LocaleResponse.optional(),
+			})
+			.optional(),
 	})
 	.extend({
 		// New fields

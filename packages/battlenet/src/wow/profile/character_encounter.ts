@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+
 import { WoWGameDataClient } from "..";
 import {
 	KeyNameIdResponse,
@@ -95,7 +96,7 @@ export const CharacterRaidResponse = LinkSelfResponse.extend({
 									"MYTHIC",
 									"LEGACY_25_MAN_HEROIC",
 									"LEGACY_10_MAN",
-									"LEGACY_10_MAN_HEROIC"
+									"LEGACY_10_MAN_HEROIC",
 								]),
 								name: LocaleResponse,
 							}),

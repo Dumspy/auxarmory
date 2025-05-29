@@ -1,12 +1,16 @@
 import { Job } from "bullmq";
-import { JobPayloads, JobPayloadSchemas, JobTypes } from "../types.js";
+
 import { AccountClient } from "@auxarmory/battlenet";
 import { dbClient } from "@auxarmory/db";
+
+import { JobPayloads, JobPayloadSchemas, JobTypes } from "../types.js";
 
 export async function processAccountDataSync(
 	job: Job<JobPayloads[typeof JobTypes.SYNC_ACCOUNT_DATA]>,
 ) {
-	const { accountId, region } = JobPayloadSchemas[JobTypes.SYNC_ACCOUNT_DATA].parse(job.data);
+	const { accountId, region } = JobPayloadSchemas[
+		JobTypes.SYNC_ACCOUNT_DATA
+	].parse(job.data);
 
 	const account = await dbClient.account.findUnique({
 		where: { id: accountId },
@@ -17,7 +21,9 @@ export async function processAccountDataSync(
 	}
 
 	if (account.bnet_expires_at < new Date()) {
-		throw new Error(`Account with ID ${accountId} has expired Battle.net access`,);
+		throw new Error(
+			`Account with ID ${accountId} has expired Battle.net access`,
+		);
 	}
 
 	const apiClient = new AccountClient({
@@ -30,7 +36,9 @@ export async function processAccountDataSync(
 	try {
 		const accountProfile = await apiClient.wow.AccountProfileSummary();
 
-		const characters = accountProfile.wow_accounts.flatMap((wowAccount) => wowAccount.characters,);
+		const characters = accountProfile.wow_accounts.flatMap(
+			(wowAccount) => wowAccount.characters,
+		);
 
 		console.log(
 			`Found ${characters.length} characters for account ${accountId}`,
@@ -40,18 +48,20 @@ export async function processAccountDataSync(
 		await job.updateProgress(progress);
 
 		for (const character of characters) {
-			console.log(`Processing character ${character.name} (${character.id})`);
+			console.log(
+				`Processing character ${character.name} (${character.id})`,
+			);
 
 			const realm = await dbClient.realm.upsert({
 				where: { id: character.realm.id },
 				create: {
 					id: character.realm.id,
-					name: 'temp', // Placeholder, will be updated later
+					name: "temp", // Placeholder, will be updated later
 					slug: character.realm.slug,
 					region,
 				},
 				update: {
-					name: 'temp',
+					name: "temp",
 					slug: character.realm.slug,
 				},
 			});
@@ -67,8 +77,8 @@ export async function processAccountDataSync(
 					equippedItemLevel: 0, // Placeholder, will be updated later
 
 					faction: character.faction.type,
-					race: 'BLOOD_ELF', // Placeholder, will be updated later
-					class: 'WARRIOR', // Placeholder, will be updated later
+					race: "BLOOD_ELF", // Placeholder, will be updated later
+					class: "WARRIOR", // Placeholder, will be updated later
 
 					realmId: realm.id,
 					guildId: null, // Placeholder, will be updated later
@@ -79,11 +89,11 @@ export async function processAccountDataSync(
 					level: character.level,
 
 					faction: character.faction.type,
-					race: 'BLOOD_ELF', // Placeholder, will be updated later
-					class: 'WARRIOR', // Placeholder, will be updated later
+					race: "BLOOD_ELF", // Placeholder, will be updated later
+					class: "WARRIOR", // Placeholder, will be updated later
 
 					realmId: realm.id,
-				}
+				},
 			});
 
 			progress += 90 / characters.length;
@@ -92,8 +102,8 @@ export async function processAccountDataSync(
 
 		console.log(`Successfully synced account data for ${accountId}`);
 
-			return {
-				success: true,
+		return {
+			success: true,
 			accountId,
 			processedAt: new Date().toISOString(),
 		};

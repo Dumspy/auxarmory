@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+
 import { WoWGameDataClient } from "..";
 import {
 	KeyNameIdResponse,
@@ -11,7 +12,7 @@ import { Faction } from "../types";
 
 export const AchievementIndexResponse = LinkSelfResponse.extend({
 	achievements: z.array(KeyNameIdResponse),
-})
+});
 
 export function AchievementsIndex(
 	this: WoWGameDataClient,
@@ -67,7 +68,7 @@ export const AchievementResponse = LinkSelfResponse.extend({
 	reward_description: LocaleResponse.optional(),
 	reward_item: KeyNameIdResponse.optional(),
 	guild_reward_items: z.array(KeyNameIdResponse).optional(),
-})
+});
 
 export function Achievement(
 	this: WoWGameDataClient,
@@ -82,7 +83,7 @@ export function Achievement(
 export const AchievementMediaResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	assets: MediaAssetArray,
-})
+});
 
 export function AchievementMedia(
 	this: WoWGameDataClient,
@@ -98,7 +99,7 @@ export const AchievementCategoryIndexResponse = LinkSelfResponse.extend({
 	categories: z.array(KeyNameIdResponse),
 	root_categories: z.array(KeyNameIdResponse),
 	guild_categories: z.array(KeyNameIdResponse),
-})
+});
 
 export function AchievementCategoryIndex(
 	this: WoWGameDataClient,
@@ -127,7 +128,7 @@ export const AchievementCategoryResponse = LinkSelfResponse.extend({
 		}),
 	}),
 	display_order: z.number(),
-})
+});
 
 export function AchievementCategory(
 	this: WoWGameDataClient,

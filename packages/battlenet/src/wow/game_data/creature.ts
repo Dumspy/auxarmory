@@ -1,12 +1,13 @@
 import { z } from "zod/v4";
+
 import { WoWGameDataClient } from "..";
 import {
-	LinkSelfResponse,
 	KeyNameIdResponse,
-	LocaleResponse,
-	MediaKeyResponse,
-	MediaAssetArray,
 	KeyResponse,
+	LinkSelfResponse,
+	LocaleResponse,
+	MediaAssetArray,
+	MediaKeyResponse,
 } from "../../types";
 
 export const CreatureResponse = LinkSelfResponse.extend({
@@ -14,10 +15,15 @@ export const CreatureResponse = LinkSelfResponse.extend({
 	name: LocaleResponse,
 	type: KeyNameIdResponse,
 	family: KeyNameIdResponse.optional(),
-	creature_displays: z.array(z.strictObject({ key: KeyResponse, id: z.number() })),
+	creature_displays: z.array(
+		z.strictObject({ key: KeyResponse, id: z.number() }),
+	),
 	is_tameable: z.boolean(),
-})
-export function Creature(this: WoWGameDataClient, id: number): Promise<z.infer<typeof CreatureResponse>> {
+});
+export function Creature(
+	this: WoWGameDataClient,
+	id: number,
+): Promise<z.infer<typeof CreatureResponse>> {
 	return this.request({
 		endpoint: `data/wow/creature/${id}`,
 		namespace: "static",
@@ -34,7 +40,7 @@ export function CreatureSearch(this: WoWGameDataClient) {
 export const CreatureMediaResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	assets: MediaAssetArray,
-})
+});
 export function CreatureMedia(this: WoWGameDataClient, id: number) {
 	return this.request({
 		endpoint: `data/wow/media/creature-display/${id}`,
@@ -44,7 +50,7 @@ export function CreatureMedia(this: WoWGameDataClient, id: number) {
 
 export const CreatueFamilyIndexResponse = LinkSelfResponse.extend({
 	creature_families: z.array(KeyNameIdResponse),
-})
+});
 export function CreatueFamilyIndex(
 	this: WoWGameDataClient,
 ): Promise<z.infer<typeof CreatueFamilyIndexResponse>> {
@@ -59,7 +65,7 @@ export const CreatueFamilyResponse = LinkSelfResponse.extend({
 	name: LocaleResponse,
 	specialization: KeyNameIdResponse.optional(),
 	media: MediaKeyResponse.optional(),
-})
+});
 export function CreatueFamily(this: WoWGameDataClient, id: number) {
 	return this.request({
 		endpoint: `data/wow/creature-family/${id}`,
@@ -70,7 +76,7 @@ export function CreatueFamily(this: WoWGameDataClient, id: number) {
 export const CreatueFamilyMediaResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	assets: MediaAssetArray,
-})
+});
 export function CreatueFamilyMedia(
 	this: WoWGameDataClient,
 	id: number,
@@ -83,7 +89,7 @@ export function CreatueFamilyMedia(
 
 export const CreatureTypeIndexResponse = LinkSelfResponse.extend({
 	creature_types: z.array(KeyNameIdResponse),
-})
+});
 export function CreatureTypeIndex(
 	this: WoWGameDataClient,
 ): Promise<z.infer<typeof CreatureTypeIndexResponse>> {
@@ -96,7 +102,7 @@ export function CreatureTypeIndex(
 export const CreatureTypeResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	name: LocaleResponse,
-})
+});
 export function CreatureType(
 	this: WoWGameDataClient,
 	id: number,

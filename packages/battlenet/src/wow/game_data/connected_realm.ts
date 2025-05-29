@@ -1,11 +1,20 @@
-import { z } from "zod/v4"
-import { WoWGameDataClient } from ".."
-import { KeyNameIdResponse, KeyResponse, LinkSelfResponse, LocaleResponse, LocaleString } from "../../types"
+import { z } from "zod/v4";
+
+import { WoWGameDataClient } from "..";
+import {
+	KeyNameIdResponse,
+	KeyResponse,
+	LinkSelfResponse,
+	LocaleResponse,
+	LocaleString,
+} from "../../types";
 
 export const ConnectedRealmIndexResponse = LinkSelfResponse.extend({
 	connected_realms: z.array(KeyResponse),
-})
-export function ConnectedRealmIndex(this: WoWGameDataClient): Promise<z.infer<typeof ConnectedRealmIndexResponse>> {
+});
+export function ConnectedRealmIndex(
+	this: WoWGameDataClient,
+): Promise<z.infer<typeof ConnectedRealmIndexResponse>> {
 	return this.request({
 		endpoint: `data/wow/connected-realm/index`,
 		namespace: "dynamic",
@@ -39,30 +48,33 @@ export const ConnectedRealmResponse = LinkSelfResponse.extend({
 				"America/Sao_Paulo",
 				"Australia/Melbourne",
 				"Europe/Paris",
-				"Asia/Seoul"
+				"Asia/Seoul",
 			]),
 			type: z.strictObject({
-				type: z.enum([
-					"NORMAL",
-					"RP",
-				]),
+				type: z.enum(["NORMAL", "RP"]),
 				name: LocaleResponse,
 			}),
 			is_tournament: z.boolean(),
 			slug: z.string(),
-		})
+		}),
 	),
 	mythic_leaderboards: KeyResponse,
 	auctions: KeyResponse,
-})
-export function ConnectedRealm(this: WoWGameDataClient, id: number): Promise<z.infer<typeof ConnectedRealmResponse>> {
+});
+export function ConnectedRealm(
+	this: WoWGameDataClient,
+	id: number,
+): Promise<z.infer<typeof ConnectedRealmResponse>> {
 	return this.request({
 		endpoint: `data/wow/connected-realm/${id}`,
 		namespace: "dynamic",
 	});
 }
 
-export function ConnectedRealmSearch(this: WoWGameDataClient, status: "UP" | "DOWN") {
+export function ConnectedRealmSearch(
+	this: WoWGameDataClient,
+	status: "UP" | "DOWN",
+) {
 	// TODO: Do correctly
 	return this.request({
 		endpoint: `data/wow/search/connected-realm`,

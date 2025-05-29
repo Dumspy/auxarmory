@@ -1,6 +1,12 @@
 import { z } from "zod/v4";
+
 import { WoWGameDataClient } from "..";
-import { KeyNameIdResponse, KeyResponse, LinkSelfResponse, LocaleResponse } from "../../types";
+import {
+	KeyNameIdResponse,
+	KeyResponse,
+	LinkSelfResponse,
+	LocaleResponse,
+} from "../../types";
 import { Faction, Gender, Realm } from "../types";
 
 export const CharacterProfileSummaryResponse = LinkSelfResponse.extend({
@@ -46,7 +52,7 @@ export const CharacterProfileSummaryResponse = LinkSelfResponse.extend({
 		soulbinds: KeyResponse,
 	}),
 	name_search: z.string(),
-})
+});
 
 export function CharacterProfileSummary(
 	this: WoWGameDataClient,
@@ -62,7 +68,7 @@ export function CharacterProfileSummary(
 export const CharacterProfileStatusResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	is_valid: z.boolean(),
-})
+});
 
 export function CharacterProfileStatus(
 	this: WoWGameDataClient,

@@ -19,26 +19,26 @@ import {
 } from "./game_data/connected_realm";
 import {
 	Covenant,
+	CovenantConduit,
+	CovenantConduitIndex,
 	CovenantIndex,
 	CovenantMedia,
 	CovenantSoulbind,
 	CovenantSoulbindIndex,
-	CovenantConduit,
-	CovenantConduitIndex,
 } from "./game_data/covenant";
 import {
-	Creature,
-	CreatureSearch,
-	CreatureMedia,
-	CreatueFamilyIndex,
 	CreatueFamily,
+	CreatueFamilyIndex,
 	CreatueFamilyMedia,
-	CreatureTypeIndex,
+	Creature,
+	CreatureMedia,
+	CreatureSearch,
 	CreatureType,
+	CreatureTypeIndex,
 } from "./game_data/creature";
 import {
-	GuildCrestIndex,
 	GuildCrestBorderMedia,
+	GuildCrestIndex,
 	GuildCrestsEmblemMedia,
 } from "./game_data/guild_crest";
 import { Heirloom, HeirloomIndex } from "./game_data/heirloom";
@@ -47,9 +47,9 @@ import {
 	ItemClass,
 	ItemClassIndex,
 	ItemMedia,
+	ItemSearch,
 	ItemSet,
 	ItemSetIndex,
-	ItemSearch,
 	ItemSubClass,
 } from "./game_data/item";
 import {
@@ -72,26 +72,26 @@ import {
 } from "./game_data/journal";
 import { MediaSearch } from "./game_data/media";
 import {
-	ModifiedCraftingIndex,
 	ModifiedCraftingCategory,
 	ModifiedCraftingCategoryIndex,
+	ModifiedCraftingIndex,
 	ModifiedCraftingReagentSlotType,
 	ModifiedCraftingReagentSlotTypeIndex,
 } from "./game_data/modified_crafting";
-import { MountIndex, Mount, MountSearch } from "./game_data/mount";
+import { Mount, MountIndex, MountSearch } from "./game_data/mount";
 import {
 	MyhticKeystoneAffix,
-	MyhticKeystoneAffixMedia,
 	MyhticKeystoneAffixesIndex,
+	MyhticKeystoneAffixMedia,
 } from "./game_data/mythic_keystone_affix";
 import {
-	MythicKeystoneIndex,
-	MythicKeystoneSeason,
-	MythicKeystoneSeasonIndex,
 	MythicKeystoneDungeon,
 	MythicKeystoneDungeonIndex,
+	MythicKeystoneIndex,
 	MythicKeystonePeriod,
 	MythicKeystonePeriodIndex,
+	MythicKeystoneSeason,
+	MythicKeystoneSeasonIndex,
 } from "./game_data/mythic_keystone_dungeon";
 import {
 	MyhticKeystoneLeaderboard,
@@ -99,11 +99,11 @@ import {
 } from "./game_data/mythic_keystone_leaderboard";
 import { MyhticRaidLeaderboard } from "./game_data/mythic_raid_leaderboard";
 import {
-	PetIndex,
 	Pet,
 	PetAbilitiesIndex,
 	PetAbility,
 	PetAbilityMedia,
+	PetIndex,
 	PetMedia,
 } from "./game_data/pets";
 import {
@@ -155,9 +155,9 @@ import {
 } from "./game_data/reputation";
 import { Spell, SpellMedia, SpellSearch } from "./game_data/spell";
 import {
-	Talent,
 	PvPTalent,
 	PvPTalentIndex,
+	Talent,
 	TalentIndex,
 	TalentTree,
 	TalentTreeIndex,
@@ -197,8 +197,8 @@ import {
 	CharacterTransmogCollectionSummary,
 } from "./profile/character_collections";
 import {
-	CharacterEncounterSummary,
 	CharacterDungeons,
+	CharacterEncounterSummary,
 	CharacterRaid,
 } from "./profile/character_encounter";
 import { CharacterEquipmentSummary } from "./profile/character_equipment";
@@ -210,16 +210,16 @@ import {
 } from "./profile/character_mythic_keystone";
 import { CharacterProfessionSummary } from "./profile/character_profession";
 import {
-	CharacterProfileSummary,
 	CharacterProfileStatus,
+	CharacterProfileSummary,
 } from "./profile/character_profile";
 import {
 	CharacterPvPBracketStatistics,
 	CharacterPvPSummary,
 } from "./profile/character_pvp";
 import {
-	CharacterQuests,
 	CharacterCompletedQuests,
+	CharacterQuests,
 } from "./profile/character_quest";
 import { CharacterReputationSummary } from "./profile/character_reputation";
 import { CharacterSoulbinds } from "./profile/character_soulbinds";
@@ -232,6 +232,7 @@ import {
 	GuildActivity,
 	GuildRoster,
 } from "./profile/guild";
+
 class WoWGameDataClient {
 	protected client: ApplicationClient;
 	protected request: ApplicationClient["request"];

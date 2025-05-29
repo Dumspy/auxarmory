@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { regions } from "@auxarmory/battlenet";
 
 // Job type definitions

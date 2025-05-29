@@ -1,9 +1,9 @@
-import z from "zod"
-import { createSubjects } from "@openauthjs/openauth/subject"
+import { createSubjects } from "@openauthjs/openauth/subject";
+import z from "zod";
 
 export const subjects = createSubjects({
-    user: z.object({
-        id: z.string(),
-        battletag: z.string(),
-    }),
-})
+	user: z.object({
+		id: z.string(),
+		battletag: z.string(),
+	}),
+});

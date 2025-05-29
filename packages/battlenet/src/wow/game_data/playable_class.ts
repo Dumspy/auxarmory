@@ -21,7 +21,10 @@ export function PlayableClassMedia(this: WoWGameDataClient, classId: number) {
 	});
 }
 
-export function PlayablePvPTalentSlot(this: WoWGameDataClient, classId: number) {
+export function PlayablePvPTalentSlot(
+	this: WoWGameDataClient,
+	classId: number,
+) {
 	return this.request({
 		endpoint: `data/wow/playable-pvp-talent-slot/${classId}`,
 		namespace: "static",

@@ -14,7 +14,10 @@ export function PvPSeason(this: WoWGameDataClient, pvpSeasonId: number) {
 	});
 }
 
-export function PvPLeaderboardIndex(this: WoWGameDataClient, pvpSeasonId: number) {
+export function PvPLeaderboardIndex(
+	this: WoWGameDataClient,
+	pvpSeasonId: number,
+) {
 	return this.request({
 		endpoint: `data/wow/pvp-season/${pvpSeasonId}/leaderboard/index`,
 		namespace: "dynamic",

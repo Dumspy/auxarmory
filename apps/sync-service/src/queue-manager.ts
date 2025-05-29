@@ -1,9 +1,14 @@
-import { Queue, Worker, QueueOptions, WorkerOptions, JobsOptions } from "bullmq";
-import { createRedisConnection } from "./redis.js";
-import { JobTypes, JobType, JobPayloads, JobPayloadSchemas } from "./types.js";
 import {
-	processCharacterDataSync,
-} from "./processors/index.js";
+	JobsOptions,
+	Queue,
+	QueueOptions,
+	Worker,
+	WorkerOptions,
+} from "bullmq";
+
+import { processCharacterDataSync } from "./processors/index.js";
+import { createRedisConnection } from "./redis.js";
+import { JobPayloads, JobPayloadSchemas, JobType, JobTypes } from "./types.js";
 
 export class QueueManager {
 	private redis = createRedisConnection();
@@ -48,22 +53,29 @@ export class QueueManager {
 		const characterWorker = new Worker(
 			JobTypes.SYNC_CHARACTER_DATA,
 			processCharacterDataSync,
-			workerOptions
+			workerOptions,
 		);
 		this.workers.set(JobTypes.SYNC_CHARACTER_DATA, characterWorker);
 
 		// Add event listeners for all workers
 		this.workers.forEach((worker, jobType) => {
 			worker.on("completed", (job) => {
-				console.log(`✅ Job ${job.id} (${jobType}) completed successfully`);
+				console.log(
+					`✅ Job ${job.id} (${jobType}) completed successfully`,
+				);
 			});
 
 			worker.on("failed", (job, err) => {
-				console.error(`❌ Job ${job?.id} (${jobType}) failed:`, err.message);
+				console.error(
+					`❌ Job ${job?.id} (${jobType}) failed:`,
+					err.message,
+				);
 			});
 
 			worker.on("progress", (job, progress) => {
-				console.log(`⏳ Job ${job.id} (${jobType}) progress: ${progress}%`);
+				console.log(
+					`⏳ Job ${job.id} (${jobType}) progress: ${progress}%`,
+				);
 			});
 		});
 
@@ -73,7 +85,7 @@ export class QueueManager {
 	async addJob<T extends keyof JobPayloads>(
 		jobType: T,
 		data: JobPayloads[T],
-		options?: JobsOptions
+		options?: JobsOptions,
 	) {
 		const queue = this.queues.get(jobType);
 		if (!queue) {
@@ -111,7 +123,7 @@ export class QueueManager {
 	// Method to get all queue statistics
 	async getAllQueueStats() {
 		const stats: Record<string, any> = {};
-		
+
 		for (const [jobType, queue] of this.queues) {
 			stats[jobType] = await this.getQueueStats(jobType);
 		}
@@ -124,11 +136,15 @@ export class QueueManager {
 		console.log("🔄 Shutting down queue manager...");
 
 		// Close all workers
-		const workerClosures = Array.from(this.workers.values()).map(worker => worker.close());
+		const workerClosures = Array.from(this.workers.values()).map((worker) =>
+			worker.close(),
+		);
 		await Promise.all(workerClosures);
 
 		// Close all queues
-		const queueClosures = Array.from(this.queues.values()).map(queue => queue.close());
+		const queueClosures = Array.from(this.queues.values()).map((queue) =>
+			queue.close(),
+		);
 		await Promise.all(queueClosures);
 
 		// Close Redis connection

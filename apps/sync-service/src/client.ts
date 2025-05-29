@@ -1,6 +1,7 @@
 import { JobsOptions, Queue } from "bullmq";
-import { JobTypes, JobPayloads, JobType } from "./types.js";
+
 import { env } from "./env.js";
+import { JobPayloads, JobType, JobTypes } from "./types.js";
 
 export class SyncServiceClient {
 	private queues: Map<JobType, Queue> = new Map();
@@ -19,7 +20,7 @@ export class SyncServiceClient {
 	async addJob<T extends keyof JobPayloads>(
 		jobType: T,
 		data: JobPayloads[T],
-		options?: JobsOptions
+		options?: JobsOptions,
 	) {
 		const queue = this.queues.get(jobType);
 		if (!queue) {
@@ -36,7 +37,9 @@ export class SyncServiceClient {
 	}
 
 	async close() {
-		const closures = Array.from(this.queues.values()).map(queue => queue.close());
+		const closures = Array.from(this.queues.values()).map((queue) =>
+			queue.close(),
+		);
 		await Promise.all(closures);
 	}
 }

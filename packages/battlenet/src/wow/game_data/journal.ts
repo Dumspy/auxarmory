@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+
 import { WoWGameDataClient } from "..";
 import {
 	KeyIdResponse,
@@ -143,7 +144,9 @@ export function JournalEncounterSearch(this: WoWGameDataClient) {
 export const JournalInstanceIndexResponse = LinkSelfResponse.extend({
 	instances: z.array(KeyNameIdResponse),
 });
-export function JournalInstanceIndex(this: WoWGameDataClient): Promise<z.infer<typeof JournalInstanceIndexResponse>> {
+export function JournalInstanceIndex(
+	this: WoWGameDataClient,
+): Promise<z.infer<typeof JournalInstanceIndexResponse>> {
 	return this.request({
 		endpoint: `data/wow/journal-instance/index`,
 		namespace: "static",
@@ -162,8 +165,7 @@ export const JournalInstanceResponse = LinkSelfResponse.extend({
 	modes: z
 		.array(
 			z.strictObject({
-				mode: z
-				.strictObject({
+				mode: z.strictObject({
 					type: z.enum([
 						"NORMAL",
 						"HEROIC",
@@ -181,15 +183,19 @@ export const JournalInstanceResponse = LinkSelfResponse.extend({
 				is_tracked: z.boolean(),
 				is_timewalking: z.boolean().optional(),
 			}),
-		).optional(),
+		)
+		.optional(),
 	media: MediaKeyResponse,
 	minimum_level: z.number().optional(),
 	category: z.strictObject({
 		type: z.enum(["DUNGEON", "RAID", "WORLD_BOSS", "EVENT"]),
 	}),
 	order_index: z.number(),
-})
-export function JournalInstance(this: WoWGameDataClient, id: number): Promise<z.infer<typeof JournalInstanceResponse>> {
+});
+export function JournalInstance(
+	this: WoWGameDataClient,
+	id: number,
+): Promise<z.infer<typeof JournalInstanceResponse>> {
 	return this.request({
 		endpoint: `data/wow/journal-instance/${id}`,
 		namespace: "static",
@@ -197,10 +203,13 @@ export function JournalInstance(this: WoWGameDataClient, id: number): Promise<z.
 }
 
 export const JournalInstanceMediaResponse = LinkSelfResponse.extend({
-	assets: MediaAssetArray
+	assets: MediaAssetArray,
 });
 
-export function JournalInstanceMedia(this: WoWGameDataClient, id: number): Promise<z.infer<typeof JournalInstanceMediaResponse>> {
+export function JournalInstanceMedia(
+	this: WoWGameDataClient,
+	id: number,
+): Promise<z.infer<typeof JournalInstanceMediaResponse>> {
 	return this.request({
 		endpoint: `data/wow/media/journal-instance/${id}`,
 		namespace: "static",

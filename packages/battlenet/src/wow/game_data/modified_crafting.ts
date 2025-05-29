@@ -28,7 +28,10 @@ export function ModifiedCraftingReagentSlotTypeIndex(this: WoWGameDataClient) {
 	});
 }
 
-export function ModifiedCraftingReagentSlotType(this: WoWGameDataClient, id: number) {
+export function ModifiedCraftingReagentSlotType(
+	this: WoWGameDataClient,
+	id: number,
+) {
 	return this.request({
 		endpoint: `data/wow/modified-crafting/reagent-slot-type/${id}`,
 		namespace: "static",

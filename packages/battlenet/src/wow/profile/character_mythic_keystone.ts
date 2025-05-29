@@ -1,8 +1,9 @@
 import z from "zod/v4";
+
 import { WoWGameDataClient } from "..";
 import { KeyNameIdResponse, KeyResponse, LinkSelfResponse } from "../../types";
-import { CharacterResponse } from "../types/character";
 import { ColorObject } from "../types";
+import { CharacterResponse } from "../types/character";
 
 export const CharacterMythicKeystoneProfileIndexResponse =
 	LinkSelfResponse.extend({
@@ -56,7 +57,7 @@ export const CharacterMythicKeystoneSeasonResponse = LinkSelfResponse.extend({
 					}),
 					specialization: KeyNameIdResponse,
 					race: KeyNameIdResponse,
-					equipped_item_level: z.number()
+					equipped_item_level: z.number(),
 				}),
 			),
 			dungeon: KeyNameIdResponse,
@@ -64,7 +65,7 @@ export const CharacterMythicKeystoneSeasonResponse = LinkSelfResponse.extend({
 			mythic_rating: z.strictObject({
 				color: ColorObject,
 				rating: z.number(),
-			})
+			}),
 		}),
 	),
 	character: CharacterResponse,

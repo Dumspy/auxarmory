@@ -1,6 +1,11 @@
 import { z } from "zod/v4";
+
 import { WoWGameDataClient } from "..";
-import { KeyNameIdResponse, LinkSelfResponse, LocaleResponse } from "../../types";
+import {
+	KeyNameIdResponse,
+	LinkSelfResponse,
+	LocaleResponse,
+} from "../../types";
 import { CharacterResponse } from "../types/character";
 
 export const CharacterEquipmentSummaryResponse = LinkSelfResponse.extend({

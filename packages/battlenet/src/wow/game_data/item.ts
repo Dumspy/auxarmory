@@ -1,6 +1,13 @@
 import { z } from "zod/v4";
+
 import { WoWGameDataClient } from "..";
-import { KeyNameIdResponse, KeyResponse, LinkSelfResponse, LocaleResponse, MediaKeyResponse } from "../../types";
+import {
+	KeyNameIdResponse,
+	KeyResponse,
+	LinkSelfResponse,
+	LocaleResponse,
+	MediaKeyResponse,
+} from "../../types";
 import { ItemIventoryType, ItemQuality, PreviewItem } from "../types/item";
 
 export const ItemResponse = LinkSelfResponse.extend({
@@ -20,14 +27,19 @@ export const ItemResponse = LinkSelfResponse.extend({
 	is_stackable: z.boolean(),
 	preview_item: PreviewItem,
 	purchase_quantity: z.number(),
-	appearances: z.array(
-		z.strictObject({
-			id: z.number(),
-			key: KeyResponse,
-		}),
-	).optional(),
-})
-export function Item(this: WoWGameDataClient, id: number): Promise<z.infer<typeof ItemResponse>> {
+	appearances: z
+		.array(
+			z.strictObject({
+				id: z.number(),
+				key: KeyResponse,
+			}),
+		)
+		.optional(),
+});
+export function Item(
+	this: WoWGameDataClient,
+	id: number,
+): Promise<z.infer<typeof ItemResponse>> {
 	return this.request({
 		endpoint: `data/wow/item/${id}`,
 		namespace: "static",

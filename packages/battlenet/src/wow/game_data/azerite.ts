@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+
 import { WoWGameDataClient } from "..";
 import {
 	KeyNameIdResponse,
@@ -10,7 +11,7 @@ import {
 
 export const AzeriteIndexResponse = LinkSelfResponse.extend({
 	azerite_essences: z.array(KeyNameIdResponse),
-})
+});
 export function AzeriteIndex(
 	this: WoWGameDataClient,
 ): Promise<z.infer<typeof AzeriteIndexResponse>> {
@@ -36,10 +37,13 @@ export const AzeriteResponse = LinkSelfResponse.extend({
 		key: KeyResponse,
 		id: z.number(),
 	}),
-})
+});
 // NOTE: Suspect that the docs is actually wrong and the id here should be an integer.
 // But we are following their docs for now.
-export function Azerite(this: WoWGameDataClient, essenceId: string): Promise<z.infer<typeof AzeriteResponse>> {
+export function Azerite(
+	this: WoWGameDataClient,
+	essenceId: string,
+): Promise<z.infer<typeof AzeriteResponse>> {
 	return this.request({
 		endpoint: `data/wow/azerite-essence/${essenceId}`,
 		namespace: "static",
@@ -61,8 +65,11 @@ export function AzeriteSearch(
 export const AzeriteMediaResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	assets: MediaAssetArray,
-})
-export function AzeriteMedia(this: WoWGameDataClient, essenceId: number): Promise<z.infer<typeof AzeriteMediaResponse>> {
+});
+export function AzeriteMedia(
+	this: WoWGameDataClient,
+	essenceId: number,
+): Promise<z.infer<typeof AzeriteMediaResponse>> {
 	return this.request({
 		endpoint: `data/wow/media/azerite-essence/${essenceId}`,
 		namespace: "static",

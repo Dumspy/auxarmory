@@ -1,16 +1,24 @@
-import { z } from "zod/v4"
+import { z } from "zod/v4";
+
 import { WoWGameDataClient } from "..";
-import { KeyIdResponse, KeyNameIdResponse, KeyResponse, LinkSelfResponse, LocaleResponse, MediaKeyResponse } from "../../types";
+import {
+	KeyIdResponse,
+	KeyNameIdResponse,
+	KeyResponse,
+	LinkSelfResponse,
+	LocaleResponse,
+	MediaKeyResponse,
+} from "../../types";
 import { ColorObject, Faction, Realm } from "../types";
 import { CharacterResponse } from "../types/character";
 
 const SimpleGuild = z.strictObject({
-		key: KeyResponse,
-		name: z.string(),
-		id: z.number(),
-		realm: Realm,
-		faction: Faction,
-	})
+	key: KeyResponse,
+	name: z.string(),
+	id: z.number(),
+	realm: Realm,
+	faction: Faction,
+});
 
 export const GuildResponse = LinkSelfResponse.extend({
 	id: z.number(),
@@ -25,7 +33,7 @@ export const GuildResponse = LinkSelfResponse.extend({
 			media: MediaKeyResponse,
 			color: z.strictObject({
 				id: z.number(),
-				rgba: ColorObject
+				rgba: ColorObject,
 			}),
 		}),
 		border: z.strictObject({
@@ -33,13 +41,13 @@ export const GuildResponse = LinkSelfResponse.extend({
 			media: MediaKeyResponse,
 			color: z.strictObject({
 				id: z.number(),
-				rgba: ColorObject
+				rgba: ColorObject,
 			}),
 		}),
 		background: z.strictObject({
 			color: z.strictObject({
 				id: z.number(),
-				rgba: ColorObject
+				rgba: ColorObject,
 			}),
 		}),
 	}),
@@ -47,10 +55,14 @@ export const GuildResponse = LinkSelfResponse.extend({
 	achievements: KeyResponse,
 	created_timestamp: z.number(),
 	activity: KeyResponse,
-	name_search: z.string()
-})
+	name_search: z.string(),
+});
 
-export function Guild(this: WoWGameDataClient, realmSlug: string, nameSlug: string): Promise<z.infer<typeof GuildResponse>> {
+export function Guild(
+	this: WoWGameDataClient,
+	realmSlug: string,
+	nameSlug: string,
+): Promise<z.infer<typeof GuildResponse>> {
 	return this.request({
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}`,
 		namespace: "profile",
@@ -63,13 +75,8 @@ const GuildActivityType = z.union([
 			encounter: KeyNameIdResponse,
 			mode: z.strictObject({
 				name: LocaleResponse,
-				type: z.enum([
-					"NORMAL",
-					"HEROIC",
-					"MYTHIC",
-					"MYTHIC_KEYSTONE",
-				])
-			})
+				type: z.enum(["NORMAL", "HEROIC", "MYTHIC", "MYTHIC_KEYSTONE"]),
+			}),
 		}),
 		activity: z.strictObject({
 			type: z.literal("ENCOUNTER"),
@@ -85,13 +92,13 @@ const GuildActivityType = z.union([
 			type: z.literal("CHARACTER_ACHIEVEMENT"),
 		}),
 		timestamp: z.number(),
-	})
-])
+	}),
+]);
 
 export const GuildActivityResponse = LinkSelfResponse.extend({
 	guild: SimpleGuild,
-	activities: z.array(GuildActivityType)
-})
+	activities: z.array(GuildActivityType),
+});
 export function GuildActivity(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -115,16 +122,18 @@ export const GuildAchievementsResponse = LinkSelfResponse.extend({
 				id: z.number(),
 				amount: z.number().optional(),
 				is_completed: z.boolean(),
-				child_criteria: z.array(
-					z.strictObject({
-						id: z.number(),
-						amount: z.number(),
-						is_completed: z.boolean(),
-					})
-				).optional(),
+				child_criteria: z
+					.array(
+						z.strictObject({
+							id: z.number(),
+							amount: z.number(),
+							is_completed: z.boolean(),
+						}),
+					)
+					.optional(),
 			}),
 			completed_timestamp: z.number().optional(),
-		})
+		}),
 	),
 	category_progress: z.array(
 		z.strictObject({
@@ -139,7 +148,7 @@ export const GuildAchievementsResponse = LinkSelfResponse.extend({
 			timestamp: z.number(),
 		}),
 	),
-})
+});
 export function GuildAchievements(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -163,9 +172,9 @@ export const GuildRosterResponse = LinkSelfResponse.extend({
 				faction: Faction.omit({ name: true }),
 			}),
 			rank: z.number(),
-		})
+		}),
 	),
-})
+});
 
 export function GuildRoster(
 	this: WoWGameDataClient,

@@ -1,18 +1,17 @@
-import { SidebarProvider } from '@auxarmory/ui/components/sidebar';
-import { ThemeProvider } from './theme-provider';
-import { AuthProvider } from './auth-provider';
-import { ApiProvider } from './api-provider';
+import { SidebarProvider } from "@auxarmory/ui/components/sidebar";
+
+import { ApiProvider } from "./api-provider";
+import { AuthProvider } from "./auth-provider";
+import { ThemeProvider } from "./theme-provider";
 
 export function ContextProvider({ children }: { children: React.ReactNode }) {
-    return (
-        <AuthProvider>
-            <ApiProvider>
-                <ThemeProvider>
-                    <SidebarProvider>
-                        {children}
-                    </SidebarProvider>
-                </ThemeProvider>
-            </ApiProvider>
-        </AuthProvider>
-    );
+	return (
+		<AuthProvider>
+			<ApiProvider>
+				<ThemeProvider>
+					<SidebarProvider>{children}</SidebarProvider>
+				</ThemeProvider>
+			</ApiProvider>
+		</AuthProvider>
+	);
 }

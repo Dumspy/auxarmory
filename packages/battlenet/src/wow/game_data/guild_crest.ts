@@ -1,6 +1,11 @@
 import { z } from "zod/v4";
+
 import { WoWGameDataClient } from "..";
-import { LinkSelfResponse, MediaAssetArray, MediaKeyResponse } from "../../types";
+import {
+	LinkSelfResponse,
+	MediaAssetArray,
+	MediaKeyResponse,
+} from "../../types";
 import { ColorObject } from "../types";
 
 export const GuildCrestIndexResponse = LinkSelfResponse.extend({
@@ -36,7 +41,7 @@ export const GuildCrestIndexResponse = LinkSelfResponse.extend({
 			}),
 		),
 	}),
-})
+});
 export function GuildCrestIndex(
 	this: WoWGameDataClient,
 ): Promise<z.infer<typeof GuildCrestIndexResponse>> {
@@ -49,8 +54,11 @@ export function GuildCrestIndex(
 export const GuildCrestBorderMediaResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	assets: MediaAssetArray,
-})
-export function GuildCrestBorderMedia(this: WoWGameDataClient, id: number): Promise<z.infer<typeof GuildCrestBorderMediaResponse>> {
+});
+export function GuildCrestBorderMedia(
+	this: WoWGameDataClient,
+	id: number,
+): Promise<z.infer<typeof GuildCrestBorderMediaResponse>> {
 	return this.request({
 		endpoint: `data/wow/media/guild-crest/border/${id}`,
 		namespace: "static",
@@ -60,8 +68,11 @@ export function GuildCrestBorderMedia(this: WoWGameDataClient, id: number): Prom
 export const GuildCrestsEmblemMediaResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	assets: MediaAssetArray,
-})
-export function GuildCrestsEmblemMedia(this: WoWGameDataClient, id: number): Promise<z.infer<typeof GuildCrestsEmblemMediaResponse>> {
+});
+export function GuildCrestsEmblemMedia(
+	this: WoWGameDataClient,
+	id: number,
+): Promise<z.infer<typeof GuildCrestsEmblemMediaResponse>> {
 	return this.request({
 		endpoint: `data/wow/media/guild-crest/emblem/${id}`,
 		namespace: "static",

@@ -14,7 +14,10 @@ export function PlayableSpecialization(this: WoWGameDataClient, id: number) {
 	});
 }
 
-export function PlayableSpecializationMedia(this: WoWGameDataClient, id: number) {
+export function PlayableSpecializationMedia(
+	this: WoWGameDataClient,
+	id: number,
+) {
 	return this.request({
 		endpoint: `data/wow/media/playable-specialization/${id}`,
 		namespace: "static",

@@ -1,4 +1,5 @@
-import "./env.js"
-import { PrismaClient } from "../generated/prisma"
+import "./env.js";
 
-export const dbClient = new PrismaClient()
+import { PrismaClient } from "../generated/prisma";
+
+export const dbClient = new PrismaClient();

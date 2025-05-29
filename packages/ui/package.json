@@ -2,7 +2,11 @@
   "name": "@auxarmory/ui",
   "version": "1.0.0",
   "description": "",
-  "scripts": {},
+  "type": "module",
+  "scripts": {
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint ."
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -33,5 +37,6 @@
     "./lib/*": "./src/lib/*",
     "./components/*": "./src/components/*",
     "./hooks/*": "./src/hooks/*"
-  }
+  },
+  "prettier": "@auxarmory/prettier-config"
 }

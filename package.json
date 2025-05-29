@@ -4,17 +4,22 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
+    "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
+    "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
+    "lint:fix": "turbo run lint --continue -- --fix --cache --cache-location .cache/.eslintcache",
+    "lint:ws": "pnpm dlx sherif@latest"
   },
   "devDependencies": {
-    "prettier": "^3.5.3",
+    "@auxarmory/prettier-config": "workspace:*",
+    "prettier": "catalog:",
     "turbo": "^2.5.3",
-    "typescript": "5.8.2"
+    "typescript": "catalog:",
+    "@turbo/gen": "^2.5.3"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.11.0",
   "engines": {
-    "node": ">=18"
-  }
+    "node": ">=22.14.0"
+  },
+  "prettier": "@auxarmory/prettier-config"
 }

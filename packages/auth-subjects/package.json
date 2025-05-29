@@ -4,24 +4,27 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@openauthjs/openauth": "^0.4.3",
-    "zod": "^3.24.4"
+    "@openauthjs/openauth": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
-    "typescript": "^5.8.2"
+    "typescript": "catalog:"
   },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
     }
-  }
+  },
+  "prettier": "@auxarmory/prettier-config"
 }

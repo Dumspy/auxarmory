@@ -19,11 +19,8 @@
           default = pkgs.mkShell rec {
             packages = with pkgs; [
               nodejs_22
+              corepack_22
               openssl
-
-              nodePackages.typescript
-              nodePackages.typescript-language-server
-              nodePackages.pnpm
             ];
 
             shellHook = with pkgs; ''

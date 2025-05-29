@@ -20,22 +20,25 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint ."
   },
   "license": "MIT",
   "dependencies": {
     "@auxarmory/db": "workspace:*",
     "@auxarmory/battlenet": "workspace:*",
-    "@t3-oss/env-core": "0.13.4",
+    "@t3-oss/env-core": "catalog:",
     "bullmq": "^5.36.1",
-    "ioredis": "^5.4.2",
-    "zod": "^3.25.0"
+    "ioredis": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
-    "@types/node": "^20.17.47",
+    "@types/node": "catalog:",
     "tsx": "^4.19.4",
-    "typescript": "5.8.2"
-  }
+    "typescript": "catalog:"
+  },
+  "prettier": "@auxarmory/prettier-config"
 }

@@ -11,23 +11,27 @@
     }
   },
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@auxarmory/auth-subjects": "workspace:*",
-    "@openauthjs/openauth": "^0.4.3",
-    "@trpc/server": "^11.1.2",
+    "@openauthjs/openauth": "catalog:",
+    "@trpc/server": "catalog:",
     "cors": "^2.8.5",
-    "zod": "^3.24.4"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
     "@types/cors": "^2.8.18",
-    "@types/node": "^20.17.47",
+    "@types/node": "catalog:",
     "tsx": "^4.19.4"
-  }
+  },
+  "prettier": "@auxarmory/prettier-config"
 }

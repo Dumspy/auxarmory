@@ -2,25 +2,29 @@
   "name": "@auxarmory/battlenet",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "license": "MIT",
   "scripts": {
     "api:dev": "ts-node src/dev.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
     "ts-node": "^10.9.2",
-    "typescript": "5.8.2",
-    "@types/node": "22.14.0"
+    "typescript": "catalog:",
+    "@types/node": "catalog:"
   },
   "dependencies": {
-    "zod": "^3.25.0"
+    "zod": "catalog:"
   },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
     }
-  }
+  },
+  "prettier": "@auxarmory/prettier-config"
 }

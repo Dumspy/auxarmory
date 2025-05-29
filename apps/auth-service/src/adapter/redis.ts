@@ -15,7 +15,7 @@ import { Redis } from "ioredis";
  */
 export function RedisStorage(
 	options?: RedisOptions,
-): Promise<StorageAdapter> {
+): StorageAdapter {
 	const client = new Redis(options ?? {});
 	client.on("error", (err: Error) =>
 		console.error("Redis Client Error", err),
@@ -25,7 +25,7 @@ export function RedisStorage(
 		async get(key: string[]) {
 			const value = await client.get(joinKey(key));
 			if (!value) return;
-			return JSON.parse(value) as Record<string, any>;
+			return JSON.parse(value) as Record<string, unknown>;
 		},
 
 		async set(key: string[], value: unknown, expiry?: Date) {

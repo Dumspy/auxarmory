@@ -58,7 +58,7 @@ const syncServiceClient = new SyncServiceClient();
 
 const app = issuer({
 	subjects,
-	storage: await RedisStorage(),
+	storage: RedisStorage(),
 	providers: {
 		battlenet: Oauth2Provider({
 			clientID: env.BATTLENET_CLIENT_ID,

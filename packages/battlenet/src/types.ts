@@ -52,7 +52,7 @@ export const MediaKeyResponse = z.strictObject({
 
 export const MediaAssetArray = z.array(
 	z.strictObject({
-		key: z.enum(["icon", "zoom", "image"]),
+		key: z.enum(["icon", "zoom", "image", "tile"]),
 		value: z.string(),
 		file_data_id: z.number().optional(),
 	}),

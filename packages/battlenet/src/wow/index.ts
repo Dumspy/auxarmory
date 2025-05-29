@@ -85,9 +85,9 @@ import {
 	MyhticKeystoneAffixesIndex,
 } from "./game_data/mythic_keystone_affix";
 import {
-	MyhticKeystoneIndex,
-	MyhticKeystoneSeason,
-	MyhticKeystoneSeasonIndex,
+	MythicKeystoneIndex,
+	MythicKeystoneSeason,
+	MythicKeystoneSeasonIndex,
 	MythicKeystoneDungeon,
 	MythicKeystoneDungeonIndex,
 	MythicKeystonePeriod,
@@ -325,9 +325,9 @@ class WoWGameDataClient {
 	MythicKeystoneAffixMedia = MyhticKeystoneAffixMedia.bind(this);
 	MythicKeystoneAffixesIndex = MyhticKeystoneAffixesIndex.bind(this);
 
-	MythicKeystoneIndex = MyhticKeystoneIndex.bind(this);
-	MythicKeystoneSeason = MyhticKeystoneSeason.bind(this);
-	MythicKeystoneSeasonIndex = MyhticKeystoneSeasonIndex.bind(this);
+	MythicKeystoneIndex = MythicKeystoneIndex.bind(this);
+	MythicKeystoneSeason = MythicKeystoneSeason.bind(this);
+	MythicKeystoneSeasonIndex = MythicKeystoneSeasonIndex.bind(this);
 	MythicKeystoneDungeon = MythicKeystoneDungeon.bind(this);
 	MythicKeystoneDungeonIndex = MythicKeystoneDungeonIndex.bind(this);
 	MythicKeystonePeriod = MythicKeystonePeriod.bind(this);

@@ -1,3 +1,9 @@
-import baseConfig from "@auxarmory/eslint-config/base.js";
+import baseConfig from "@auxarmory/eslint-config/base";
 
-export default [...baseConfig];
+/** @type {import('typescript-eslint').Config} */
+export default [
+  {
+	ignores: ["dist/**", "out/**"],
+  },
+  ...baseConfig,
+];

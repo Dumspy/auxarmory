@@ -22,10 +22,12 @@
     "@auxarmory/prettier-config": "workspace:*",
     "@auxarmory/eslint-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
-    "@types/node": "^20.17.47",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "@types/node": "catalog:",
     "prisma": "^6.8.2",
     "tsx": "^4.19.4",
-    "typescript": "^5.8.2"
+    "typescript": "catalog:"
   },
   "exports": {
     ".": {

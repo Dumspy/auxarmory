@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node src/index.ts"
+    "api:dev": "ts-node src/dev.ts"
   },
   "devDependencies": {
     "@auxarmory/eslint-config": "workspace:*",
@@ -15,5 +15,11 @@
   },
   "dependencies": {
     "zod": "^3.25.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
   }
 }

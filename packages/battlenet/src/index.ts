@@ -1,10 +1,13 @@
 import { WoWGameDataClient, WoWProfileClient } from "./wow";
 
+export * from "./util";
+
 export const regions = ["us", "eu", "kr", "tw", "cn"] as const;
 type Region = typeof regions[number];
 
 interface BaseClientOptions {
 	region: Region;
+	locale?: string;
 }
 
 interface BaseRequestOptions {
@@ -19,9 +22,11 @@ class BaseClient {
 	protected region: Region;
 
 	protected baseUrl: string;
+	protected locale?: string;
 
 	constructor(options: BaseClientOptions) {
 		this.region = options.region;
+		this.locale = options.locale
 
 		this.baseUrl =
 			this.region === "cn"
@@ -30,11 +35,15 @@ class BaseClient {
 	}
 
 	public async request<T>(opt: BaseRequestOptions): Promise<T> {
-		const { endpoint, params, method = "GET", namespace } = opt;
+		const { endpoint, params = new URLSearchParams(), method = "GET", namespace } = opt;
 
 		const url = new URL(`${this.baseUrl}/${endpoint}`);
 
-		if (params) {
+		if (this.locale) {
+			params.set("locale", this.locale);
+		}
+
+		if (params.size > 0) {
 			url.search = params.toString();
 		}
 
@@ -168,3 +177,4 @@ export class AccountClient extends BaseClient {
 		});
 	}
 }
+

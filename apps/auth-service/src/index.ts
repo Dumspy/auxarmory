@@ -43,7 +43,7 @@ async function upsertAccount(oauth: Oauth2Token) {
   })
 
   return {
-    id: account.id.toString(),
+    id: account.id,
     battletag: account.battletag,
   }
 }
@@ -73,16 +73,13 @@ const app = issuer({
       case "battlenet": {
         const upserted = await upsertAccount(value.tokenset)
 
-        syncServiceClient.addJob("sync-character-data", {
-          characterId: "",
-          region: "us",
-          realm: "",
-          characterName: "",
-          priority: 0
+        syncServiceClient.addJob("sync-account-data", {
+          accountId: upserted.id,
+          region: "eu",
         })
 
         return await ctx.subject("user", {
-          id: upserted.id, 
+          id: upserted.id.toString(),
           battletag: upserted.battletag,
         })
       }

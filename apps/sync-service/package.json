@@ -10,7 +10,7 @@
       "default": "./src/index.ts"
     },
     "./client": {
-      "types": "./dist/client.d.ts", 
+      "types": "./dist/client.d.ts",
       "default": "./src/client.ts"
     },
     "./types": {
@@ -19,6 +19,7 @@
     }
   },
   "scripts": {
+    "build": "tsc",
     "dev": "tsx watch src/index.ts"
   },
   "license": "MIT",

@@ -61,13 +61,17 @@ model Character {
 }
 
 enum RegionEnum {
-  US
-  EU
+  us
+  eu
+  kr
+  tw
+  cn
 }
 
 enum FactionEnum {
   ALLIANCE
   HORDE
+  NEUTRAL
 }
 
 enum RaceEnum {

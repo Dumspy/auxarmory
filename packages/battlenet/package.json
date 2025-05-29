@@ -4,7 +4,8 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "api:dev": "ts-node src/dev.ts"
+    "api:dev": "ts-node src/dev.ts",
+    "build": "tsc"
   },
   "devDependencies": {
     "@auxarmory/eslint-config": "workspace:*",

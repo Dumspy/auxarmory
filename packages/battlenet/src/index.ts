@@ -1,6 +1,7 @@
 import { WoWGameDataClient, WoWProfileClient } from "./wow";
 
-type Region = "us" | "eu" | "kr" | "tw" | "cn";
+export const regions = ["us", "eu", "kr", "tw", "cn"] as const;
+type Region = typeof regions[number];
 
 interface BaseClientOptions {
 	region: Region;

@@ -27,20 +27,20 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@auxarmory/db": "workspace:*",
     "@auxarmory/battlenet": "workspace:*",
+    "@auxarmory/db": "workspace:*",
     "@t3-oss/env-core": "catalog:",
     "bullmq": "^5.36.1",
     "ioredis": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auxarmory/prettier-config": "workspace:*",
     "@auxarmory/eslint-config": "workspace:*",
+    "@auxarmory/prettier-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "@types/node": "catalog:",
     "tsx": "^4.19.4",
     "typescript": "catalog:"
   },

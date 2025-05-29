@@ -17,8 +17,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auxarmory/prettier-config": "workspace:*",
     "@auxarmory/eslint-config": "workspace:*",
+    "@auxarmory/prettier-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",

@@ -1,6 +1,6 @@
+import type { Challenge } from "@openauthjs/openauth/client";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { createClient  } from "@openauthjs/openauth/client";
-import type {Challenge} from "@openauthjs/openauth/client";
+import { createClient } from "@openauthjs/openauth/client";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 
 import type { AppRouter } from "../../../../trpc-api/src/index.js";
@@ -96,7 +96,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	async function callback(code: string, state: string) {
-		const challenge = JSON.parse(sessionStorage.getItem("challenge") ?? '') as Challenge | null;
+		const challenge = JSON.parse(
+			sessionStorage.getItem("challenge") ?? "",
+		) as Challenge | null;
 		if (code) {
 			if (state === challenge?.state && challenge.verifier) {
 				const exchanged = await authClient.exchange(

@@ -35,13 +35,13 @@ async function upsertAccount(oauth: Oauth2Token) {
 		update: {
 			battletag: userInfo.battletag,
 			bnet_access_token: oauth.access,
-			bnet_expires_at: new Date(oauth.expiry * 1000),
+			bnet_expires_at: new Date(Date.now() + oauth.expiry * 1000),
 		},
 		create: {
 			id: userInfo.id,
 			battletag: userInfo.battletag,
 			bnet_access_token: oauth.access,
-			bnet_expires_at: new Date(oauth.expiry * 1000),
+			bnet_expires_at: new Date(Date.now() + oauth.expiry * 1000),
 		},
 	});
 

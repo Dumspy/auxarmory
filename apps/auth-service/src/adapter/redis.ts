@@ -3,17 +3,16 @@ import type { RedisOptions } from "ioredis";
 import { joinKey, splitKey } from "@openauthjs/openauth/storage/storage";
 import { Redis } from "ioredis";
 
-// Source https://github.com/toolbeam/openauth/pull/237
+import { env } from "../env";
 
-/**
- * Creates a Redis KV store.
- * @param options - The config for the adapter.
- */
-export function RedisStorage(options?: RedisOptions): StorageAdapter {
-	const client = new Redis(options ?? {});
-	client.on("error", (err: Error) =>
-		console.error("Redis Client Error", err),
-	);
+export interface RedisStorageOptions {
+	connectionUrl: string;
+}
+
+export type RedisStorageCredentials = RedisOptions;
+
+export function RedisStorage(): StorageAdapter {
+	const client = new Redis(env.REDIS_URL);
 
 	return {
 		async get(key: string[]) {
@@ -21,26 +20,22 @@ export function RedisStorage(options?: RedisOptions): StorageAdapter {
 			if (!value) return;
 			return JSON.parse(value) as Record<string, unknown>;
 		},
-
 		async set(key: string[], value: unknown, expiry?: Date) {
-			if (expiry) {
-				const expirySeconds = Math.ceil(
-					(expiry.getTime() - Date.now()) / 1000,
-				);
-				await client.setex(
+			if (expiry !== undefined && expiry > new Date()) {
+				const ttl = Math.trunc((expiry.getTime() - Date.now()) / 1000);
+				await client.set(
 					joinKey(key),
-					expirySeconds,
 					JSON.stringify(value),
+					"EX",
+					Math.trunc(ttl),
 				);
 			} else {
 				await client.set(joinKey(key), JSON.stringify(value));
 			}
 		},
-
 		async remove(key: string[]) {
 			await client.del(joinKey(key));
 		},
-
 		async *scan(prefix: string[]) {
 			let cursor = "0";
 
@@ -57,6 +52,12 @@ export function RedisStorage(options?: RedisOptions): StorageAdapter {
 						yield [splitKey(key), JSON.parse(value)];
 					}
 				}
+
+				// Number(..) cant handle 64bit integer
+				if (BigInt(next) === BigInt(0)) {
+					break;
+				}
+
 				cursor = next;
 			}
 		},

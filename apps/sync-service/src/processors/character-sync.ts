@@ -39,7 +39,6 @@ export async function processCharacterDataSync(
 			characterName,
 		);
 
-
 		if (character.guild) {
 			await dbClient.guild.upsert({
 				where: { id: character.guild.id },

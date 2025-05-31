@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { createClient } from "@openauthjs/openauth/client";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 
-import type { AppRouter } from "../../../../trpc-api/src/index.js";
+import type { AppRouter } from "../../../../trpc-api/src/index";
 
 const authClient = createClient({
 	clientID: "auxarmory-frontend",

@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 
-import type { AppRouter } from "../../../../trpc-api/src/index.js";
+import type { AppRouter } from "../../../../trpc-api/src/index";
 import { useAuth } from "./auth-provider";
 
 interface ApiContextType {

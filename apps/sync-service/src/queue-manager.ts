@@ -1,11 +1,14 @@
 import type { JobsOptions } from "bullmq";
 import { Queue, Worker } from "bullmq";
 
-import type { JobPayloads, JobType } from "./types.js";
-import { processCharacterDataSync, processAccountDataSync } from "./processors/index.js";
-import { createRedisConnection } from "./redis.js";
-import { JobTypes } from "./types.js";
-import { createQueueOptions, createWorkerOptions } from "./defaults.js";
+import type { JobPayloads, JobType } from "./types";
+import { createQueueOptions, createWorkerOptions } from "./defaults";
+import {
+	processAccountDataSync,
+	processCharacterDataSync,
+} from "./processors/index";
+import { createRedisConnection } from "./redis";
+import { JobTypes } from "./types";
 
 export class QueueManager {
 	private redis = createRedisConnection();

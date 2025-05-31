@@ -1,6 +1,6 @@
-import "./env.js";
+import "./env";
 
-import { QueueManager } from "./queue-manager.js";
+import { QueueManager } from "./queue-manager";
 
 class SyncService {
 	private queueManager: QueueManager;

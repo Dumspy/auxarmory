@@ -3,9 +3,9 @@ import type { Job } from "bullmq";
 import { AccountClient, localeToString } from "@auxarmory/battlenet";
 import { dbClient } from "@auxarmory/db";
 
-import type { JobPayloads } from "../types.js";
-import { SyncServiceClient } from "../client.js";
-import { JobPayloadSchemas, JobTypes } from "../types.js";
+import type { JobPayloads } from "../types";
+import { SyncServiceClient } from "../client";
+import { JobPayloadSchemas, JobTypes } from "../types";
 
 export async function processAccountDataSync(
 	job: Job<JobPayloads[typeof JobTypes.SYNC_ACCOUNT_DATA]>,

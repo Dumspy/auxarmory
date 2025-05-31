@@ -8,8 +8,8 @@ import { subjects } from "@auxarmory/auth-subjects";
 import { dbClient } from "@auxarmory/db";
 import { SyncServiceClient } from "@auxarmory/sync-service/client";
 
-import { RedisStorage } from "./adapter/redis.js";
-import { env } from "./env.js";
+import { RedisStorage } from "./adapter/redis";
+import { env } from "./env";
 
 interface UserInfoResponse {
 	sub: string;

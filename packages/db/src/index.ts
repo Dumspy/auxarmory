@@ -1,4 +1,4 @@
-import "./env.js";
+import "./env";
 
 import { PrismaClient } from "../generated/prisma";
 

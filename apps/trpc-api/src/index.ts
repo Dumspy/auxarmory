@@ -1,8 +1,8 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import cors from "cors";
 
-import { createContext } from "./context.js";
-import { protectedProcedure, publicProcedure, router } from "./trpc.js";
+import { createContext } from "./context";
+import { protectedProcedure, publicProcedure, router } from "./trpc";
 
 const appRouter = router({
 	helloWorld: publicProcedure.query(() => {

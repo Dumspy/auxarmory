@@ -2,16 +2,16 @@ import type { JobsOptions } from "bullmq";
 import { Queue } from "bullmq";
 
 import type { JobPayloads, JobType } from "./types";
-import { JobTypes } from "./types";
 import { createQueueOptions } from "./defaults";
 import { createRedisConnection } from "./redis";
+import { JobTypes } from "./types";
 
 export class SyncServiceClient {
 	private redis = createRedisConnection();
 	private queues = new Map<JobType, Queue>();
 
 	constructor() {
-		const options = createQueueOptions(this.redis)
+		const options = createQueueOptions(this.redis);
 
 		Object.values(JobTypes).forEach((jobType) => {
 			const queue = new Queue(jobType, options);

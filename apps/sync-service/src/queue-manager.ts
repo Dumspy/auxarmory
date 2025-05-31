@@ -2,6 +2,7 @@ import type { JobsOptions, QueueOptions, WorkerOptions } from "bullmq";
 import { Queue, Worker } from "bullmq";
 
 import type { JobPayloads, JobType } from "./types.js";
+import { processAccountDataSync } from "./processors/account-sync.js";
 import { processCharacterDataSync } from "./processors/index.js";
 import { createRedisConnection } from "./redis.js";
 import { JobTypes } from "./types.js";
@@ -52,6 +53,13 @@ export class QueueManager {
 			workerOptions,
 		);
 		this.workers.set(JobTypes.SYNC_CHARACTER_DATA, characterWorker);
+
+		const accountWorker = new Worker(
+			JobTypes.SYNC_ACCOUNT_DATA,
+			processAccountDataSync,
+			workerOptions,
+		);
+		this.workers.set(JobTypes.SYNC_ACCOUNT_DATA, accountWorker);
 
 		// Add event listeners for all workers
 		this.workers.forEach((worker, jobType) => {

@@ -16,15 +16,15 @@ export const CharacterProfileSummaryResponse = LinkSelfResponse.extend({
 	faction: Faction,
 	race: KeyNameIdResponse,
 	character_class: KeyNameIdResponse,
-	active_spec: KeyNameIdResponse,
+	active_spec: KeyNameIdResponse.optional(),
 	realm: Realm,
 	guild: z.strictObject({
 		key: KeyResponse,
-		name: LocaleResponse,
+		name: z.string(),
 		id: z.number(),
 		realm: Realm,
 		faction: Faction,
-	}),
+	}).optional(),
 	level: z.number(),
 	experience: z.number(),
 	achievement_points: z.number(),
@@ -50,8 +50,13 @@ export const CharacterProfileSummaryResponse = LinkSelfResponse.extend({
 		chosen_covenant: KeyNameIdResponse,
 		renown_level: z.number(),
 		soulbinds: KeyResponse,
-	}),
+	}).optional(),
+	active_title: KeyNameIdResponse.extend({
+		display_string: LocaleResponse,
+	}).optional(),
 	name_search: z.string(),
+	is_remix: z.boolean().optional(),
+	hunter_pets: KeyResponse.optional(),
 });
 
 export function CharacterProfileSummary(
@@ -60,7 +65,7 @@ export function CharacterProfileSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterProfileSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}`,
 		namespace: "profile",
 		zod: CharacterProfileSummaryResponse,
 	});

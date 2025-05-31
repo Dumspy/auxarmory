@@ -27,10 +27,10 @@ import {
 	CovenantSoulbindIndex,
 } from "./game_data/covenant";
 import {
+	Creature,
 	CreatureFamily,
 	CreatureFamilyIndex,
 	CreatureFamilyMedia,
-	Creature,
 	CreatureMedia,
 	CreatureSearch,
 	CreatureType,

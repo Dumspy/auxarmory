@@ -12,11 +12,10 @@ export type JobType = (typeof JobTypes)[keyof typeof JobTypes];
 
 // Job payload schemas
 export const SyncCharacterDataSchema = z.object({
-	characterId: z.string(),
+	accountId: z.number(),
 	region: z.enum(regions),
-	realm: z.string(),
+	realmSlug: z.string(),
 	characterName: z.string(),
-	priority: z.number().default(1),
 });
 
 export const SyncAccountDataSchema = z.object({

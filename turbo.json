@@ -31,6 +31,7 @@
       "persistent": true,
       "env": [
         "DATABASE_URL",
+        "REDIS_URL",
         "BATTLENET_CLIENT_ID",
         "BATTLENET_CLIENT_SECRET",
         "PRISMA_SCHEMA_ENGINE_BINARY",

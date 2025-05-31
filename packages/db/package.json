@@ -7,6 +7,7 @@
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "generate": "node prisma/generate-schema.cjs && prisma generate --schema=./prisma/schema.generated",
     "db:push": "prisma db push --schema=./prisma/schema.generated",
+    "db:studio": "prisma studio --schema=./prisma/schema.generated",
     "build": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint ."

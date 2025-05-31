@@ -1,9 +1,10 @@
 import type { Job } from "bullmq";
 
-import { AccountClient } from "@auxarmory/battlenet";
+import { AccountClient, localeToString } from "@auxarmory/battlenet";
 import { dbClient } from "@auxarmory/db";
 
 import type { JobPayloads } from "../types.js";
+import { SyncServiceClient } from "../client.js";
 import { JobPayloadSchemas, JobTypes } from "../types.js";
 
 export async function processAccountDataSync(
@@ -27,6 +28,8 @@ export async function processAccountDataSync(
 		);
 	}
 
+	const syncServiceClient = new SyncServiceClient();
+
 	const apiClient = new AccountClient({
 		accessToken: account.bnet_access_token,
 		region: region,
@@ -40,6 +43,9 @@ export async function processAccountDataSync(
 		const characters = accountProfile.wow_accounts.flatMap(
 			(wowAccount) => wowAccount.characters,
 		);
+		// .filter(
+		// 	(character) => character.level >= 70
+		// );
 
 		console.log(
 			`Found ${characters.length} characters for account ${accountId}`,
@@ -53,48 +59,27 @@ export async function processAccountDataSync(
 				`Processing character ${character.name} (${character.id})`,
 			);
 
-			const realm = await dbClient.realm.upsert({
+			await dbClient.realm.upsert({
 				where: { id: character.realm.id },
 				create: {
 					id: character.realm.id,
-					name: "temp", // Placeholder, will be updated later
+					name:
+						localeToString(character.realm.name) ?? "Unknown Realm",
 					slug: character.realm.slug,
 					region,
 				},
 				update: {
-					name: "temp",
+					name:
+						localeToString(character.realm.name) ?? "Unknown Realm",
 					slug: character.realm.slug,
 				},
 			});
 
-			await dbClient.character.upsert({
-				where: { id: character.id },
-				create: {
-					id: character.id,
-					name: character.name,
-					gender: character.gender.type,
-					level: character.level,
-					averageItemLevel: 0, // Placeholder, will be updated later
-					equippedItemLevel: 0, // Placeholder, will be updated later
-
-					faction: character.faction.type,
-					race: "BLOOD_ELF", // Placeholder, will be updated later
-					class: "WARRIOR", // Placeholder, will be updated later
-
-					realmId: realm.id,
-					guildId: null, // Placeholder, will be updated later
-				},
-				update: {
-					name: character.name,
-					gender: character.gender.type,
-					level: character.level,
-
-					faction: character.faction.type,
-					race: "BLOOD_ELF", // Placeholder, will be updated later
-					class: "WARRIOR", // Placeholder, will be updated later
-
-					realmId: realm.id,
-				},
+			await syncServiceClient.addJob("sync-character-data", {
+				accountId: accountId,
+				region: region,
+				realmSlug: character.realm.slug,
+				characterName: character.name,
 			});
 
 			progress += 90 / characters.length;

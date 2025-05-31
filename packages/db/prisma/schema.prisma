@@ -46,10 +46,11 @@ model Character {
   level             Int
   averageItemLevel  Int
   equippedItemLevel Int
+  lastLogin         DateTime
 
   faction FactionEnum
-  class   ClassEnum
-  race    RaceEnum
+  classId   Int
+  raceId    Int
 
   realm   Realm @relation(fields: [realmId], references: [id])
   realmId Int
@@ -57,7 +58,8 @@ model Character {
   guild   Guild? @relation(fields: [guildId], references: [id])
   guildId Int?
 
-  Account Account[]
+  account  Account @relation(fields: [accountId], references: [id])
+  accountId Int
 }
 
 enum RegionEnum {

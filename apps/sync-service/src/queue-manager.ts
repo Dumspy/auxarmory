@@ -1,11 +1,11 @@
-import type { JobsOptions, QueueOptions, WorkerOptions } from "bullmq";
+import type { JobsOptions } from "bullmq";
 import { Queue, Worker } from "bullmq";
 
 import type { JobPayloads, JobType } from "./types.js";
-import { processAccountDataSync } from "./processors/account-sync.js";
-import { processCharacterDataSync } from "./processors/index.js";
+import { processCharacterDataSync, processAccountDataSync } from "./processors/index.js";
 import { createRedisConnection } from "./redis.js";
 import { JobTypes } from "./types.js";
+import { createQueueOptions, createWorkerOptions } from "./defaults.js";
 
 export class QueueManager {
 	private redis = createRedisConnection();
@@ -18,22 +18,10 @@ export class QueueManager {
 	}
 
 	private setupQueues() {
-		const queueOptions: QueueOptions = {
-			connection: this.redis,
-			defaultJobOptions: {
-				removeOnComplete: 100,
-				removeOnFail: 50,
-				attempts: 3,
-				backoff: {
-					type: "exponential",
-					delay: 2000,
-				},
-			},
-		};
+		const options = createQueueOptions(this.redis);
 
-		// Create queues for each job type
 		Object.values(JobTypes).forEach((jobType) => {
-			const queue = new Queue(jobType, queueOptions);
+			const queue = new Queue(jobType, options);
 			this.queues.set(jobType, queue);
 		});
 
@@ -41,23 +29,19 @@ export class QueueManager {
 	}
 
 	private setupWorkers() {
-		const workerOptions: WorkerOptions = {
-			connection: this.redis,
-			concurrency: 5,
-		};
+		const options = createWorkerOptions(this.redis);
 
-		// Character data sync worker
 		const characterWorker = new Worker(
 			JobTypes.SYNC_CHARACTER_DATA,
 			processCharacterDataSync,
-			workerOptions,
+			options,
 		);
 		this.workers.set(JobTypes.SYNC_CHARACTER_DATA, characterWorker);
 
 		const accountWorker = new Worker(
 			JobTypes.SYNC_ACCOUNT_DATA,
 			processAccountDataSync,
-			workerOptions,
+			options,
 		);
 		this.workers.set(JobTypes.SYNC_ACCOUNT_DATA, accountWorker);
 

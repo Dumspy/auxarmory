@@ -1,20 +1,20 @@
 import type { JobsOptions } from "bullmq";
 import { Queue } from "bullmq";
 
-import type { JobPayloads, JobType } from "./types.js";
-import { env } from "./env.js";
-import { JobTypes } from "./types.js";
+import type { JobPayloads, JobType } from "./types";
+import { JobTypes } from "./types";
+import { createQueueOptions } from "./defaults";
+import { createRedisConnection } from "./redis";
 
 export class SyncServiceClient {
+	private redis = createRedisConnection();
 	private queues = new Map<JobType, Queue>();
 
 	constructor() {
+		const options = createQueueOptions(this.redis)
+
 		Object.values(JobTypes).forEach((jobType) => {
-			const queue = new Queue(jobType, {
-				connection: {
-					url: env.REDIS_URL,
-				},
-			});
+			const queue = new Queue(jobType, options);
 			this.queues.set(jobType, queue);
 		});
 	}
@@ -46,4 +46,4 @@ export class SyncServiceClient {
 	}
 }
 
-export { JobTypes, type JobPayloads } from "./types.js";
+export { JobTypes, type JobPayloads } from "./types";

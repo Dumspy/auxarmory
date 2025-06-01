@@ -8,7 +8,7 @@ import { CharacterResponse } from "../types/character";
 const MythicRating = z.strictObject({
 	color: ColorObject,
 	rating: z.number(),
-})
+});
 
 const BestRun = z.strictObject({
 	completed_timestamp: z.number(),
@@ -34,8 +34,8 @@ const BestRun = z.strictObject({
 	dungeon: KeyNameIdResponse,
 	is_completed_within_time: z.boolean(),
 	mythic_rating: MythicRating,
-	map_rating: MythicRating
-})
+	map_rating: MythicRating,
+});
 
 export const CharacterMythicKeystoneProfileIndexResponse =
 	LinkSelfResponse.extend({
@@ -46,12 +46,14 @@ export const CharacterMythicKeystoneProfileIndexResponse =
 			}),
 			best_runs: z.array(BestRun).optional(),
 		}),
-		seasons: z.array(
-			z.strictObject({
-				key: KeyResponse,
-				id: z.number(),
-			}),
-		).optional(),
+		seasons: z
+			.array(
+				z.strictObject({
+					key: KeyResponse,
+					id: z.number(),
+				}),
+			)
+			.optional(),
 		character: CharacterResponse,
 		current_mythic_rating: MythicRating.optional(),
 	});
@@ -77,7 +79,7 @@ export const CharacterMythicKeystoneSeasonResponse = LinkSelfResponse.extend({
 	}),
 	best_runs: z.array(BestRun),
 	character: CharacterResponse,
-	mythic_rating: MythicRating
+	mythic_rating: MythicRating,
 });
 
 export function CharacterMythicKeystoneSeason(

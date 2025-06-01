@@ -27,30 +27,32 @@ export const GuildResponse = LinkSelfResponse.extend({
 	achievement_points: z.number(),
 	member_count: z.number(),
 	realm: Realm,
-	crest: z.strictObject({
-		emblem: z.strictObject({
-			id: z.number(),
-			media: MediaKeyResponse,
-			color: z.strictObject({
+	crest: z
+		.strictObject({
+			emblem: z.strictObject({
 				id: z.number(),
-				rgba: ColorObject,
+				media: MediaKeyResponse,
+				color: z.strictObject({
+					id: z.number(),
+					rgba: ColorObject,
+				}),
 			}),
-		}),
-		border: z.strictObject({
-			id: z.number(),
-			media: MediaKeyResponse,
-			color: z.strictObject({
+			border: z.strictObject({
 				id: z.number(),
-				rgba: ColorObject,
+				media: MediaKeyResponse,
+				color: z.strictObject({
+					id: z.number(),
+					rgba: ColorObject,
+				}),
 			}),
-		}),
-		background: z.strictObject({
-			color: z.strictObject({
-				id: z.number(),
-				rgba: ColorObject,
+			background: z.strictObject({
+				color: z.strictObject({
+					id: z.number(),
+					rgba: ColorObject,
+				}),
 			}),
-		}),
-	}).optional(),
+		})
+		.optional(),
 	roster: KeyResponse,
 	achievements: KeyResponse,
 	created_timestamp: z.number(),

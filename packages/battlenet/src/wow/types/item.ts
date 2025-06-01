@@ -74,17 +74,19 @@ const BaseItem = z.strictObject({
 	item_class: KeyNameIdResponse,
 	item_subclass: KeyNameIdResponse,
 	inventory_type: ItemIventoryType,
-	bonus_list: z.array(z.number()),
+	bonus_list: z.array(z.number()).optional(),
 	binding: z.strictObject({
 		type: z.enum(["TO_ACCOUNT", "ON_EQUIP", "ON_ACQUIRE", "QUEST"]),
 		name: LocaleResponse,
 	}),
-	spells: z.array(
-		z.strictObject({
-			spell: KeyNameIdResponse,
-			description: LocaleResponse,
-		}),
-	),
+	spells: z
+		.array(
+			z.strictObject({
+				spell: KeyNameIdResponse,
+				description: LocaleResponse,
+			}),
+		)
+		.optional(),
 	unique_equipped: LocaleResponse.optional(),
 	is_subclass_hidden: z.boolean().optional(),
 	set: z.strictObject({
@@ -98,39 +100,45 @@ const BaseItem = z.strictObject({
 		),
 		display_string: LocaleResponse,
 	}),
-	weapon: z.strictObject({
-		damage: z.strictObject({
-			min_value: z.number(),
-			max_value: z.number(),
-			display_string: LocaleResponse,
-			damage_class: z.strictObject({
-				type: z.enum(["PHYSICAL"]),
-				name: LocaleResponse,
+	weapon: z
+		.strictObject({
+			damage: z.strictObject({
+				min_value: z.number(),
+				max_value: z.number(),
+				display_string: LocaleResponse,
+				damage_class: z.strictObject({
+					type: z.enum(["PHYSICAL"]),
+					name: LocaleResponse,
+				}),
 			}),
-		}),
-		attack_speed: z.strictObject({
+			attack_speed: z.strictObject({
+				value: z.number(),
+				display_string: LocaleResponse,
+			}),
+			dps: z.strictObject({
+				value: z.number(),
+				display_string: LocaleResponse,
+			}),
+		})
+		.optional(),
+	armor: z
+		.strictObject({
 			value: z.number(),
-			display_string: LocaleResponse,
-		}),
-		dps: z.strictObject({
+			display: z.strictObject({
+				display_string: LocaleResponse,
+				color: ColorObject,
+			}),
+		})
+		.optional(),
+	shield_block: z
+		.strictObject({
 			value: z.number(),
-			display_string: LocaleResponse,
-		}),
-	}),
-	armor: z.strictObject({
-		value: z.number(),
-		display: z.strictObject({
-			display_string: LocaleResponse,
-			color: ColorObject,
-		}),
-	}),
-	shield_block: z.strictObject({
-		value: z.number(),
-		display: z.strictObject({
-			display_string: LocaleResponse,
-			color: ColorObject,
-		}),
-	}),
+			display: z.strictObject({
+				display_string: LocaleResponse,
+				color: ColorObject,
+			}),
+		})
+		.optional(),
 	stats: z.array(
 		z.strictObject({
 			type: z.strictObject({
@@ -187,27 +195,31 @@ const BaseItem = z.strictObject({
 			})
 			.optional(),
 	}),
-	sockets: z.array(
-		z.strictObject({
-			socket_type: z.strictObject({
-				type: z.enum([
-					"PRISMATIC",
-					"META",
-					"SINGING_THUNDER",
-					"SINGING_SEA",
-					"SINGING_WIND",
-				]),
-				name: LocaleResponse,
+	sockets: z
+		.array(
+			z.strictObject({
+				socket_type: z.strictObject({
+					type: z.enum([
+						"PRISMATIC",
+						"META",
+						"SINGING_THUNDER",
+						"SINGING_SEA",
+						"SINGING_WIND",
+					]),
+					name: LocaleResponse,
+				}),
 			}),
-		}),
-	),
-	socket_bonus: LocaleResponse,
-	description: LocaleResponse,
-	limit_category: LocaleResponse,
-	name_description: z.strictObject({
-		display_string: LocaleResponse,
-		color: ColorObject,
-	}),
+		)
+		.optional(),
+	socket_bonus: LocaleResponse.optional(),
+	description: LocaleResponse.optional(),
+	limit_category: LocaleResponse.optional(),
+	name_description: z
+		.strictObject({
+			display_string: LocaleResponse,
+			color: ColorObject,
+		})
+		.optional(),
 	sell_price: z.strictObject({
 		value: z.number(),
 		display_strings: z.strictObject({
@@ -230,17 +242,7 @@ export const HeirloomItem = BaseItem.omit({
 	.extend({
 		// BaseItem optional shapes
 		context: BaseItem.shape.context.optional(),
-		bonus_list: BaseItem.shape.bonus_list.optional(),
-		weapon: BaseItem.shape.weapon.optional(),
-		armor: BaseItem.shape.armor.optional(),
 		set: BaseItem.shape.set.optional(),
-		limit_category: BaseItem.shape.limit_category.optional(),
-		spells: BaseItem.shape.spells.optional(),
-		sockets: BaseItem.shape.sockets.optional(),
-		socket_bonus: BaseItem.shape.socket_bonus.optional(),
-		description: BaseItem.shape.description.optional(),
-		name_description: BaseItem.shape.name_description.optional(),
-		shield_block: BaseItem.shape.shield_block.optional(),
 	})
 	.extend({
 		// Modified BaseItem shapes
@@ -258,21 +260,11 @@ export const HeirloomItem = BaseItem.omit({
 	});
 
 const PreviewItemBase = BaseItem.extend({
-	// from BaseItem shapes
+	// BaseItem optional shapes
 	context: BaseItem.shape.context.optional(),
-	weapon: BaseItem.shape.weapon.optional(),
-	armor: BaseItem.shape.armor.optional(),
-	bonus_list: BaseItem.shape.bonus_list.optional(),
-	spells: BaseItem.shape.spells.optional(),
 	stats: BaseItem.shape.stats.optional(),
 	level: BaseItem.shape.level.optional(),
-	sockets: BaseItem.shape.sockets.optional(),
-	socket_bonus: BaseItem.shape.socket_bonus.optional(),
 	binding: BaseItem.shape.binding.optional(),
-	description: BaseItem.shape.description.optional(),
-	limit_category: BaseItem.shape.limit_category.optional(),
-	name_description: BaseItem.shape.name_description.optional(),
-	shield_block: BaseItem.shape.shield_block.optional(),
 	sell_price: BaseItem.shape.sell_price.optional(),
 	durability: BaseItem.shape.durability.optional(),
 })
@@ -350,19 +342,9 @@ export const PreviewItem = PreviewItemBase.extend({
 });
 
 export const CharacterEquipmentItem = BaseItem.extend({
-	// from BaseItem shapes
-	spells: BaseItem.shape.spells.optional(),
-	weapon: BaseItem.shape.weapon.optional(),
-	armor: BaseItem.shape.armor.optional(),
-	shield_block: BaseItem.shape.shield_block.optional(),
-	sockets: BaseItem.shape.sockets.optional(),
-	socket_bonus: BaseItem.shape.socket_bonus.optional(),
-	description: BaseItem.shape.description.optional(),
-	limit_category: BaseItem.shape.limit_category.optional(),
-	name_description: BaseItem.shape.name_description.optional(),
+	// BaseItem optional shapes
 	sell_price: BaseItem.shape.sell_price.optional(),
 	durability: BaseItem.shape.durability.optional(),
-	bonus_list: BaseItem.shape.bonus_list.optional(),
 	stats: BaseItem.shape.stats.optional(),
 })
 	.extend({
@@ -398,7 +380,7 @@ export const CharacterEquipmentItem = BaseItem.extend({
 		modified_appearance_id: z.number().optional(),
 		sockets: z
 			.array(
-				BaseItem.shape.sockets.element.extend({
+				BaseItem.shape.sockets.unwrap().element.extend({
 					item: KeyNameIdResponse.optional(),
 					context: z.number().optional(),
 					display_string: LocaleResponse.optional(),
@@ -420,5 +402,3 @@ export const CharacterEquipmentItem = BaseItem.extend({
 			)
 			.optional(),
 	});
-
-// TODO: When all endpoints that will use an item are implemented, cross check them to see if all version implement the same fields. Or all version implment the same field as optional

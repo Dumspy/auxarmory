@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 
 import type { WoWGameDataClient } from "..";
 import { KeyIdResponse, LinkSelfResponse, NameIdResponse } from "../../types";
+import { PvPBracketType } from "../game_data/pvp_tier";
 import { Faction } from "../types";
 import { CharacterResponse } from "../types/character";
 
@@ -10,7 +11,7 @@ export const CharacterPvPBracketStatisticsResponse = LinkSelfResponse.extend({
 	faction: Faction,
 	bracket: z.strictObject({
 		id: z.number(),
-		type: z.enum(["ARENA_2v2", "ARENA_3v3", "ARENA_10v10"]),
+		type: PvPBracketType,
 	}),
 	rating: z.number(),
 	season: KeyIdResponse,
@@ -30,7 +31,7 @@ export function CharacterPvPBracketStatistics(
 	this: WoWGameDataClient,
 	realmSlug: string,
 	characterName: string,
-	pvpBracket: "2v2" | "3v3" | "10v10",
+	pvpBracket: z.infer<typeof PvPBracketType>,
 ) {
 	return this.request<z.infer<typeof CharacterPvPBracketStatisticsResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName}/pvp-bracket/${pvpBracket}`,

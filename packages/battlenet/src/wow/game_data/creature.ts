@@ -28,11 +28,15 @@ export function Creature(this: WoWGameDataClient, id: number) {
 	});
 }
 
-export function CreatureSearch(this: WoWGameDataClient) {
+export function CreatureSearch(
+	this: WoWGameDataClient,
+	params: URLSearchParams,
+) {
 	return this.request<unknown>({
 		endpoint: `data/wow/search/creature`,
 		namespace: "static",
 		zod: z.unknown(),
+		params,
 	});
 }
 

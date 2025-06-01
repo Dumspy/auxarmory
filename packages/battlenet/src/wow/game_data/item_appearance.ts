@@ -10,11 +10,15 @@ export function ItemAppearance(this: WoWGameDataClient, id: number) {
 	});
 }
 
-export function ItemAppearanceSearch(this: WoWGameDataClient) {
+export function ItemAppearanceSearch(
+	this: WoWGameDataClient,
+	params: URLSearchParams,
+) {
 	return this.request<unknown>({
 		endpoint: `data/wow/search/item-appearance`,
 		namespace: "static",
 		zod: z.unknown(),
+		params,
 	});
 }
 

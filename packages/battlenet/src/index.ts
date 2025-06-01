@@ -1,16 +1,17 @@
 import type { z } from "zod/v4";
 
+import type { RegionsEnum } from "./types";
 import { ApplicationAuthResponse } from "./types";
 import { WoWGameDataClient, WoWProfileClient } from "./wow";
 
 export * from "./util";
 
-export const regions = ["us", "eu", "kr", "tw", "cn"] as const;
-type Region = (typeof regions)[number];
+type Regions = z.infer<typeof RegionsEnum>;
 
 interface BaseClientOptions {
-	region: Region;
+	region: Regions;
 	locale?: string;
+	disableZodValidation?: boolean;
 }
 
 interface BaseRequestOptions<T> {
@@ -23,13 +24,15 @@ interface BaseRequestOptions<T> {
 }
 
 class BaseClient {
-	protected region: Region;
+	protected region: Regions;
 	protected baseUrl: string;
 	protected locale?: string;
+	protected disableZodValidation: boolean;
 
 	constructor(options: BaseClientOptions) {
 		this.region = options.region;
 		this.locale = options.locale;
+		this.disableZodValidation = options.disableZodValidation ?? false;
 
 		this.baseUrl =
 			this.region === "cn"
@@ -72,28 +75,30 @@ class BaseClient {
 
 		if (res.ok) {
 			const json = await res.json();
+			if (this.disableZodValidation) {
+				return json as T;
+			}
 			const { data, success, error } = zod.safeParse(json);
 			if (!success) {
 				throw new Error(
-					`Failed to parse api response with zod validator.
-					This usually means the API response has changed or the zod schema is incorrect.
-					${error.message || "Unknown zod error"}
-					`,
+					"Failed to parse api response with zod validator." +
+						"This usually means the API response has changed or the zod schema is incorrect." +
+						(error.message || "Unknown zod error"),
 				);
 			}
 			return data;
 		}
 
 		// TODO: error handling i guess
-		console.log(res);
+		//console.log(res);
 		throw new Error(
-			`Failed to fetch data from Battle.net API: ${res.status} ${res.statusText}`,
+			`Failed to fetch data from Battle.net API: ${res.status} ${res.statusText}` +
+				(res.url ? `\nURL: ${res.url}` : ""),
 		);
 	}
 }
 
-interface ApplicationOptions {
-	region: Region;
+interface ApplicationOptions extends BaseClientOptions {
 	clientId: string;
 	clientSecret: string;
 }
@@ -174,8 +179,7 @@ export class ApplicationClient extends BaseClient {
 	}
 }
 
-interface AccountOptions {
-	region: Region;
+interface AccountOptions extends BaseClientOptions {
 	accessToken: string;
 }
 

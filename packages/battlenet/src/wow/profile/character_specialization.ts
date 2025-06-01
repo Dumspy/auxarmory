@@ -7,22 +7,14 @@ import {
 	LinkSelfResponse,
 	LocaleResponse,
 } from "../../types";
+import { SpellTooltips } from "../types";
 import { CharacterResponse } from "../types/character";
 
 const ToolTip = z.strictObject({
 	talent: KeyNameIdResponse.extend({
 		name: LocaleResponse.optional(),
 	}),
-	spell_tooltip: z.strictObject({
-		spell: KeyNameIdResponse.extend({
-			name: LocaleResponse.optional(),
-		}),
-		description: LocaleResponse.optional(),
-		cast_time: LocaleResponse.optional(),
-		power_cost: LocaleResponse.optional(),
-		range: LocaleResponse.optional(),
-		cooldown: LocaleResponse.optional(),
-	}),
+	spell_tooltip: SpellTooltips,
 });
 
 export const CharacterSpecializationsSummaryResponse = LinkSelfResponse.extend({

@@ -128,11 +128,15 @@ export function JournalEncounter(this: WoWGameDataClient, id: number) {
 	});
 }
 
-export function JournalEncounterSearch(this: WoWGameDataClient) {
+export function JournalEncounterSearch(
+	this: WoWGameDataClient,
+	params: URLSearchParams,
+) {
 	return this.request<unknown>({
 		endpoint: `data/wow/search/journal-encounter`,
 		namespace: "static",
 		zod: z.unknown(),
+		params,
 	});
 }
 

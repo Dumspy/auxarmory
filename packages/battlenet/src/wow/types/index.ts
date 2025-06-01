@@ -1,9 +1,11 @@
 import { z } from "zod/v4";
 
-import { KeyNameIdResponse, LocaleResponse } from "../../types";
+import { KeyIdResponse, KeyNameIdResponse, LocaleResponse } from "../../types";
+
+export const FactionEnum = z.enum(["HORDE", "ALLIANCE", "NEUTRAL"]);
 
 export const Faction = z.strictObject({
-	type: z.enum(["HORDE", "ALLIANCE", "NEUTRAL"]),
+	type: FactionEnum,
 	name: LocaleResponse,
 });
 
@@ -15,10 +17,20 @@ export const ColorObject = z.strictObject({
 });
 
 export const Realm = KeyNameIdResponse.extend({
+	name: LocaleResponse.optional(),
 	slug: z.string(),
 });
 
 export const Gender = z.strictObject({
 	type: z.enum(["MALE", "FEMALE"]),
 	name: LocaleResponse,
+});
+
+export const SpellTooltips = z.strictObject({
+	spell: z.union([KeyIdResponse, KeyNameIdResponse]),
+	description: LocaleResponse.optional(),
+	cast_time: LocaleResponse.optional(),
+	power_cost: LocaleResponse.optional(),
+	range: LocaleResponse.optional(),
+	cooldown: LocaleResponse.optional(),
 });

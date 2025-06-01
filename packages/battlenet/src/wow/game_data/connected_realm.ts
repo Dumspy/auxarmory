@@ -68,10 +68,14 @@ export function ConnectedRealm(this: WoWGameDataClient, id: number) {
 	});
 }
 
-export function ConnectedRealmSearch(this: WoWGameDataClient) {
+export function ConnectedRealmSearch(
+	this: WoWGameDataClient,
+	params: URLSearchParams,
+) {
 	return this.request<unknown>({
 		endpoint: "data/wow/search/connected-realm",
 		namespace: "dynamic",
 		zod: z.unknown(),
+		params,
 	});
 }

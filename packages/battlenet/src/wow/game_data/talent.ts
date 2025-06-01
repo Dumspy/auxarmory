@@ -8,6 +8,7 @@ import {
 	LinkSelfResponse,
 	LocaleResponse,
 } from "../../types";
+import { SpellTooltips } from "../types";
 
 export const TalentTreeIndexResponse = LinkSelfResponse.extend({
 	spec_talent_trees: z.array(KeyNameResponse),
@@ -24,14 +25,7 @@ export function TalentTreeIndex(this: WoWGameDataClient) {
 
 const RankTooltip = z.strictObject({
 	talent: KeyNameIdResponse,
-	spell_tooltip: z.strictObject({
-		spell: KeyNameIdResponse,
-		description: LocaleResponse,
-		cast_time: LocaleResponse,
-		power_cost: LocaleResponse.optional(),
-		range: LocaleResponse.optional(),
-		cooldown: LocaleResponse.optional(),
-	}),
+	spell_tooltip: SpellTooltips,
 });
 
 const TalentTreeNode = z.array(

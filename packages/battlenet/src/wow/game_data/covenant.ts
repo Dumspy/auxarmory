@@ -8,6 +8,7 @@ import {
 	MediaAssetArray,
 	MediaKeyResponse,
 } from "../../types";
+import { SpellTooltips } from "../types";
 
 export const CovenantIndexResponse = LinkSelfResponse.extend({
 	covenants: z.array(KeyNameIdResponse),
@@ -20,14 +21,6 @@ export function CovenantIndex(this: WoWGameDataClient) {
 	});
 }
 
-export const CovenantSpellTooltip = z.strictObject({
-	spell: KeyNameIdResponse,
-	description: LocaleResponse,
-	cast_time: LocaleResponse,
-	range: LocaleResponse.optional(),
-	cooldown: LocaleResponse.optional(),
-});
-
 export const CovenantResponese = LinkSelfResponse.extend({
 	id: z.number(),
 	name: LocaleResponse,
@@ -35,7 +28,7 @@ export const CovenantResponese = LinkSelfResponse.extend({
 	signature_ability: z
 		.strictObject({
 			id: z.number(),
-			spell_tooltip: CovenantSpellTooltip,
+			spell_tooltip: SpellTooltips,
 		})
 		.optional(),
 	class_abilities: z
@@ -43,7 +36,7 @@ export const CovenantResponese = LinkSelfResponse.extend({
 			z.strictObject({
 				id: z.number(),
 				playable_class: KeyNameIdResponse,
-				spell_tooltip: CovenantSpellTooltip,
+				spell_tooltip: SpellTooltips,
 			}),
 		)
 		.optional(),
@@ -129,7 +122,7 @@ export const CovenantConduitResponse = LinkSelfResponse.extend({
 		z.strictObject({
 			id: z.number(),
 			tier: z.number(),
-			spell_tooltip: CovenantSpellTooltip,
+			spell_tooltip: SpellTooltips,
 		}),
 	),
 });

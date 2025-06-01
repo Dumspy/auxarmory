@@ -13,6 +13,7 @@ export const CompleteLocaleResponse = z.strictObject({
 	ko_KR: z.string().optional(),
 	zh_TW: z.string().optional(),
 	zh_CN: z.string().optional(),
+	pt_PT: z.string().optional(),
 });
 
 export const LocaleResponse = CompleteLocaleResponse.or(z.string())
@@ -93,3 +94,6 @@ export const ApplicationAuthResponse = z.strictObject({
 	token_type: z.string(),
 	sub: z.string(),
 });
+
+export const RegionsConst = ["us", "eu", "kr", "tw", "cn"] as const;
+export const RegionsEnum = z.enum(RegionsConst);

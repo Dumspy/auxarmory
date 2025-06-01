@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { regions } from "@auxarmory/battlenet";
+import { RegionsConst } from "@auxarmory/battlenet/types";
 
 // Job type definitions
 export const JobTypes = {
@@ -15,7 +15,7 @@ export type JobType = (typeof JobTypes)[keyof typeof JobTypes];
 // Job payload schemas
 export const SyncCharacterDataSchema = z.object({
 	accountId: z.number(),
-	region: z.enum(regions),
+	region: z.enum(RegionsConst),
 	realmSlug: z.string(),
 	characterName: z.string(),
 });
@@ -29,12 +29,12 @@ export const SyncGuildDataSchema = z.object({
 		id: z.number(),
 		slug: z.string(),
 	}),
-	region: z.enum(regions),
+	region: z.enum(RegionsConst),
 });
 
 export const SyncAccountDataSchema = z.object({
 	accountId: z.number(),
-	region: z.enum(regions),
+	region: z.enum(RegionsConst),
 });
 
 export const SyncGamedataSchema = z.object({});

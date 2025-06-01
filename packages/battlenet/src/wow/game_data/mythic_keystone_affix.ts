@@ -1,27 +1,47 @@
 import { z } from "zod/v4";
 
 import type { WoWGameDataClient } from "..";
+import {
+	KeyNameIdResponse,
+	LinkSelfResponse,
+	LocaleResponse,
+	MediaAssetArray,
+	MediaKeyResponse,
+} from "../../types";
 
-export function MyhticKeystoneAffixesIndex(this: WoWGameDataClient) {
-	return this.request<unknown>({
+export const MythicKeystoneAffixesIndexResponse = LinkSelfResponse.extend({
+	affixes: z.array(KeyNameIdResponse),
+});
+export function MythicKeystoneAffixesIndex(this: WoWGameDataClient) {
+	return this.request<z.infer<typeof MythicKeystoneAffixesIndexResponse>>({
 		endpoint: `data/wow/keystone-affix/index`,
 		namespace: "static",
-		zod: z.unknown(),
+		zod: MythicKeystoneAffixesIndexResponse,
 	});
 }
 
-export function MyhticKeystoneAffix(this: WoWGameDataClient, id: number) {
-	return this.request<unknown>({
+export const MythicKeystoneAffixResponse = LinkSelfResponse.extend({
+	id: z.number(),
+	name: LocaleResponse,
+	description: LocaleResponse,
+	media: MediaKeyResponse,
+});
+export function MythicKeystoneAffix(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof MythicKeystoneAffixResponse>>({
 		endpoint: `data/wow/keystone-affix/${id}`,
 		namespace: "static",
-		zod: z.unknown(),
+		zod: MythicKeystoneAffixResponse,
 	});
 }
 
-export function MyhticKeystoneAffixMedia(this: WoWGameDataClient, id: number) {
-	return this.request<unknown>({
+export const MythicKeystoneAffixMediaResponse = LinkSelfResponse.extend({
+	assets: MediaAssetArray.optional(),
+	id: z.number(),
+});
+export function MythicKeystoneAffixMedia(this: WoWGameDataClient, id: number) {
+	return this.request<z.infer<typeof MythicKeystoneAffixMediaResponse>>({
 		endpoint: `data/wow/media/keystone-affix/${id}`,
 		namespace: "static",
-		zod: z.unknown(),
+		zod: MythicKeystoneAffixMediaResponse,
 	});
 }

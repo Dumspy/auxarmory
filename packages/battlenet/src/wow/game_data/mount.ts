@@ -18,10 +18,11 @@ export function Mount(this: WoWGameDataClient, id: number) {
 	});
 }
 
-export function MountSearch(this: WoWGameDataClient) {
+export function MountSearch(this: WoWGameDataClient, params: URLSearchParams) {
 	return this.request<unknown>({
 		endpoint: `data/wow/mount/search`,
 		namespace: "static",
 		zod: z.unknown(),
+		params,
 	});
 }

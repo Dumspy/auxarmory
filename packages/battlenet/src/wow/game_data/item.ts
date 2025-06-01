@@ -46,11 +46,12 @@ export function Item(this: WoWGameDataClient, id: number) {
 	});
 }
 
-export function ItemSearch(this: WoWGameDataClient) {
+export function ItemSearch(this: WoWGameDataClient, params: URLSearchParams) {
 	return this.request<unknown>({
 		endpoint: `data/wow/search/item`,
 		namespace: "static",
 		zod: z.unknown(),
+		params,
 	});
 }
 

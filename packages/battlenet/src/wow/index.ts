@@ -80,9 +80,9 @@ import {
 } from "./game_data/modified_crafting";
 import { Mount, MountIndex, MountSearch } from "./game_data/mount";
 import {
-	MyhticKeystoneAffix,
-	MyhticKeystoneAffixesIndex,
-	MyhticKeystoneAffixMedia,
+	MythicKeystoneAffix,
+	MythicKeystoneAffixesIndex,
+	MythicKeystoneAffixMedia,
 } from "./game_data/mythic_keystone_affix";
 import {
 	MythicKeystoneDungeon,
@@ -94,10 +94,10 @@ import {
 	MythicKeystoneSeasonIndex,
 } from "./game_data/mythic_keystone_dungeon";
 import {
-	MyhticKeystoneLeaderboard,
+	MythicKeystoneLeaderboard,
 	MythicKeystoneLeaderboardIndex,
 } from "./game_data/mythic_keystone_leaderboard";
-import { MyhticRaidLeaderboard } from "./game_data/mythic_raid_leaderboard";
+import { MythicRaidLeaderboard } from "./game_data/mythic_raid_leaderboard";
 import {
 	Pet,
 	PetAbilitiesIndex,
@@ -322,9 +322,9 @@ class WoWGameDataClient {
 	MountIndex = MountIndex.bind(this);
 	MountSearch = MountSearch.bind(this);
 
-	MythicKeystoneAffix = MyhticKeystoneAffix.bind(this);
-	MythicKeystoneAffixMedia = MyhticKeystoneAffixMedia.bind(this);
-	MythicKeystoneAffixesIndex = MyhticKeystoneAffixesIndex.bind(this);
+	MythicKeystoneAffix = MythicKeystoneAffix.bind(this);
+	MythicKeystoneAffixMedia = MythicKeystoneAffixMedia.bind(this);
+	MythicKeystoneAffixesIndex = MythicKeystoneAffixesIndex.bind(this);
 
 	MythicKeystoneIndex = MythicKeystoneIndex.bind(this);
 	MythicKeystoneSeason = MythicKeystoneSeason.bind(this);
@@ -334,10 +334,10 @@ class WoWGameDataClient {
 	MythicKeystonePeriod = MythicKeystonePeriod.bind(this);
 	MythicKeystonePeriodIndex = MythicKeystonePeriodIndex.bind(this);
 
-	MythicKeystoneLeaderboard = MyhticKeystoneLeaderboard.bind(this);
+	MythicKeystoneLeaderboard = MythicKeystoneLeaderboard.bind(this);
 	MythicKeystoneLeaderboardIndex = MythicKeystoneLeaderboardIndex.bind(this);
 
-	MythicRaidLeaderboard = MyhticRaidLeaderboard.bind(this);
+	MythicRaidLeaderboard = MythicRaidLeaderboard.bind(this);
 
 	Pet = Pet.bind(this);
 	PetIndex = PetIndex.bind(this);

@@ -53,6 +53,8 @@ model Character {
     activeSpec        String?
 
     faction FactionEnum
+
+	race   Race @relation(fields: [raceId], references: [id])
     raceId  Int
 
     class Class @relation(fields: [classId], references: [id])
@@ -69,10 +71,17 @@ model Character {
 }
 
 model Class {
-	id  Int    @id
-	name String @unique
+	id  Int    @id @unique
+	name String
 
 	Character Character[]
+}
+
+model Race {
+	id   Int      @id @unique
+	name String
+
+	characters Character[]
 }
 
 enum RegionEnum {
@@ -87,55 +96,4 @@ enum FactionEnum {
     ALLIANCE
     HORDE
     NEUTRAL
-}
-
-enum RaceEnum {
-    // Alliance
-    HUMAN
-    DWARF
-    NIGHT_ELF
-    GNOME
-    DRAENEI
-    WORGEN
-    // Alliance Allied races
-    VOID_ELF
-    LIGHTFORGED_DRAENEI
-    DARK_IRON_DWARF
-    KUL_TIRAN
-    MECHAGNOME
-
-    // Horde
-    ORC
-    UNDEAD
-    TAUREN
-    TROLL
-    BLOOD_ELF
-    GOBLIN
-
-    // Horde Allied races
-    NIGHTBORNE
-    HIGHMOUNTAIN_TAUREN
-    MAGHAR_ORC
-    ZANDALARI_TROLL
-    VULPERA
-
-    PANDAREN
-    DRACTHYR
-    EARTHEN
-}
-
-enum ClassEnum {
-    WARRIOR
-    PALADIN
-    HUNTER
-    ROGUE
-    PRIEST
-    SHAMAN
-    MAGE
-    WARLOCK
-    MONK
-    DRUID
-    DEMON_HUNTER
-    DEATH_KNIGHT
-    EVOKER
 }

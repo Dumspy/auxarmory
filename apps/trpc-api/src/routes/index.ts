@@ -17,7 +17,11 @@ export const indexRouter = router({
 				name: true,
 				equippedItemLevel: true,
 				lastLogin: true,
-				classId: true,
+				class: {
+					select: {
+						name: true,
+					},
+				},
 				level: true,
 				avatarUrl: true,
 				activeSpec: true,
@@ -47,7 +51,6 @@ export const indexRouter = router({
 					name: true,
 					equippedItemLevel: true,
 					lastLogin: true,
-					classId: true,
 					level: true,
 					avatarUrl: true,
 					activeSpec: true,

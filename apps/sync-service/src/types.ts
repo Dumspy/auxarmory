@@ -6,6 +6,7 @@ import { regions } from "@auxarmory/battlenet";
 export const JobTypes = {
 	SYNC_CHARACTER_DATA: "sync-character-data",
 	SYNC_ACCOUNT_DATA: "sync-account-data",
+	SYNC_GAMEDATA: "sync-gamedata",
 } as const;
 
 export type JobType = (typeof JobTypes)[keyof typeof JobTypes];
@@ -23,13 +24,17 @@ export const SyncAccountDataSchema = z.object({
 	region: z.enum(regions),
 });
 
+export const SyncGamedataSchema = z.object({});
+
 // Union type for all job payloads
 export interface JobPayloads {
 	[JobTypes.SYNC_CHARACTER_DATA]: z.infer<typeof SyncCharacterDataSchema>;
 	[JobTypes.SYNC_ACCOUNT_DATA]: z.infer<typeof SyncAccountDataSchema>;
+	[JobTypes.SYNC_GAMEDATA]: z.infer<typeof SyncGamedataSchema>;
 }
 
 export const JobPayloadSchemas = {
 	[JobTypes.SYNC_CHARACTER_DATA]: SyncCharacterDataSchema,
 	[JobTypes.SYNC_ACCOUNT_DATA]: SyncAccountDataSchema,
+	[JobTypes.SYNC_GAMEDATA]: SyncGamedataSchema,
 } as const;

@@ -31,7 +31,6 @@ export async function processCharacterDataSync(
 	console.log(`Processing account data sync for ${accountId} (${region})`);
 
 	try {
-		// Update job progress
 		await job.updateProgress(10);
 
 		const characterProfile = await apiClient.wow.CharacterProfileSummary(
@@ -73,9 +72,7 @@ export async function processCharacterDataSync(
 			averageItemLevel: characterProfile.average_item_level,
 			equippedItemLevel: characterProfile.equipped_item_level,
 			lastLogin: new Date(characterProfile.last_login_timestamp),
-			activeSpec: localeToString(
-				characterProfile.active_spec?.name ?? "Unknown",
-			),
+			activeSpec: characterProfile.active_spec?.name ? localeToString(characterProfile.active_spec.name) : undefined,
 			avatarUrl,
 
 			faction: characterProfile.faction.type,

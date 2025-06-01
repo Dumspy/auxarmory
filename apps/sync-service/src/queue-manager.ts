@@ -6,6 +6,7 @@ import { createQueueOptions, createWorkerOptions } from "./defaults";
 import {
 	processAccountDataSync,
 	processCharacterDataSync,
+	processGamedataSync
 } from "./processors/index";
 import { createRedisConnection } from "./redis";
 import { JobTypes } from "./types";
@@ -47,6 +48,13 @@ export class QueueManager {
 			options,
 		);
 		this.workers.set(JobTypes.SYNC_ACCOUNT_DATA, accountWorker);
+
+		const gamedataWorker = new Worker(
+			JobTypes.SYNC_GAMEDATA,
+			processGamedataSync,
+			options,
+		);
+		this.workers.set(JobTypes.SYNC_GAMEDATA, gamedataWorker);
 
 		// Add event listeners for all workers
 		this.workers.forEach((worker, jobType) => {

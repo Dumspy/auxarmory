@@ -95,8 +95,7 @@ export function CharacterCard({
 							{/* TODO: Fix class color */}
 						</div>
 						<p className="text-muted-foreground text-sm">
-							Level {character.level} {character.activeSpec}{" "}
-							{character.classId}
+							Level {character.level} {character.activeSpec} {character.class.name}
 						</p>
 					</div>
 				</div>

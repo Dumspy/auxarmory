@@ -1,6 +1,7 @@
 import "./env";
 
 import { QueueManager } from "./queue-manager";
+import { JobTypes } from "./types";
 
 class SyncService {
 	private queueManager: QueueManager;
@@ -8,8 +9,10 @@ class SyncService {
 	constructor() {
 		this.queueManager = new QueueManager();
 
+		void this.queueManager.addJob(JobTypes.SYNC_GAMEDATA, {}, {})
+
 		this.setupGracefulShutdown();
-		this.setupRecurringJobs();
+		void this.setupRecurringJobs();
 	}
 
 	start() {
@@ -23,7 +26,6 @@ class SyncService {
 			try {
 				await this.queueManager.shutdown();
 				console.log("✅ Graceful shutdown completed");
-				process.exit(0);
 			} catch (error) {
 				console.error("❌ Error during shutdown:", error);
 				process.exit(1);
@@ -50,21 +52,20 @@ class SyncService {
 		});
 	}
 
-	private setupRecurringJobs() {
+	private async setupRecurringJobs() {
 		console.log("⏰ Setting up recurring jobs...");
 
 		try {
-			// Schedule daily cleanup job at 2 AM
-			// await this.queueManager.addJob(
-			// 	JobTypes.CLEANUP_OLD_DATA,
-			// 	{
-			// 		dataType: "logs",
-			// 		olderThanDays: 30,
-			// 	},
-			// 	{
-			// 		repeat: { pattern: "0 2 * * *" } // Daily at 2 AM
-			// 	}
-			// );
+			await this.queueManager.addJob(
+				JobTypes.SYNC_GAMEDATA,
+				{
+					dataType: "logs",
+					olderThanDays: 30,
+				},
+				{
+					repeat: { pattern: "0 2 * * 0" } // Weekly on Sunday at 2 AM
+				}
+			);
 
 			console.log("✅ Recurring jobs scheduled");
 		} catch (error) {

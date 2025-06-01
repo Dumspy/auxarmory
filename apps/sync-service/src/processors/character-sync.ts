@@ -1,6 +1,6 @@
 import type { Job } from "bullmq";
 
-import { ApplicationClient } from "@auxarmory/battlenet";
+import { ApplicationClient, localeToString } from "@auxarmory/battlenet";
 import { dbClient } from "@auxarmory/db";
 
 import type { JobPayloads } from "../types";
@@ -34,63 +34,67 @@ export async function processCharacterDataSync(
 		// Update job progress
 		await job.updateProgress(10);
 
-		const character = await apiClient.wow.CharacterProfileSummary(
+		const characterProfile = await apiClient.wow.CharacterProfileSummary(
 			realmSlug,
-			characterName,
+			characterName.toLowerCase(),
 		);
 
-		if (character.guild) {
+		if (characterProfile.guild) {
 			await dbClient.guild.upsert({
-				where: { id: character.guild.id },
+				where: { id: characterProfile.guild.id },
 				create: {
-					id: character.guild.id,
-					name: character.guild.name,
+					id: characterProfile.guild.id,
+					name: characterProfile.guild.name,
 					slug: "", // TODO
-					realmId: character.guild.realm.id,
+					realmId: characterProfile.guild.realm.id,
 				},
 
 				update: {
-					name: character.guild.name,
+					name: characterProfile.guild.name,
 				},
 			});
 		}
 
 		await job.updateProgress(50);
 
+		const characterMedia = await apiClient.wow.CharacterMediaSummary(
+			realmSlug,
+			characterName.toLowerCase(),
+		);
+
+		const avatarUrl = characterMedia.assets.find(
+			(asset) => asset.key === "avatar",
+		)?.value;
+
+		const character = {
+			name: characterProfile.name,
+			gender: characterProfile.gender.type,
+			level: characterProfile.level,
+			averageItemLevel: characterProfile.average_item_level,
+			equippedItemLevel: characterProfile.equipped_item_level,
+			lastLogin: new Date(characterProfile.last_login_timestamp),
+			activeSpec: localeToString(
+				characterProfile.active_spec?.name ?? "Unknown",
+			),
+			avatarUrl,
+
+			faction: characterProfile.faction.type,
+			raceId: characterProfile.race.id,
+			classId: characterProfile.character_class.id,
+
+			realmId: characterProfile.realm.id,
+			guildId: characterProfile.guild?.id,
+		};
+
 		await dbClient.character.upsert({
-			where: { id: character.id },
+			where: { id: characterProfile.id },
 			create: {
-				id: character.id,
-				name: character.name,
-				gender: character.gender.type,
-				level: character.level,
-				averageItemLevel: character.average_item_level,
-				equippedItemLevel: character.equipped_item_level,
-				lastLogin: new Date(character.last_login_timestamp),
-
-				faction: character.faction.type,
-				raceId: character.race.id,
-				classId: character.character_class.id,
-
-				realmId: character.realm.id,
-				guildId: character.guild?.id,
-
+				id: characterProfile.id,
 				accountId: account.id,
+				...character,
 			},
 			update: {
-				name: character.name,
-				gender: character.gender.type,
-				level: character.level,
-				averageItemLevel: character.average_item_level,
-				equippedItemLevel: character.equipped_item_level,
-				lastLogin: new Date(character.last_login_timestamp),
-
-				faction: character.faction.type,
-				raceId: character.race.id,
-				classId: character.character_class.id,
-
-				realmId: character.realm.id,
-				guildId: character.guild?.id,
+				...character,
 			},
 		});
 
@@ -100,7 +104,7 @@ export async function processCharacterDataSync(
 
 		return {
 			success: true,
-			characterId: character.id,
+			characterId: characterProfile.id,
 			processedAt: new Date().toISOString(),
 		};
 	} catch (error) {

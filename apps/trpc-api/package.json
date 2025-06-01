@@ -6,7 +6,6 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
     }
   },
@@ -21,6 +20,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@auxarmory/db": "workspace:*",
     "@auxarmory/auth-subjects": "workspace:*",
     "@openauthjs/openauth": "catalog:",
     "@trpc/server": "catalog:",

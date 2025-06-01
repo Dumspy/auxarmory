@@ -34,14 +34,14 @@ async function upsertAccount(oauth: Oauth2Token) {
 		where: { id: userInfo.id },
 		update: {
 			battletag: userInfo.battletag,
-			bnet_access_token: oauth.access,
-			bnet_expires_at: new Date(Date.now() + oauth.expiry * 1000),
+			bnetAccessToken: oauth.access,
+			bnetExpiresAt: new Date(Date.now() + oauth.expiry * 1000),
 		},
 		create: {
 			id: userInfo.id,
 			battletag: userInfo.battletag,
-			bnet_access_token: oauth.access,
-			bnet_expires_at: new Date(Date.now() + oauth.expiry * 1000),
+			bnetAccessToken: oauth.access,
+			bnetExpiresAt: new Date(Date.now() + oauth.expiry * 1000),
 		},
 	});
 
@@ -82,7 +82,7 @@ const app = issuer({
 					region: "eu",
 				});
 
-				return await ctx.subject("user", {
+				return await ctx.subject("account", {
 					id: upserted.id.toString(),
 					battletag: upserted.battletag,
 				});

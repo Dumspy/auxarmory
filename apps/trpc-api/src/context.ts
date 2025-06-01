@@ -15,7 +15,7 @@ export async function createContext({
 	IncomingMessage,
 	ServerResponse<IncomingMessage>
 >) {
-	async function getUserIdFromHeader() {
+	async function getAccountIdFromHeader() {
 		const authHeader = req.headers.authorization;
 		if (authHeader) {
 			const token = authHeader.split(" ")[1] ?? "";
@@ -26,16 +26,15 @@ export async function createContext({
 				return null;
 			}
 
-			console.log("Token verified:", verified);
 			return verified.subject.properties.id;
 		}
 		return null;
 	}
 
-	const userId = await getUserIdFromHeader();
+	const accountId = await getAccountIdFromHeader();
 
 	return {
-		userId,
+		accountId,
 	};
 }
 export type Context = Awaited<ReturnType<typeof createContext>>;

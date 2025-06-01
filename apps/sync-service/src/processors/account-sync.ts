@@ -22,7 +22,7 @@ export async function processAccountDataSync(
 		throw new Error(`Account with ID ${accountId} not found`);
 	}
 
-	if (account.bnet_expires_at < new Date()) {
+	if (account.bnetExpiresAt < new Date()) {
 		throw new Error(
 			`Account with ID ${accountId} has expired Battle.net access`,
 		);
@@ -31,7 +31,7 @@ export async function processAccountDataSync(
 	const syncServiceClient = new SyncServiceClient();
 
 	const apiClient = new AccountClient({
-		accessToken: account.bnet_access_token,
+		accessToken: account.bnetAccessToken,
 		region: region,
 	});
 

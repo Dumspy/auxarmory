@@ -1,25 +1,18 @@
-import { createContext, useContext, useRef } from "react";
+import { useState } from "react";
+import { TRPCProvider } from "@/utils/trpc";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
-import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 
-import type { AppRouter } from "../../../../trpc-api/src/index";
+import type { AppRouter } from "@auxarmory/trpc-api";
+
 import { useAuth } from "./auth-provider";
-
-interface ApiContextType {
-	trpc: ReturnType<typeof createTRPCOptionsProxy<AppRouter>>;
-}
-
-const ApiContext = createContext({} as ApiContextType);
-
-// Create the QueryClient instance
-const queryClient = new QueryClient();
 
 export function ApiProvider({ children }: { children: React.ReactNode }) {
 	const { getToken } = useAuth();
 
-	// Create the tRPC client
-	const trpcClient = useRef(
+	const queryClient = new QueryClient();
+
+	const [trpcClient] = useState(() =>
 		createTRPCClient<AppRouter>({
 			links: [
 				httpBatchLink({
@@ -35,23 +28,12 @@ export function ApiProvider({ children }: { children: React.ReactNode }) {
 		}),
 	);
 
-	// Create the tRPC proxy that components will use
-	const trpc = useRef(
-		createTRPCOptionsProxy<AppRouter>({
-			client: trpcClient.current,
-			queryClient,
-		}),
-	).current;
-
 	return (
 		<QueryClientProvider client={queryClient}>
-			<ApiContext.Provider value={{ trpc }}>
+			\
+			<TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
 				{children}
-			</ApiContext.Provider>
+			</TRPCProvider>
 		</QueryClientProvider>
 	);
-}
-
-export function useApi() {
-	return useContext(ApiContext);
 }

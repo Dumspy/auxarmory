@@ -11,7 +11,7 @@ const authClient = createClient({
 });
 
 interface AuthContextType {
-	userId?: string;
+	accountId?: string;
 	loaded: boolean;
 	loggedIn: boolean;
 	logout: () => void;
@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [loaded, setLoaded] = useState(false);
 	const [loggedIn, setLoggedIn] = useState(false);
 	const token = useRef<string | undefined>(undefined);
-	const [userId, setUserId] = useState<string | undefined>();
+	const [accountId, setAccountId] = useState<string | undefined>();
 
 	useEffect(() => {
 		const hash = new URLSearchParams(location.search.slice(1));
@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		const token = await refreshTokens();
 
 		if (token) {
-			await user();
+			await account();
 		}
 
 		setLoaded(true);
@@ -115,7 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		}
 	}
 
-	async function user() {
+	async function account() {
 		// Create a temporary tRPC client just for this call
 		const client = createTRPCClient<AppRouter>({
 			links: [
@@ -129,11 +129,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		});
 
 		try {
-			const id = await client.getUserId.query();
-			setUserId(id);
+			const id = await client.getAccountId.query();
+			setAccountId(id);
 			setLoggedIn(true);
 		} catch {
-			// If the query fails, we'll leave userId and loggedIn as is
 			return;
 		}
 	}
@@ -150,7 +149,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			value={{
 				login,
 				logout,
-				userId,
+				accountId: accountId,
 				loaded,
 				loggedIn,
 				getToken,

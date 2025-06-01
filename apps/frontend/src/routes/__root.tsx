@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ContextProvider } from "@/components/contexts";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
 	createRootRoute,
 	Link,
@@ -86,6 +87,7 @@ export const Route = createRootRoute({
 				</main>
 			</SidebarInset>
 			<TanStackRouterDevtools position="bottom-right" />
+			<ReactQueryDevtools />
 		</ContextProvider>
 	),
 });

@@ -10,128 +10,123 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as AboutImport } from "./routes/about";
-import { Route as IndexImport } from "./routes/index";
-import { Route as WishlistOverviewImport } from "./routes/wishlist/overview";
-import { Route as WishlistPersonalImport } from "./routes/wishlist/personal";
+import { Route as rootRoute } from './routes/__root'
+import { Route as AboutImport } from './routes/about'
+import { Route as IndexImport } from './routes/index'
+import { Route as WishlistPersonalImport } from './routes/wishlist/personal'
+import { Route as WishlistOverviewImport } from './routes/wishlist/overview'
 
 // Create/Update Routes
 
 const AboutRoute = AboutImport.update({
-	id: "/about",
-	path: "/about",
-	getParentRoute: () => rootRoute,
-} as any);
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => rootRoute,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const WishlistPersonalRoute = WishlistPersonalImport.update({
-	id: "/wishlist/personal",
-	path: "/wishlist/personal",
-	getParentRoute: () => rootRoute,
-} as any);
+  id: '/wishlist/personal',
+  path: '/wishlist/personal',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const WishlistOverviewRoute = WishlistOverviewImport.update({
-	id: "/wishlist/overview",
-	path: "/wishlist/overview",
-	getParentRoute: () => rootRoute,
-} as any);
+  id: '/wishlist/overview',
+  path: '/wishlist/overview',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
-	interface FileRoutesByPath {
-		"/": {
-			id: "/";
-			path: "/";
-			fullPath: "/";
-			preLoaderRoute: typeof IndexImport;
-			parentRoute: typeof rootRoute;
-		};
-		"/about": {
-			id: "/about";
-			path: "/about";
-			fullPath: "/about";
-			preLoaderRoute: typeof AboutImport;
-			parentRoute: typeof rootRoute;
-		};
-		"/wishlist/overview": {
-			id: "/wishlist/overview";
-			path: "/wishlist/overview";
-			fullPath: "/wishlist/overview";
-			preLoaderRoute: typeof WishlistOverviewImport;
-			parentRoute: typeof rootRoute;
-		};
-		"/wishlist/personal": {
-			id: "/wishlist/personal";
-			path: "/wishlist/personal";
-			fullPath: "/wishlist/personal";
-			preLoaderRoute: typeof WishlistPersonalImport;
-			parentRoute: typeof rootRoute;
-		};
-	}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutImport
+      parentRoute: typeof rootRoute
+    }
+    '/wishlist/overview': {
+      id: '/wishlist/overview'
+      path: '/wishlist/overview'
+      fullPath: '/wishlist/overview'
+      preLoaderRoute: typeof WishlistOverviewImport
+      parentRoute: typeof rootRoute
+    }
+    '/wishlist/personal': {
+      id: '/wishlist/personal'
+      path: '/wishlist/personal'
+      fullPath: '/wishlist/personal'
+      preLoaderRoute: typeof WishlistPersonalImport
+      parentRoute: typeof rootRoute
+    }
+  }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-	"/": typeof IndexRoute;
-	"/about": typeof AboutRoute;
-	"/wishlist/overview": typeof WishlistOverviewRoute;
-	"/wishlist/personal": typeof WishlistPersonalRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/wishlist/overview': typeof WishlistOverviewRoute
+  '/wishlist/personal': typeof WishlistPersonalRoute
 }
 
 export interface FileRoutesByTo {
-	"/": typeof IndexRoute;
-	"/about": typeof AboutRoute;
-	"/wishlist/overview": typeof WishlistOverviewRoute;
-	"/wishlist/personal": typeof WishlistPersonalRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/wishlist/overview': typeof WishlistOverviewRoute
+  '/wishlist/personal': typeof WishlistPersonalRoute
 }
 
 export interface FileRoutesById {
-	__root__: typeof rootRoute;
-	"/": typeof IndexRoute;
-	"/about": typeof AboutRoute;
-	"/wishlist/overview": typeof WishlistOverviewRoute;
-	"/wishlist/personal": typeof WishlistPersonalRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/wishlist/overview': typeof WishlistOverviewRoute
+  '/wishlist/personal': typeof WishlistPersonalRoute
 }
 
 export interface FileRouteTypes {
-	fileRoutesByFullPath: FileRoutesByFullPath;
-	fullPaths: "/" | "/about" | "/wishlist/overview" | "/wishlist/personal";
-	fileRoutesByTo: FileRoutesByTo;
-	to: "/" | "/about" | "/wishlist/overview" | "/wishlist/personal";
-	id:
-		| "__root__"
-		| "/"
-		| "/about"
-		| "/wishlist/overview"
-		| "/wishlist/personal";
-	fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/about' | '/wishlist/overview' | '/wishlist/personal'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/about' | '/wishlist/overview' | '/wishlist/personal'
+  id: '__root__' | '/' | '/about' | '/wishlist/overview' | '/wishlist/personal'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-	IndexRoute: typeof IndexRoute;
-	AboutRoute: typeof AboutRoute;
-	WishlistOverviewRoute: typeof WishlistOverviewRoute;
-	WishlistPersonalRoute: typeof WishlistPersonalRoute;
+  IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  WishlistOverviewRoute: typeof WishlistOverviewRoute
+  WishlistPersonalRoute: typeof WishlistPersonalRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-	IndexRoute: IndexRoute,
-	AboutRoute: AboutRoute,
-	WishlistOverviewRoute: WishlistOverviewRoute,
-	WishlistPersonalRoute: WishlistPersonalRoute,
-};
+  IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  WishlistOverviewRoute: WishlistOverviewRoute,
+  WishlistPersonalRoute: WishlistPersonalRoute,
+}
 
 export const routeTree = rootRoute
-	._addFileChildren(rootRouteChildren)
-	._addFileTypes<FileRouteTypes>();
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {

@@ -52,12 +52,19 @@ export const MediaKeyResponse = z.strictObject({
 
 export const MediaAssetArray = z.array(
 	z.strictObject({
-		key: z.enum(["icon", "zoom", "image", "tile"]),
+		key: z.enum([
+			"icon",
+			"zoom",
+			"image",
+			"tile",
+			"avatar",
+			"inset",
+			"main-raw",
+		]),
 		value: z.string(),
 		file_data_id: z.number().optional(),
 	}),
 );
-
 export const LocaleString = z.enum([
 	"enUS",
 	"esMX",

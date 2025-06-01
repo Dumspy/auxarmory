@@ -2,7 +2,7 @@ import { createSubjects } from "@openauthjs/openauth/subject";
 import z from "zod";
 
 export const subjects = createSubjects({
-	user: z.object({
+	account: z.object({
 		id: z.string(),
 		battletag: z.string(),
 	}),

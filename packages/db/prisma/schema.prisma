@@ -1,128 +1,141 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+    provider = "prisma-client-js"
+    output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL")
+    provider = "postgres"
+    url      = env("DATABASE_URL")
 }
 
 model Account {
-  id        Int    @id @unique
-  battletag String @unique
-  bnet_access_token String
-  bnet_expires_at DateTime
+    id              Int       @id @unique
+    battletag       String    @unique
+    bnetAccessToken String
+    bnetExpiresAt   DateTime
+    lastSync        DateTime?
 
-  characters Character[]
+    characters Character[]
 }
 
 model Realm {
-  id     Int        @id
-  name   String
-  slug   String
-  region RegionEnum
+    id     Int        @id
+    name   String
+    slug   String
+    region RegionEnum
 
-  guilds Guild[]
+    guilds Guild[]
 
-  characters Character[]
+    characters Character[]
 }
 
 model Guild {
-  id   Int    @id
-  name String
-  slug String
+    id   Int    @id
+    name String
+    slug String
 
-  realm   Realm @relation(fields: [realmId], references: [id])
-  realmId Int
+    realm   Realm @relation(fields: [realmId], references: [id])
+    realmId Int
 
-  members Character[]
+    members Character[]
 }
 
 model Character {
-  id                Int    @id
-  name              String
-  gender            String
-  level             Int
-  averageItemLevel  Int
-  equippedItemLevel Int
-  lastLogin         DateTime
+    id                Int      @id
+    name              String
+    gender            String
+    level             Int
+    averageItemLevel  Int
+    equippedItemLevel Int
+    lastLogin         DateTime
+    avatarUrl         String?
+    favorite          Boolean @default(false)
+    activeSpec        String?
 
-  faction FactionEnum
-  classId   Int
-  raceId    Int
+    faction FactionEnum
+    raceId  Int
 
-  realm   Realm @relation(fields: [realmId], references: [id])
-  realmId Int
+    class Class @relation(fields: [classId], references: [id])
+    classId Int
 
-  guild   Guild? @relation(fields: [guildId], references: [id])
-  guildId Int?
+    realm   Realm @relation(fields: [realmId], references: [id])
+    realmId Int
 
-  account  Account @relation(fields: [accountId], references: [id])
-  accountId Int
+    guild   Guild? @relation(fields: [guildId], references: [id])
+    guildId Int?
+
+    account   Account @relation(fields: [accountId], references: [id])
+    accountId Int
+}
+
+model Class {
+	id  Int    @id
+	name String @unique
+
+	Character Character[]
 }
 
 enum RegionEnum {
-  us
-  eu
-  kr
-  tw
-  cn
+    us
+    eu
+    kr
+    tw
+    cn
 }
 
 enum FactionEnum {
-  ALLIANCE
-  HORDE
-  NEUTRAL
+    ALLIANCE
+    HORDE
+    NEUTRAL
 }
 
 enum RaceEnum {
-  // Alliance
-  HUMAN
-  DWARF
-  NIGHT_ELF
-  GNOME
-  DRAENEI
-  WORGEN
-  // Alliance Allied races
-  VOID_ELF
-  LIGHTFORGED_DRAENEI
-  DARK_IRON_DWARF
-  KUL_TIRAN
-  MECHAGNOME
+    // Alliance
+    HUMAN
+    DWARF
+    NIGHT_ELF
+    GNOME
+    DRAENEI
+    WORGEN
+    // Alliance Allied races
+    VOID_ELF
+    LIGHTFORGED_DRAENEI
+    DARK_IRON_DWARF
+    KUL_TIRAN
+    MECHAGNOME
 
-  // Horde
-  ORC
-  UNDEAD
-  TAUREN
-  TROLL
-  BLOOD_ELF
-  GOBLIN
+    // Horde
+    ORC
+    UNDEAD
+    TAUREN
+    TROLL
+    BLOOD_ELF
+    GOBLIN
 
-  // Horde Allied races
-  NIGHTBORNE
-  HIGHMOUNTAIN_TAUREN
-  MAGHAR_ORC
-  ZANDALARI_TROLL
-  VULPERA
+    // Horde Allied races
+    NIGHTBORNE
+    HIGHMOUNTAIN_TAUREN
+    MAGHAR_ORC
+    ZANDALARI_TROLL
+    VULPERA
 
-  PANDAREN
-  DRACTHYR
-  EARTHEN
+    PANDAREN
+    DRACTHYR
+    EARTHEN
 }
 
 enum ClassEnum {
-  WARRIOR
-  PALADIN
-  HUNTER
-  ROGUE
-  PRIEST
-  SHAMAN
-  MAGE
-  WARLOCK
-  MONK
-  DRUID
-  DEMON_HUNTER
-  DEATH_KNIGHT
-  EVOKER
+    WARRIOR
+    PALADIN
+    HUNTER
+    ROGUE
+    PRIEST
+    SHAMAN
+    MAGE
+    WARLOCK
+    MONK
+    DRUID
+    DEMON_HUNTER
+    DEATH_KNIGHT
+    EVOKER
 }

@@ -30,10 +30,10 @@ model Realm {
 }
 
 model Guild {
-    id   Int    @id
-    name String
-    slug String
-	memberCount Int
+    id          Int    @id
+    name        String
+    slug        String
+    memberCount Int @default(0)
 
     realm   Realm @relation(fields: [realmId], references: [id])
     realmId Int
@@ -50,15 +50,17 @@ model Character {
     equippedItemLevel Int
     lastLogin         DateTime
     avatarUrl         String?
-    favorite          Boolean @default(false)
+    favorite          Boolean  @default(false)
     activeSpec        String?
+    mythicRating      Float?   @default(0)
+    mythicRatingColor String?  @default("0,0,0,0")
 
     faction FactionEnum
 
-	race   Race @relation(fields: [raceId], references: [id])
-    raceId  Int
+    race   Race @relation(fields: [raceId], references: [id])
+    raceId Int
 
-    class Class @relation(fields: [classId], references: [id])
+    class   Class @relation(fields: [classId], references: [id])
     classId Int
 
     realm   Realm @relation(fields: [realmId], references: [id])
@@ -72,17 +74,17 @@ model Character {
 }
 
 model Class {
-	id  Int    @id @unique
-	name String
+    id   Int    @id @unique
+    name String
 
-	Character Character[]
+    Character Character[]
 }
 
 model Race {
-	id   Int      @id @unique
-	name String
+    id   Int    @id @unique
+    name String
 
-	characters Character[]
+    characters Character[]
 }
 
 enum RegionEnum {

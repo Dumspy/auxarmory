@@ -5,6 +5,38 @@ import { KeyNameIdResponse, KeyResponse, LinkSelfResponse } from "../../types";
 import { ColorObject } from "../types";
 import { CharacterResponse } from "../types/character";
 
+const MythicRating = z.strictObject({
+	color: ColorObject,
+	rating: z.number(),
+})
+
+const BestRun = z.strictObject({
+	completed_timestamp: z.number(),
+	duration: z.number(),
+	keystone_level: z.number(),
+	keystone_affixes: z.array(KeyNameIdResponse),
+	members: z.array(
+		z.strictObject({
+			character: z.strictObject({
+				name: z.string(),
+				id: z.number(),
+				realm: z.strictObject({
+					key: KeyResponse,
+					id: z.number(),
+					slug: z.string(),
+				}),
+			}),
+			specialization: KeyNameIdResponse,
+			race: KeyNameIdResponse,
+			equipped_item_level: z.number(),
+		}),
+	),
+	dungeon: KeyNameIdResponse,
+	is_completed_within_time: z.boolean(),
+	mythic_rating: MythicRating,
+	map_rating: MythicRating
+})
+
 export const CharacterMythicKeystoneProfileIndexResponse =
 	LinkSelfResponse.extend({
 		current_period: z.strictObject({
@@ -12,14 +44,16 @@ export const CharacterMythicKeystoneProfileIndexResponse =
 				key: KeyResponse,
 				id: z.number(),
 			}),
+			best_runs: z.array(BestRun).optional(),
 		}),
 		seasons: z.array(
 			z.strictObject({
 				key: KeyResponse,
 				id: z.number(),
 			}),
-		),
+		).optional(),
 		character: CharacterResponse,
+		current_mythic_rating: MythicRating.optional(),
 	});
 
 export function CharacterMythicKeystoneProfileIndex(
@@ -41,41 +75,9 @@ export const CharacterMythicKeystoneSeasonResponse = LinkSelfResponse.extend({
 		key: KeyResponse,
 		id: z.number(),
 	}),
-	best_runs: z.array(
-		z.strictObject({
-			completed_timestamp: z.number(),
-			duration: z.number(),
-			keystone_level: z.number(),
-			keystone_affixes: z.array(KeyNameIdResponse),
-			members: z.array(
-				z.strictObject({
-					character: z.strictObject({
-						name: z.string(),
-						id: z.number(),
-						realm: z.strictObject({
-							key: KeyResponse,
-							id: z.number(),
-							slug: z.string(),
-						}),
-					}),
-					specialization: KeyNameIdResponse,
-					race: KeyNameIdResponse,
-					equipped_item_level: z.number(),
-				}),
-			),
-			dungeon: KeyNameIdResponse,
-			is_completed_within_time: z.boolean(),
-			mythic_rating: z.strictObject({
-				color: ColorObject,
-				rating: z.number(),
-			}),
-		}),
-	),
+	best_runs: z.array(BestRun),
 	character: CharacterResponse,
-	mythic_rating: z.strictObject({
-		color: ColorObject,
-		rating: z.number(),
-	}),
+	mythic_rating: MythicRating
 });
 
 export function CharacterMythicKeystoneSeason(

@@ -91,7 +91,7 @@ export function CharacterCard({
 							<h3 className="text-foreground font-semibold">
 								{character.name}
 							</h3>
-							<div className={`bg-class-${character.class.name.toLowerCase().replace(/\s+/g, "")} h-3 w-3 rounded-full`}/>
+							<div className={`bg-class-${character.class.name.toLowerCase().replace(/\s+/g, "")} h-3 w-3 rounded-full`} />
 						</div>
 						<p className="text-muted-foreground text-sm">
 							Level {character.level} {character.activeSpec} {character.class.name}
@@ -112,10 +112,17 @@ export function CharacterCard({
 						<span className="text-muted-foreground text-sm">
 							M+ Score
 						</span>
-						<span className="text-foreground text-sm font-medium">
-							{0}
-						</span>{" "}
-						{/* TODO: m+ score */}
+						{
+							character.mythicRating ? (
+								<span style={{color: `rgba(${character.mythicRatingColor})`}} className="text-sm font-medium">
+									{character.mythicRating.toFixed(0)}
+								</span>
+							) : (
+								<span className="text-sm font-medium text-foreground">
+									N/A
+								</span>
+							)
+						}
 					</div>
 					<div className="flex items-center justify-between">
 						<span className="text-muted-foreground text-sm">

@@ -55,6 +55,11 @@ export async function processCharacterDataSync(
 			});
 		}
 
+		const { current_mythic_rating } = await apiClient.wow.CharacterMythicKeystoneProfileIndex(
+			realmSlug,
+			characterName.toLowerCase(),
+		)
+
 		await job.updateProgress(50);
 
 		const characterMedia = await apiClient.wow.CharacterMediaSummary(
@@ -82,6 +87,9 @@ export async function processCharacterDataSync(
 
 			realmId: characterProfile.realm.id,
 			guildId: characterProfile.guild?.id,
+
+			mythicRating: current_mythic_rating?.rating,
+			mythicRatingColor: current_mythic_rating ? `${current_mythic_rating.color.r}, ${current_mythic_rating.color.g}, ${current_mythic_rating.color.b}, ${current_mythic_rating.color.a}` : undefined,
 		};
 
 		await dbClient.character.upsert({

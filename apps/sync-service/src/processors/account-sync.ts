@@ -86,6 +86,8 @@ export async function processAccountDataSync(
 			await job.updateProgress(progress);
 		}
 
+		{ /* Todo pass updatedAt/Created at to sync-character job to cleanup old characters that are no longer existing */}
+
 		console.log(`Successfully synced account data for ${accountId}`);
 
 		return {

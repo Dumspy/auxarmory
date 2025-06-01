@@ -7,10 +7,11 @@ import {
 	LocaleResponse,
 } from "../../types";
 import { CharacterResponse } from "../types/character";
+import { CharacterEquipmentItem } from "../types/item";
 
 export const CharacterEquipmentSummaryResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
-	equipped_items: z.array(z.any()), // TODO: Requires item type to be completed firstly
+	equipped_items: z.array(CharacterEquipmentItem),
 	equipped_item_sets: z.array(
 		z.strictObject({
 			item_set: KeyNameIdResponse,

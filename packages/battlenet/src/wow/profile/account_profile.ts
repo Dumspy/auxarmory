@@ -10,6 +10,7 @@ import {
 } from "../../types";
 import { Faction, Gender, Realm } from "../types";
 import { CharacterResponse } from "../types/character";
+import { ItemIventoryType } from "../types/item";
 
 const ProfileLinkSelf = z.strictObject({
 	_links: z.strictObject({
@@ -198,32 +199,7 @@ export const AccountTransmogCollectionSummaryResponse = ProfileLinkSelf.extend({
 	appearance_sets: z.array(KeyNameIdResponse),
 	slots: z.array(
 		z.strictObject({
-			slot: z.strictObject({
-				type: z.enum([
-					"HEAD",
-					"PROFESSION_TOOL",
-					"RANGEDRIGHT",
-					"HOLDABLE",
-					"WEAPONOFFHAND",
-					"WEAPONMAINHAND",
-					"ROBE",
-					"TABARD",
-					"TWOHWEAPON",
-					"CLOAK",
-					"RANGED",
-					"SHIELD",
-					"WEAPON",
-					"HAND",
-					"WRIST",
-					"FEET",
-					"LEGS",
-					"WAIST",
-					"CHEST",
-					"BODY",
-					"SHOULDER",
-				]),
-				name: LocaleResponse,
-			}),
+			slot: ItemIventoryType,
 			appearances: z.array(KeyIdResponse),
 		}),
 	),

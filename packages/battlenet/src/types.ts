@@ -45,6 +45,11 @@ export const NameIdResponse = z.strictObject({
 	id: z.number(),
 });
 
+export const KeyNameResponse = z.strictObject({
+	key: KeyResponse,
+	name: LocaleResponse,
+});
+
 export const MediaKeyResponse = z.strictObject({
 	key: KeyResponse,
 	id: z.number(),
@@ -65,6 +70,7 @@ export const MediaAssetArray = z.array(
 		file_data_id: z.number().optional(),
 	}),
 );
+
 export const LocaleString = z.enum([
 	"enUS",
 	"esMX",

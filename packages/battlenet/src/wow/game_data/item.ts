@@ -6,6 +6,7 @@ import {
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
+	MediaAssetArray,
 	MediaKeyResponse,
 } from "../../types";
 import { ItemIventoryType, ItemQuality, PreviewItem } from "../types/item";
@@ -27,6 +28,7 @@ export const ItemResponse = LinkSelfResponse.extend({
 	is_stackable: z.boolean(),
 	preview_item: PreviewItem,
 	purchase_quantity: z.number(),
+	description: LocaleResponse.optional(),
 	appearances: z
 		.array(
 			z.strictObject({
@@ -52,54 +54,88 @@ export function ItemSearch(this: WoWGameDataClient) {
 	});
 }
 
+export const ItemMediaResponse = LinkSelfResponse.extend({
+	assets: MediaAssetArray,
+	id: z.number(),
+});
 export function ItemMedia(this: WoWGameDataClient, id: number) {
-	return this.request<unknown>({
+	return this.request<z.infer<typeof ItemMediaResponse>>({
 		endpoint: `data/wow/media/item/${id}`,
 		namespace: "static",
-		zod: z.unknown(),
+		zod: ItemMediaResponse,
 	});
 }
 
+export const ItemClassIndexResponse = LinkSelfResponse.extend({
+	item_classes: z.array(KeyNameIdResponse),
+});
 export function ItemClassIndex(this: WoWGameDataClient) {
-	return this.request<unknown>({
+	return this.request<z.infer<typeof ItemClassIndexResponse>>({
 		endpoint: `data/wow/item-class/index`,
 		namespace: "static",
-		zod: z.unknown(),
+		zod: ItemClassIndexResponse,
 	});
 }
 
+export const ItemClassResponse = LinkSelfResponse.extend({
+	class_id: z.number(),
+	name: LocaleResponse,
+	item_subclasses: z.array(KeyNameIdResponse),
+});
 export function ItemClass(this: WoWGameDataClient, id: number) {
-	return this.request<unknown>({
+	return this.request<z.infer<typeof ItemClassResponse>>({
 		endpoint: `data/wow/item-class/${id}`,
 		namespace: "static",
-		zod: z.unknown(),
+		zod: ItemClassResponse,
 	});
 }
 
+export const ItemSetIndexResponse = LinkSelfResponse.extend({
+	item_sets: z.array(KeyNameIdResponse),
+});
 export function ItemSetIndex(this: WoWGameDataClient) {
-	return this.request<unknown>({
+	return this.request<z.infer<typeof ItemSetIndexResponse>>({
 		endpoint: `data/wow/item-set/index`,
 		namespace: "static",
-		zod: z.unknown(),
+		zod: ItemSetIndexResponse,
 	});
 }
 
+export const ItemSetResponse = LinkSelfResponse.extend({
+	id: z.number(),
+	name: LocaleResponse,
+	items: z.array(KeyNameIdResponse),
+	effects: z.array(
+		z.strictObject({
+			display_string: LocaleResponse,
+			required_count: z.number(),
+		}),
+	),
+	is_effect_active: z.boolean().optional(),
+});
 export function ItemSet(this: WoWGameDataClient, id: number) {
-	return this.request<unknown>({
+	return this.request<z.infer<typeof ItemSetResponse>>({
 		endpoint: `data/wow/item-set/${id}`,
 		namespace: "static",
-		zod: z.unknown(),
+		zod: ItemSetResponse,
 	});
 }
 
+export const ItemSubClassResponse = LinkSelfResponse.extend({
+	class_id: z.number(),
+	subclass_id: z.number(),
+	display_name: LocaleResponse,
+	verbose_name: LocaleResponse.optional(),
+	hide_subclass_in_tooltips: z.boolean().optional(),
+});
 export function ItemSubClass(
 	this: WoWGameDataClient,
 	itemClassId: number,
 	itemSubClassId: number,
 ) {
-	return this.request<unknown>({
+	return this.request<z.infer<typeof ItemSubClassResponse>>({
 		endpoint: `data/wow/item-class/${itemClassId}/item-subclass/${itemSubClassId}`,
 		namespace: "static",
-		zod: z.unknown(),
+		zod: ItemSubClassResponse,
 	});
 }

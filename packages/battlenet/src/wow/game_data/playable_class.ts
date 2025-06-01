@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
 import type { WoWGameDataClient } from "..";
-import { LinkSelfResponse, KeyNameIdResponse } from "../../types";
+import { KeyNameIdResponse, LinkSelfResponse } from "../../types";
 
 export const PlayableClassIndexResponse = LinkSelfResponse.extend({
 	classes: z.array(KeyNameIdResponse),

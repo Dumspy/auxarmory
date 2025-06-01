@@ -6,6 +6,7 @@ import { dbClient } from "@auxarmory/db";
 import type { JobPayloads } from "../types";
 import { env } from "../env";
 import { JobPayloadSchemas, JobTypes } from "../types";
+import { SyncServiceClient } from "../client";
 
 export async function processCharacterDataSync(
 	job: Job<JobPayloads[typeof JobTypes.SYNC_CHARACTER_DATA]>,
@@ -39,18 +40,18 @@ export async function processCharacterDataSync(
 		);
 
 		if (characterProfile.guild) {
-			await dbClient.guild.upsert({
-				where: { id: characterProfile.guild.id },
-				create: {
-					id: characterProfile.guild.id,
-					name: characterProfile.guild.name,
-					slug: "", // TODO
-					realmId: characterProfile.guild.realm.id,
-				},
+			const syncServiceClient = new SyncServiceClient();
 
-				update: {
-					name: characterProfile.guild.name,
+			await syncServiceClient.addJob(JobTypes.SYNC_GUILD_DATA, {
+				guild: {
+					id: characterProfile.guild.id,
+					slug: characterProfile.guild.name.toLowerCase().replace(/\s+/g, "-"),
 				},
+				realm: {
+					id: characterProfile.guild.realm.id,
+					slug: characterProfile.guild.realm.slug,
+				},
+				region,
 			});
 		}
 

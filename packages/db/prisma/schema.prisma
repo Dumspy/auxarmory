@@ -33,6 +33,7 @@ model Guild {
     id   Int    @id
     name String
     slug String
+	memberCount Int
 
     realm   Realm @relation(fields: [realmId], references: [id])
     realmId Int

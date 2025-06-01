@@ -50,7 +50,7 @@ export const GuildResponse = LinkSelfResponse.extend({
 				rgba: ColorObject,
 			}),
 		}),
-	}),
+	}).optional(),
 	roster: KeyResponse,
 	achievements: KeyResponse,
 	created_timestamp: z.number(),

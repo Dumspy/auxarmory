@@ -115,6 +115,20 @@
 	--color-sidebar-ring: var(--sidebar-ring);
 }
 
+@source inline("bg-class-deathknight");
+@source inline("bg-class-demonhunter");
+@source inline("bg-class-druid");
+@source inline("bg-class-evoker");
+@source inline("bg-class-hunter");
+@source inline("bg-class-mage");
+@source inline("bg-class-monk");
+@source inline("bg-class-paladin");
+@source inline("bg-class-priest");
+@source inline("bg-class-rogue");
+@source inline("bg-class-shaman");
+@source inline("bg-class-warlock");
+@source inline("bg-class-warrior");
+
 @theme {
 	--color-class-deathknight: oklch(0.5308 0.1969 19.54);
 	--color-class-demonhunter: oklch(0.5507 0.2299 316);
@@ -135,6 +149,7 @@
 	* {
 		@apply border-border outline-ring/50;
 	}
+
 	body {
 		@apply bg-background text-foreground;
 	}

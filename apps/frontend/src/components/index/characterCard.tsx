@@ -91,8 +91,7 @@ export function CharacterCard({
 							<h3 className="text-foreground font-semibold">
 								{character.name}
 							</h3>
-							<div className="bg-primary h-3 w-3 rounded-full"></div>{" "}
-							{/* TODO: Fix class color */}
+							<div className={`bg-class-${character.class.name.toLowerCase().replace(/\s+/g, "")} h-3 w-3 rounded-full`}/>
 						</div>
 						<p className="text-muted-foreground text-sm">
 							Level {character.level} {character.activeSpec} {character.class.name}

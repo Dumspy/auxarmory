@@ -1,5 +1,5 @@
 import { createEnv } from "@t3-oss/env-core";
-import { regions } from "@auxarmory/battlenet";
+import { RegionsConst } from "@auxarmory/battlenet/types";
 import { z } from "zod";
 
 export const env = createEnv({
@@ -11,7 +11,7 @@ export const env = createEnv({
 		DATABASE_URL: z.string(),
 		BATTLENET_CLIENT_ID: z.string(),
 		BATTLENET_CLIENT_SECRET: z.string(),
-		BATTLENET_REGION: z.enum(regions).default("eu"),
+		BATTLENET_REGION: z.enum(RegionsConst).default("eu"),
 
 	},
 	runtimeEnv: process.env,

@@ -38,7 +38,7 @@ model Guild {
     realm   Realm @relation(fields: [realmId], references: [id])
     realmId Int
 
-    members Character[]
+    members GuildMember[]
 }
 
 model Character {
@@ -66,11 +66,20 @@ model Character {
     realm   Realm @relation(fields: [realmId], references: [id])
     realmId Int
 
-    guild   Guild? @relation(fields: [guildId], references: [id])
-    guildId Int?
+    guild GuildMember?
 
     account   Account @relation(fields: [accountId], references: [id])
     accountId Int
+}
+
+model GuildMember {
+    character Character @relation(fields: [characterId], references: [id])
+    characterId Int @unique @id
+
+	guild Guild @relation(fields: [guildId], references: [id])
+	guildId Int
+
+	isMain Boolean @default(false)
 }
 
 model Class {

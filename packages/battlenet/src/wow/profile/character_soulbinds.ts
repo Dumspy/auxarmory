@@ -50,7 +50,7 @@ export function CharacterSoulbinds(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterSoulbindsResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/soulbinds`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/soulbinds`,
 		namespace: "profile",
 		zod: CharacterSoulbindsResponse,
 	});

@@ -44,7 +44,7 @@ export function CharacterProfessionSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterProfessionSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/professions`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/professions`,
 		namespace: "profile",
 		zod: CharacterProfessionSummaryResponse,
 	});

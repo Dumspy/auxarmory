@@ -15,7 +15,7 @@ export function CharacterQuests(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterQuestsResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/quests`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/quests`,
 		namespace: "profile",
 		zod: CharacterQuestsResponse,
 	});
@@ -31,7 +31,7 @@ export function CharacterCompletedQuests(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterCompletedQuestsResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/quests/completed`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/quests/completed`,
 		namespace: "profile",
 		zod: CharacterCompletedQuestsResponse,
 	});

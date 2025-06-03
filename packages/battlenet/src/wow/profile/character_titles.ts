@@ -21,7 +21,7 @@ export function CharacterTitlesSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterTitlesSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/titles`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/titles`,
 		namespace: "profile",
 		zod: CharacterTitlesSummaryResponse,
 	});

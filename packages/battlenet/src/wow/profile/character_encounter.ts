@@ -20,7 +20,7 @@ export function CharacterEncounterSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterEncounterSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/encounters`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/encounters`,
 		namespace: "profile",
 		zod: CharacterEncounterSummaryResponse,
 	});
@@ -74,7 +74,7 @@ export function CharacterDungeons(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterDungeonsResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/encounters/dungeons`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/encounters/dungeons`,
 		namespace: "profile",
 		zod: CharacterDungeonsResponse,
 	});
@@ -131,7 +131,7 @@ export function CharacterRaid(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterRaidResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/encounters/raids`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/encounters/raids`,
 		namespace: "profile",
 		zod: CharacterRaidResponse,
 	});

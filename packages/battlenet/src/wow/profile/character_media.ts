@@ -14,7 +14,7 @@ export function CharacterMediaSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterMediaSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/character-media`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/character-media`,
 		namespace: "profile",
 		zod: CharacterMediaSummaryResponse,
 	});

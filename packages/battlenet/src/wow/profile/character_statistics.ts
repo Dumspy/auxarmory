@@ -67,7 +67,7 @@ export function CharacterStatisticsSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterStatisticsSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/statistics`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/statistics`,
 		namespace: "profile",
 		zod: CharacterStatisticsSummaryResponse,
 	});

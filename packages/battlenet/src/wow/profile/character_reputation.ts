@@ -37,7 +37,7 @@ export function CharacterReputationSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterReputationSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/reputations`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/reputations`,
 		namespace: "profile",
 		zod: CharacterReputationSummaryResponse,
 	});

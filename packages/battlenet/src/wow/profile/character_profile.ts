@@ -86,7 +86,7 @@ export function CharacterProfileStatus(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterProfileStatusResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/status`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/status`,
 		namespace: "profile",
 		zod: CharacterProfileStatusResponse,
 	});

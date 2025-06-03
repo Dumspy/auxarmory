@@ -65,7 +65,7 @@ export function CharacterAchievementsSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterAchievementsSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/achievements`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/achievements`,
 		namespace: "profile",
 		zod: CharacterAchievementsSummaryResponse,
 	});
@@ -116,7 +116,7 @@ export function CharacterAchievementsStatistics(
 	return this.request<
 		z.infer<typeof CharacterAchievementsStatisticsResponse>
 	>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/achievements/statistics`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/achievements/statistics`,
 		namespace: "profile",
 		zod: CharacterAchievementsStatisticsResponse,
 	});

@@ -66,7 +66,7 @@ export function CharacterMythicKeystoneProfileIndex(
 	return this.request<
 		z.infer<typeof CharacterMythicKeystoneProfileIndexResponse>
 	>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/mythic-keystone-profile`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/mythic-keystone-profile`,
 		namespace: "profile",
 		zod: CharacterMythicKeystoneProfileIndexResponse,
 	});
@@ -89,7 +89,7 @@ export function CharacterMythicKeystoneSeason(
 	seasonId: number,
 ) {
 	return this.request<z.infer<typeof CharacterMythicKeystoneSeasonResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/mythic-keystone-profile/season/${seasonId}`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/mythic-keystone-profile/season/${seasonId}`,
 		namespace: "profile",
 		zod: CharacterMythicKeystoneSeasonResponse,
 	});

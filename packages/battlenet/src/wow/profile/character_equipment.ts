@@ -38,7 +38,7 @@ export function CharacterEquipmentSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterEquipmentSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/equipment`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/equipment`,
 		namespace: "profile",
 		zod: CharacterEquipmentSummaryResponse,
 	});

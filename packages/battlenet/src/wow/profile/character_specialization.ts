@@ -78,7 +78,7 @@ export function CharacterSpecializationsSummary(
 	return this.request<
 		z.infer<typeof CharacterSpecializationsSummaryResponse>
 	>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/specializations`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/specializations`,
 		namespace: "profile",
 		zod: CharacterSpecializationsSummaryResponse,
 	});

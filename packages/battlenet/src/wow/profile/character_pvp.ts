@@ -34,7 +34,7 @@ export function CharacterPvPBracketStatistics(
 	pvpBracket: z.infer<typeof PvPBracketType>,
 ) {
 	return this.request<z.infer<typeof CharacterPvPBracketStatisticsResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/pvp-bracket/${pvpBracket}`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/pvp-bracket/${pvpBracket}`,
 		namespace: "profile",
 		zod: CharacterPvPBracketStatisticsResponse,
 	});
@@ -63,7 +63,7 @@ export function CharacterPvPSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterPvPSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/pvp-summary`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/pvp-summary`,
 		namespace: "profile",
 		zod: CharacterPvPSummaryResponse,
 	});

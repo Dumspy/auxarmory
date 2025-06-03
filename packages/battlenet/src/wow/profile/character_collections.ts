@@ -25,7 +25,7 @@ export function CharacterCollectionIndex(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterCollectionIndexResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/collections`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections`,
 		namespace: "profile",
 		zod: CharacterCollectionIndexResponse,
 	});
@@ -50,7 +50,7 @@ export function CharacterHeirloomsCollectionSummary(
 	return this.request<
 		z.infer<typeof CharacterHeirloomsCollectionSummaryResponse>
 	>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/collections/heirlooms`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/heirlooms`,
 		namespace: "profile",
 		zod: CharacterHeirloomsCollectionSummaryResponse,
 	});
@@ -76,7 +76,7 @@ export function CharacterMountsCollectionSummary(
 	return this.request<
 		z.infer<typeof CharacterMountsCollectionSummaryResponse>
 	>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/collections/mounts`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/mounts`,
 		namespace: "profile",
 		zod: CharacterMountsCollectionSummaryResponse,
 	});
@@ -114,7 +114,7 @@ export function CharacterPetsCollectionSummary(
 ) {
 	return this.request<z.infer<typeof CharacterPetsCollectionSummaryResponse>>(
 		{
-			endpoint: `profile/wow/character/${realmSlug}/${characterName}/collections/pets`,
+			endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/pets`,
 			namespace: "profile",
 			zod: CharacterPetsCollectionSummaryResponse,
 		},
@@ -136,7 +136,7 @@ export function CharacterToysCollectionSummary(
 ) {
 	return this.request<z.infer<typeof CharacterToysCollectionSummaryResponse>>(
 		{
-			endpoint: `profile/wow/character/${realmSlug}/${characterName}/collections/toys`,
+			endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/toys`,
 			namespace: "profile",
 			zod: CharacterToysCollectionSummaryResponse,
 		},
@@ -161,7 +161,7 @@ export function CharacterTransmogCollectionSummary(
 	return this.request<
 		z.infer<typeof CharacterTransmogCollectionSummaryResponse>
 	>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/collections/transmogs`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/transmogs`,
 		namespace: "profile",
 		zod: CharacterTransmogCollectionSummaryResponse,
 	});

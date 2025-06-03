@@ -81,7 +81,7 @@ export function CharacterAppearanceSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterAppearanceSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/appearance`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/appearance`,
 		namespace: "profile",
 		zod: CharacterAppearanceSummaryResponse,
 	});

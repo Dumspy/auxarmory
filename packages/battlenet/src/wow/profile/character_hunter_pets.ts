@@ -28,7 +28,7 @@ export function CharacterHunterPetsSummary(
 	characterName: string,
 ) {
 	return this.request<z.infer<typeof CharacterHunterPetsSummaryResponse>>({
-		endpoint: `profile/wow/character/${realmSlug}/${characterName}/hunter-pets`,
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/hunter-pets`,
 		namespace: "profile",
 		zod: CharacterHunterPetsSummaryResponse,
 	});

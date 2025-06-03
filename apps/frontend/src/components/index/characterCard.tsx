@@ -10,6 +10,7 @@ import { Card, CardContent } from "@auxarmory/ui/components/card";
 // import { Progress } from "@auxarmory/ui/components/progress";
 import { Separator } from "@auxarmory/ui/components/separator";
 import { Skeleton } from "@auxarmory/ui/components/skeleton";
+import { formatDistance } from "date-fns";
 
 export function CharacterCardSkeleton() {
 	return (
@@ -129,7 +130,7 @@ export function CharacterCard({
 							Last Played
 						</span>
 						<span className="text-muted-foreground text-sm">
-							{character.lastLogin}
+							{formatDistance(new Date(character.lastLogin), new Date(), { addSuffix: true })}
 						</span>
 					</div>
 				</div>

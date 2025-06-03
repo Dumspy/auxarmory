@@ -86,11 +86,30 @@ export async function processCharacterDataSync(
 			classId: characterProfile.character_class.id,
 
 			realmId: characterProfile.realm.id,
-			guildId: characterProfile.guild?.id,
+			guildMember: characterProfile.guild ? {
+				connect: {
+					characterId: characterProfile.id,
+				}
+			} : undefined,
 
 			mythicRating: current_mythic_rating?.rating,
 			mythicRatingColor: current_mythic_rating ? `${current_mythic_rating.color.r}, ${current_mythic_rating.color.g}, ${current_mythic_rating.color.b}, ${current_mythic_rating.color.a}` : undefined,
 		};
+
+		if (characterProfile.guild){
+			(await dbClient.guildMember.upsert({
+				where: {
+					characterId: characterProfile.id,
+				},
+				create: {
+					characterId: characterProfile.id,
+					guildId: characterProfile.guild.id,
+				},
+				update: {
+					guildId: characterProfile.guild.id,
+				}
+			}))
+		}
 
 		await dbClient.character.upsert({
 			where: { id: characterProfile.id },

@@ -57,12 +57,12 @@ async function processChain<T, R>({
 		region: "eu",
 		clientId: process.env.BATTLENET_CLIENT_ID || "",
 		clientSecret: process.env.BATTLENET_CLIENT_SECRET || "",
-		disableZodValidation: true,
+		suppressZodErrors: true,
 	});
 
 	await processChain({
 		inputs: [null],
-		endpoint: async () => client.wow.ConnectedRealmIndex(),
+		endpoint: async () => client.wow.Azerite("2000000"),
 		validator: ConnectedRealmIndexResponse,
 		saveId: () => "root",
 		next: async (idx) => {

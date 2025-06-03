@@ -32,13 +32,26 @@ export const PvPSeasonResponse = LinkSelfResponse.extend({
 	season_end_timestamp: z.number().optional(),
 	season_name: LocaleResponse.optional(),
 });
-// FIXME: This returns 403 for some of the early seasons, this should be caught here.
-export function PvPSeason(this: WoWGameDataClient, pvpSeasonId: number) {
-	return this.request<z.infer<typeof PvPSeasonResponse>>({
+type PvPSeasonReturn = z.infer<typeof PvPSeasonResponse> | null;
+export async function PvPSeason(this: WoWGameDataClient, pvpSeasonId: number) {
+	const ret = await this.request<PvPSeasonReturn>({
 		endpoint: `data/wow/pvp-season/${pvpSeasonId}`,
 		namespace: "dynamic",
 		zod: PvPSeasonResponse,
 	});
+
+	if (ret.success) return ret;
+
+	if (ret.error_type === "battlenet" && ret.error.code === 403) {
+		// This is likely an old season which is not available in the api.
+		return {
+			success: true,
+			data: null,
+			raw_data: null,
+		};
+	}
+
+	return ret;
 }
 
 export const PvPLeaderboardIndexResponse = LinkSelfResponse.extend({

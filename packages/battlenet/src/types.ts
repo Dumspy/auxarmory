@@ -97,3 +97,9 @@ export const ApplicationAuthResponse = z.strictObject({
 
 export const RegionsConst = ["us", "eu", "kr", "tw", "cn"] as const;
 export const RegionsEnum = z.enum(RegionsConst);
+
+export const BattlenetError = z.strictObject({
+	code: z.number(),
+	type: z.string(),
+	detail: z.string(),
+})

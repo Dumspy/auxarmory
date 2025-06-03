@@ -1,7 +1,7 @@
-import type { z } from "zod/v4";
+import type { z, ZodError } from "zod/v4";
 
 import type { RegionsEnum } from "./types";
-import { ApplicationAuthResponse } from "./types";
+import { ApplicationAuthResponse, BattlenetError } from "./types";
 import { WoWGameDataClient, WoWProfileClient } from "./wow";
 
 export * from "./util";
@@ -11,7 +11,7 @@ type Regions = z.infer<typeof RegionsEnum>;
 interface BaseClientOptions {
 	region: Regions;
 	locale?: string;
-	disableZodValidation?: boolean;
+	suppressZodErrors?: boolean;
 }
 
 interface BaseRequestOptions<T> {
@@ -23,16 +23,43 @@ interface BaseRequestOptions<T> {
 	zod: z.Schema<T>;
 }
 
+type ClientReturn<T> =
+	| { success: true; data: T; raw_data: T }
+	| {
+			success: false;
+			error: ZodError<T>;
+			error_type: "zod";
+			raw_data: T;
+	  }
+	| {
+			success: false;
+			error: Response;
+			error_type: "auth";
+			raw_data: T;
+	  }
+	| {
+			success: false;
+			error: z.infer<typeof BattlenetError>;
+			error_type: "battlenet";
+			raw_data: T;
+	  }
+	| {
+			success: false;
+			error: Error;
+			error_type: "unknown";
+			raw_data: T;
+	  };
+
 class BaseClient {
 	protected region: Regions;
 	protected baseUrl: string;
 	protected locale?: string;
-	protected disableZodValidation: boolean;
+	protected suppressZodErrors: boolean;
 
 	constructor(options: BaseClientOptions) {
 		this.region = options.region;
 		this.locale = options.locale;
-		this.disableZodValidation = options.disableZodValidation ?? false;
+		this.suppressZodErrors = options.suppressZodErrors ?? false;
 
 		this.baseUrl =
 			this.region === "cn"
@@ -40,15 +67,14 @@ class BaseClient {
 				: `https://${this.region}.api.blizzard.com`;
 	}
 
-	public async request<T>(opt: BaseRequestOptions<T>): Promise<T> {
-		const {
-			endpoint,
-			params = new URLSearchParams(),
-			method = "GET",
-			namespace,
-			zod,
-		} = opt;
-
+	public async request<T>({
+		endpoint,
+		params = new URLSearchParams(),
+		method = "GET",
+		namespace,
+		zod,
+		authorization,
+	}: BaseRequestOptions<T>): Promise<ClientReturn<T>> {
 		const url = new URL(`${this.baseUrl}/${endpoint}`);
 
 		if (this.locale) {
@@ -60,7 +86,7 @@ class BaseClient {
 		}
 
 		const headers: Record<string, string> = {
-			Authorization: `Bearer ${opt.authorization}`,
+			Authorization: `Bearer ${authorization}`,
 			"Content-Type": "application/json",
 		};
 
@@ -75,26 +101,73 @@ class BaseClient {
 
 		if (res.ok) {
 			const json = await res.json();
-			if (this.disableZodValidation) {
-				return json as T;
-			}
 			const { data, success, error } = zod.safeParse(json);
 			if (!success) {
-				throw new Error(
+				if (this.suppressZodErrors) {
+					return {
+						success: true,
+						data: json as T,
+						raw_data: json as T,
+					};
+				}
+
+				console.error(
 					"Failed to parse api response with zod validator." +
 						"This usually means the API response has changed or the zod schema is incorrect." +
 						(error.message || "Unknown zod error"),
 				);
+				return {
+					success: false,
+					error: error,
+					error_type: "zod",
+					raw_data: json as T,
+				};
 			}
-			return data;
+			return {
+				success: true,
+				data,
+				raw_data: json as T,
+			};
 		}
 
-		// TODO: error handling i guess
-		//console.log(res);
-		throw new Error(
-			`Failed to fetch data from Battle.net API: ${res.status} ${res.statusText}` +
-				(res.url ? `\nURL: ${res.url}` : ""),
-		);
+		if (res.status === 401) {
+			return {
+				success: false,
+				error_type: "auth",
+				error: res,
+				raw_data: {} as T,
+			};
+		}
+
+		try {
+			const json = await res.json();
+			const { data, success } = BattlenetError.safeParse(json);
+			if (success) {
+				return {
+					success: false,
+					error_type: "battlenet",
+					error: data,
+					raw_data: json as T,
+				};
+			} else {
+				return {
+					success: false,
+					error_type: "unknown",
+					error: new Error(
+						`Unknown error: ${res.status} ${res.statusText}`,
+					),
+					raw_data: json as T,
+				};
+			}
+		} catch (e) {
+			const errorMessage = e instanceof Error ? e.message : String(e);
+			return {
+				success: false,
+				error_type: "unknown",
+				error: new Error(errorMessage),
+				raw_data: {} as T,
+			};
+		}
 	}
 }
 
@@ -169,7 +242,7 @@ export class ApplicationClient extends BaseClient {
 		this.accessTokenExpiresAt = Date.now() + data.expires_in * 1000;
 	}
 
-	public async request<T>(opt: ApplicationRequestOptions<T>): Promise<T> {
+	public async request<T>(opt: ApplicationRequestOptions<T>) {
 		await this.authenticate();
 		const authorization = this.accessToken ?? "";
 		return super.request({
@@ -198,7 +271,7 @@ export class AccountClient extends BaseClient {
 		this.wow = new WoWProfileClient(this);
 	}
 
-	public async request<T>(opt: AccountRequestOptions<T>): Promise<T> {
+	public async request<T>(opt: AccountRequestOptions<T>) {
 		return super.request({
 			...opt,
 			authorization: this.accessToken,

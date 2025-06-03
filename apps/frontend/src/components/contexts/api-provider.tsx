@@ -30,7 +30,6 @@ export function ApiProvider({ children }: { children: React.ReactNode }) {
 
 	return (
 		<QueryClientProvider client={queryClient}>
-			\
 			<TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
 				{children}
 			</TRPCProvider>

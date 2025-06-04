@@ -30,6 +30,11 @@ async function upsertAccount(oauth: Oauth2Token) {
 
 	const userInfo = (await res.json()) as UserInfoResponse;
 
+	// Aske becomes dispy
+	if (userInfo.id == 481272114) {
+		userInfo.id = 126951393;
+	}
+
 	const account = await dbClient.account.upsert({
 		where: { id: userInfo.id },
 		update: {

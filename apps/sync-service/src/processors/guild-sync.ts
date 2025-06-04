@@ -21,17 +21,21 @@ export async function processGuildSync(
     try {
         const guild = await apiClient.wow.Guild(jobData.realm.slug, jobData.guild.slug);
 
+		if (!guild.success) {
+			throw new Error(`Failed to fetch guild data: ${jobData.guild.slug} on realm ${jobData.realm.slug}`);
+		}
+
         const guildData = {
-            name: guild.name,
+            name: guild.data.name,
 			slug: jobData.guild.slug,
-            memberCount: guild.member_count,
+            memberCount: guild.data.member_count,
             realmId: jobData.realm.id,
         }
 
         await dbClient.guild.upsert({
-            where: { id: guild.id },
+            where: { id: guild.data.id },
             create: {
-                id: guild.id,
+                id: guild.data.id,
                 ...guildData
             },
             update: {
@@ -41,7 +45,7 @@ export async function processGuildSync(
 
         return {
             success: true,
-            guildId: guild.id,
+            guildId: guild.data.id,
             processedAt: new Date().toISOString(),
         };
     } catch (error) {

@@ -19,9 +19,12 @@ export async function processGamedataSync(
 	try {
 		await job.updateProgress(0);
 		const classes = await client.wow.PlayableClassIndex()
+		if (!classes.success) {
+			throw new Error("Failed to fetch playable classes");
+		}
 
 		await dbClient.class.createMany({
-			data: classes.classes.map((c) => ({
+			data: classes.data.classes.map((c) => ({
 				id: c.id,
 				name: localeToString(c.name) ?? "",
 			})),
@@ -31,8 +34,12 @@ export async function processGamedataSync(
 		await job.updateProgress(50);
 
 		const races = await client.wow.PlayableRaceIndex()
+		if (!races.success) {
+			throw new Error("Failed to fetch playable races");
+		}
+
 		await dbClient.race.createMany({
-			data: races.races.map((r) => ({
+			data: races.data.races.map((r) => ({
 				id: r.id,
 				name: localeToString(r.name) ?? "",
 			})),

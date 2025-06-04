@@ -39,8 +39,13 @@ export async function processAccountDataSync(
 
 	try {
 		const accountProfile = await apiClient.wow.AccountProfileSummary();
+		if (!accountProfile.success) {
+			throw new Error(
+				`Failed to fetch account profile for ${accountId}`,
+			);
+		}
 
-		const characters = accountProfile.wow_accounts.flatMap(
+		const characters = accountProfile.data.wow_accounts.flatMap(
 			(wowAccount) => wowAccount.characters,
 		);
 		// .filter(
@@ -59,20 +64,19 @@ export async function processAccountDataSync(
 				`Processing character ${character.name} (${character.id})`,
 			);
 
+			const realmData = {
+				name: character.realm.name ? localeToString(character.realm.name) ?? "Unknown Realm" : "Unknown Realm",
+				slug: character.realm.slug,
+			}
+
 			await dbClient.realm.upsert({
 				where: { id: character.realm.id },
 				create: {
 					id: character.realm.id,
-					name:
-						localeToString(character.realm.name) ?? "Unknown Realm",
-					slug: character.realm.slug,
 					region,
+					...realmData,
 				},
-				update: {
-					name:
-						localeToString(character.realm.name) ?? "Unknown Realm",
-					slug: character.realm.slug,
-				},
+				update: realmData
 			});
 
 			await syncServiceClient.addJob("sync-character-data", {

@@ -39,23 +39,29 @@ export async function processCharacterDataSync(
 			characterName.toLowerCase(),
 		);
 
-		if (characterProfile.guild) {
+		if (!characterProfile.success) {
+			throw new Error(
+				`Failed to fetch character profile for ${characterName} on realm ${realmSlug}`,
+			);
+		}
+
+		if (characterProfile.data.guild) {
 			const syncServiceClient = new SyncServiceClient();
 
 			await syncServiceClient.addJob(JobTypes.SYNC_GUILD_DATA, {
 				guild: {
-					id: characterProfile.guild.id,
-					slug: characterProfile.guild.name.toLowerCase().replace(/\s+/g, "-"),
+					id: characterProfile.data.guild.id,
+					slug: characterProfile.data.guild.name.toLowerCase().replace(/\s+/g, "-"),
 				},
 				realm: {
-					id: characterProfile.guild.realm.id,
-					slug: characterProfile.guild.realm.slug,
+					id: characterProfile.data.guild.realm.id,
+					slug: characterProfile.data.guild.realm.slug,
 				},
 				region,
 			});
 		}
 
-		const { current_mythic_rating } = await apiClient.wow.CharacterMythicKeystoneProfileIndex(
+		const mythicKeystoneProfile = await apiClient.wow.CharacterMythicKeystoneProfileIndex(
 			realmSlug,
 			characterName.toLowerCase(),
 		)
@@ -67,54 +73,60 @@ export async function processCharacterDataSync(
 			characterName.toLowerCase(),
 		);
 
-		const avatarUrl = characterMedia.assets.find(
+		if (!characterMedia.success) {
+			throw new Error(
+				`Failed to fetch character media for ${characterName} on realm ${realmSlug}`,
+			);
+		}
+
+		const avatarUrl = characterMedia.data.assets.find(
 			(asset) => asset.key === "avatar",
 		)?.value;
 
 		const character = {
-			name: characterProfile.name,
-			gender: characterProfile.gender.type,
-			level: characterProfile.level,
-			averageItemLevel: characterProfile.average_item_level,
-			equippedItemLevel: characterProfile.equipped_item_level,
-			lastLogin: new Date(characterProfile.last_login_timestamp),
-			activeSpec: characterProfile.active_spec?.name ? localeToString(characterProfile.active_spec.name) : undefined,
+			name: characterProfile.data.name,
+			gender: characterProfile.data.gender.type,
+			level: characterProfile.data.level,
+			averageItemLevel: characterProfile.data.average_item_level,
+			equippedItemLevel: characterProfile.data.equipped_item_level,
+			lastLogin: new Date(characterProfile.data.last_login_timestamp),
+			activeSpec: characterProfile.data.active_spec?.name ? localeToString(characterProfile.data.active_spec.name) : undefined,
 			avatarUrl,
 
-			faction: characterProfile.faction.type,
-			raceId: characterProfile.race.id,
-			classId: characterProfile.character_class.id,
+			faction: characterProfile.data.faction.type,
+			raceId: characterProfile.data.race.id,
+			classId: characterProfile.data.character_class.id,
 
-			realmId: characterProfile.realm.id,
-			guildMember: characterProfile.guild ? {
+			realmId: characterProfile.data.realm.id,
+			guildMember: characterProfile.data.guild ? {
 				connect: {
-					characterId: characterProfile.id,
+					characterId: characterProfile.data.id,
 				}
 			} : undefined,
 
-			mythicRating: current_mythic_rating?.rating,
-			mythicRatingColor: current_mythic_rating ? `${current_mythic_rating.color.r}, ${current_mythic_rating.color.g}, ${current_mythic_rating.color.b}, ${current_mythic_rating.color.a}` : undefined,
+			mythicRating: mythicKeystoneProfile.data?.current_mythic_rating?.rating,
+			mythicRatingColor: mythicKeystoneProfile.data?.current_mythic_rating ? `${mythicKeystoneProfile.data.current_mythic_rating.color.r}, ${mythicKeystoneProfile.data.current_mythic_rating.color.g}, ${mythicKeystoneProfile.data.current_mythic_rating.color.b}, ${mythicKeystoneProfile.data.current_mythic_rating.color.a}` : undefined,
 		};
 
-		if (characterProfile.guild){
+		if (characterProfile.data.guild){
 			(await dbClient.guildMember.upsert({
 				where: {
-					characterId: characterProfile.id,
+					characterId: characterProfile.data.id,
 				},
 				create: {
-					characterId: characterProfile.id,
-					guildId: characterProfile.guild.id,
+					characterId: characterProfile.data.id,
+					guildId: characterProfile.data.guild.id,
 				},
 				update: {
-					guildId: characterProfile.guild.id,
+					guildId: characterProfile.data.guild.id,
 				}
 			}))
 		}
 
 		await dbClient.character.upsert({
-			where: { id: characterProfile.id },
+			where: { id: characterProfile.data.id },
 			create: {
-				id: characterProfile.id,
+				id: characterProfile.data.id,
 				accountId: account.id,
 				...character,
 			},
@@ -129,7 +141,7 @@ export async function processCharacterDataSync(
 
 		return {
 			success: true,
-			characterId: characterProfile.id,
+			characterId: characterProfile.data.id,
 			processedAt: new Date().toISOString(),
 		};
 	} catch (error) {

@@ -25,12 +25,12 @@ export const CharacterEquipmentSummaryResponse = LinkSelfResponse.extend({
 				z.strictObject({
 					display_string: LocaleResponse,
 					required_count: z.int(),
-					is_active: z.boolean(),
+					is_active: z.boolean().optional(),
 				}),
 			),
 			display_string: LocaleResponse,
 		}),
-	),
+	).optional(),
 });
 export function CharacterEquipmentSummary(
 	this: WoWGameDataClient,

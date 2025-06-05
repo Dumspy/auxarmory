@@ -135,6 +135,76 @@ export async function processCharacterDataSync(
 			},
 		});
 
+		const equipment = await apiClient.wow.CharacterEquipmentSummary(
+			realmSlug,
+			characterName,
+		);
+
+		if (!equipment.success) {
+			if (equipment.error_type === "zod")
+			{
+				throw new Error(
+					`Failed to parse character equipment for ${characterName} on realm ${realmSlug}: ${equipment.error.message}`,
+				);
+			}
+
+			throw new Error(
+				`Failed to fetch character equipment for ${characterName} on realm ${realmSlug}`,
+			);
+		}
+
+		for (const item of equipment.data.equipped_items) {
+			if (!await dbClient.equipmentMedia.findUnique({
+				where: { id: item.media.id },
+			})) {
+				const itemMedia = await apiClient.wow.ItemMedia(item.item.id);
+				if (!itemMedia.success) {
+					console.warn(
+						`Failed to fetch media for item ${item.item.id}`,
+					);
+					continue;
+				}
+
+				await dbClient.equipmentMedia.create({
+					data: {
+						id: item.media.id,
+						mediaUrl: itemMedia.data.assets.find((asset) => asset.key === "icon",)?.value ?? "", // TOOD Placerholder image?
+					},
+				});
+			}
+
+			const gemIds = item.sockets?.map((s) => s.item?.id).filter((n): n is number => n !== undefined) ?? [];
+			const craftedStats = item.modified_crafting_stat?.map((stat) => stat.id) ?? [];
+
+			const itemData = {
+				ilvl: item.level.value,
+				id: item.item.id,
+				name: localeToString(item.name) ?? `${item.item.id}`,
+				quality: item.quality.type,
+				bonusIds : item.bonus_list,
+				gemIds,
+				mediaId: item.media.id,
+				enchantId: item.enchantments?.[0]?.enchantment_id,
+				track: item.name_description?.display_string ? localeToString(item.name_description.display_string) : undefined,
+				craftedStats,
+			}
+
+			await dbClient.characterEquipment.upsert({
+				where: {
+					characterId_slot: {
+						characterId: characterProfile.data.id,
+						slot: item.slot.type,
+					}
+				},
+				create: {
+					characterId: characterProfile.data.id,
+					slot: item.slot.type,
+					...itemData,
+				},
+				update: itemData,
+			});
+		}
+
 		await job.updateProgress(100);
 
 		console.log(`Successfully synced character data for ${characterName}`);

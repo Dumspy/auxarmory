@@ -13,7 +13,7 @@ export const ColorObject = z.strictObject({
 	r: z.number().int().min(0).max(255),
 	g: z.number().int().min(0).max(255),
 	b: z.number().int().min(0).max(255),
-	a: z.number().min(0).max(1),
+	a: z.union([z.number().min(0).max(1), z.number().int().min(0).max(255)]),
 });
 
 export const Realm = KeyNameIdResponse.extend({

@@ -31,6 +31,7 @@
     "@auxarmory/db": "workspace:*",
     "@t3-oss/env-core": "catalog:",
     "bullmq": "^5.36.1",
+    "date-fns": "^4.1.0",
     "ioredis": "catalog:",
     "zod": "catalog:"
   },

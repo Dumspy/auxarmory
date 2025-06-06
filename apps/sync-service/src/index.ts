@@ -61,8 +61,8 @@ class SyncService {
 					olderThanDays: 30,
 				},
 				{
-					repeat: { pattern: "0 2 * * 0" } // Weekly on Sunday at 2 AM
-				}
+					repeat: { pattern: "0 2 * * 0" }, // Weekly on Sunday at 2 AM
+				},
 			);
 
 			console.log("✅ Recurring jobs scheduled");

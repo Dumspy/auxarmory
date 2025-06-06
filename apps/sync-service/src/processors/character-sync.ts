@@ -4,9 +4,9 @@ import { ApplicationClient, localeToString } from "@auxarmory/battlenet";
 import { dbClient } from "@auxarmory/db";
 
 import type { JobPayloads } from "../types";
+import { SyncServiceClient } from "../client";
 import { env } from "../env";
 import { JobPayloadSchemas, JobTypes } from "../types";
-import { SyncServiceClient } from "../client";
 
 export async function processCharacterDataSync(
 	job: Job<JobPayloads[typeof JobTypes.SYNC_CHARACTER_DATA]>,
@@ -27,7 +27,7 @@ export async function processCharacterDataSync(
 		clientId: env.BATTLENET_CLIENT_ID,
 		clientSecret: env.BATTLENET_CLIENT_SECRET,
 		region: region,
-		suppressZodErrors: true
+		suppressZodErrors: true,
 	});
 
 	console.log(`Processing account data sync for ${accountId} (${region})`);
@@ -52,7 +52,9 @@ export async function processCharacterDataSync(
 			await syncServiceClient.addJob(JobTypes.SYNC_GUILD_DATA, {
 				guild: {
 					id: characterProfile.data.guild.id,
-					slug: characterProfile.data.guild.name.toLowerCase().replace(/\s+/g, "-"),
+					slug: characterProfile.data.guild.name
+						.toLowerCase()
+						.replace(/\s+/g, "-"),
 				},
 				realm: {
 					id: characterProfile.data.guild.realm.id,
@@ -62,10 +64,11 @@ export async function processCharacterDataSync(
 			});
 		}
 
-		const mythicKeystoneProfile = await apiClient.wow.CharacterMythicKeystoneProfileIndex(
-			realmSlug,
-			characterName.toLowerCase(),
-		)
+		const mythicKeystoneProfile =
+			await apiClient.wow.CharacterMythicKeystoneProfileIndex(
+				realmSlug,
+				characterName.toLowerCase(),
+			);
 
 		await job.updateProgress(50);
 
@@ -91,7 +94,9 @@ export async function processCharacterDataSync(
 			averageItemLevel: characterProfile.data.average_item_level,
 			equippedItemLevel: characterProfile.data.equipped_item_level,
 			lastLogin: new Date(characterProfile.data.last_login_timestamp),
-			activeSpec: characterProfile.data.active_spec?.name ? localeToString(characterProfile.data.active_spec.name) : undefined,
+			activeSpec: characterProfile.data.active_spec?.name
+				? localeToString(characterProfile.data.active_spec.name)
+				: undefined,
 			avatarUrl,
 
 			faction: characterProfile.data.faction.type,
@@ -99,18 +104,23 @@ export async function processCharacterDataSync(
 			classId: characterProfile.data.character_class.id,
 
 			realmId: characterProfile.data.realm.id,
-			guildMember: characterProfile.data.guild ? {
-				connect: {
-					characterId: characterProfile.data.id,
-				}
-			} : undefined,
+			guildMember: characterProfile.data.guild
+				? {
+						connect: {
+							characterId: characterProfile.data.id,
+						},
+					}
+				: undefined,
 
-			mythicRating: mythicKeystoneProfile.data?.current_mythic_rating?.rating,
-			mythicRatingColor: mythicKeystoneProfile.data?.current_mythic_rating ? `${mythicKeystoneProfile.data.current_mythic_rating.color.r}, ${mythicKeystoneProfile.data.current_mythic_rating.color.g}, ${mythicKeystoneProfile.data.current_mythic_rating.color.b}, ${mythicKeystoneProfile.data.current_mythic_rating.color.a}` : undefined,
+			mythicRating:
+				mythicKeystoneProfile.data?.current_mythic_rating?.rating,
+			mythicRatingColor: mythicKeystoneProfile.data?.current_mythic_rating
+				? `${mythicKeystoneProfile.data.current_mythic_rating.color.r}, ${mythicKeystoneProfile.data.current_mythic_rating.color.g}, ${mythicKeystoneProfile.data.current_mythic_rating.color.b}, ${mythicKeystoneProfile.data.current_mythic_rating.color.a}`
+				: undefined,
 		};
 
-		if (characterProfile.data.guild){
-			(await dbClient.guildMember.upsert({
+		if (characterProfile.data.guild) {
+			await dbClient.guildMember.upsert({
 				where: {
 					characterId: characterProfile.data.id,
 				},
@@ -120,8 +130,8 @@ export async function processCharacterDataSync(
 				},
 				update: {
 					guildId: characterProfile.data.guild.id,
-				}
-			}))
+				},
+			});
 		}
 
 		await dbClient.character.upsert({
@@ -142,8 +152,7 @@ export async function processCharacterDataSync(
 		);
 
 		if (!equipment.success) {
-			if (equipment.error_type === "zod")
-			{
+			if (equipment.error_type === "zod") {
 				throw new Error(
 					`Failed to parse character equipment for ${characterName} on realm ${realmSlug}: ${equipment.error.message}`,
 				);
@@ -155,9 +164,11 @@ export async function processCharacterDataSync(
 		}
 
 		for (const item of equipment.data.equipped_items) {
-			if (!await dbClient.equipmentMedia.findUnique({
-				where: { id: item.media.id },
-			})) {
+			if (
+				!(await dbClient.equipmentMedia.findUnique({
+					where: { id: item.media.id },
+				}))
+			) {
 				const itemMedia = await apiClient.wow.ItemMedia(item.item.id);
 				if (!itemMedia.success) {
 					console.warn(
@@ -169,33 +180,42 @@ export async function processCharacterDataSync(
 				await dbClient.equipmentMedia.create({
 					data: {
 						id: item.media.id,
-						mediaUrl: itemMedia.data.assets.find((asset) => asset.key === "icon",)?.value ?? "", // TOOD Placerholder image?
+						mediaUrl:
+							itemMedia.data.assets.find(
+								(asset) => asset.key === "icon",
+							)?.value ?? "", // TOOD Placerholder image?
 					},
 				});
 			}
 
-			const gemIds = item.sockets?.map((s) => s.item?.id).filter((n): n is number => n !== undefined) ?? [];
-			const craftedStats = item.modified_crafting_stat?.map((stat) => stat.id) ?? [];
+			const gemIds =
+				item.sockets
+					?.map((s) => s.item?.id)
+					.filter((n): n is number => n !== undefined) ?? [];
+			const craftedStats =
+				item.modified_crafting_stat?.map((stat) => stat.id) ?? [];
 
 			const itemData = {
 				ilvl: item.level.value,
 				id: item.item.id,
 				name: localeToString(item.name) ?? `${item.item.id}`,
 				quality: item.quality.type,
-				bonusIds : item.bonus_list,
+				bonusIds: item.bonus_list,
 				gemIds,
 				mediaId: item.media.id,
 				enchantId: item.enchantments?.[0]?.enchantment_id,
-				track: item.name_description?.display_string ? localeToString(item.name_description.display_string) : undefined,
+				track: item.name_description?.display_string
+					? localeToString(item.name_description.display_string)
+					: undefined,
 				craftedStats,
-			}
+			};
 
 			await dbClient.characterEquipment.upsert({
 				where: {
 					characterId_slot: {
 						characterId: characterProfile.data.id,
 						slot: item.slot.type,
-					}
+					},
 				},
 				create: {
 					characterId: characterProfile.data.id,

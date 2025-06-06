@@ -49,17 +49,19 @@ export function CharacterDetailedViewSkeleton() {
 					<div className="space-y-3">
 						<div className="bg-muted flex h-5 w-full animate-pulse items-center gap-2 rounded" />
 						<div className="grid grid-cols-3 gap-4">
-							{Array(3).fill(undefined).map((_, i) => (
-								<div
-									key={i}
-									className="bg-muted/50 animate-pulse rounded-lg p-3"
-								>
-									<div className="space-y-2 text-center">
-										<div className="bg-muted mx-auto h-6 w-12 rounded" />
-										<div className="bg-muted mx-auto h-3 w-16 rounded" />
+							{Array(3)
+								.fill(undefined)
+								.map((_, i) => (
+									<div
+										key={i}
+										className="bg-muted/50 animate-pulse rounded-lg p-3"
+									>
+										<div className="space-y-2 text-center">
+											<div className="bg-muted mx-auto h-6 w-12 rounded" />
+											<div className="bg-muted mx-auto h-3 w-16 rounded" />
+										</div>
 									</div>
-								</div>
-							))}
+								))}
 						</div>
 					</div>
 
@@ -95,19 +97,21 @@ export function CharacterDetailedViewSkeleton() {
 				</CardHeader>
 				<CardContent>
 					<div className="space-y-3">
-						{Array(4).fill(undefined).map((_, i) => (
-							<div
-								key={i}
-								className="bg-muted/50 flex items-center gap-3 rounded-lg p-3"
-							>
-								<div className="bg-muted h-8 w-8 animate-pulse rounded-lg" />
-								<div className="flex-1">
-									<div className="bg-muted mb-1 h-4 w-48 animate-pulse rounded" />
-									<div className="bg-muted h-3 w-32 animate-pulse rounded" />
+						{Array(4)
+							.fill(undefined)
+							.map((_, i) => (
+								<div
+									key={i}
+									className="bg-muted/50 flex items-center gap-3 rounded-lg p-3"
+								>
+									<div className="bg-muted h-8 w-8 animate-pulse rounded-lg" />
+									<div className="flex-1">
+										<div className="bg-muted mb-1 h-4 w-48 animate-pulse rounded" />
+										<div className="bg-muted h-3 w-32 animate-pulse rounded" />
+									</div>
+									<ChevronRight className="text-muted-foreground h-4 w-4" />
 								</div>
-								<ChevronRight className="text-muted-foreground h-4 w-4" />
-							</div>
-						))}
+							))}
 					</div>
 				</CardContent>
 			</Card>

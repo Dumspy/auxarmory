@@ -27,11 +27,11 @@ export const indexRouter = router({
 				activeSpec: true,
 				favorite: true,
 				mythicRating: true,
-				mythicRatingColor: true
+				mythicRatingColor: true,
 			},
 			orderBy: {
 				equippedItemLevel: "desc",
-			}
+			},
 		});
 
 		return characters;

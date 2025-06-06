@@ -44,7 +44,7 @@ export const ItemIventoryType = z.strictObject({
 		"TABARD",
 		"HANDS",
 		"SHIRT",
-		"BODY"
+		"BODY",
 	]),
 	name: LocaleResponse,
 });
@@ -78,14 +78,14 @@ const StatEnum = z.enum([
 	"COMBAT_RATING_AVOIDANCE",
 	"COMBAT_RATING_LIFESTEAL",
 	"COMBAT_RATING_SPEED",
-	"CORRUPTION_RESISTANCE"
-])
+	"CORRUPTION_RESISTANCE",
+]);
 
 const Upgrade = z.strictObject({
 	value: z.number(),
 	max_value: z.number(),
 	display_string: LocaleResponse,
-})
+});
 
 const BaseItem = z.strictObject({
 	item: z.strictObject({
@@ -184,36 +184,41 @@ const BaseItem = z.strictObject({
 		value: z.number(),
 		display_string: LocaleResponse,
 	}),
-	requirements: z.strictObject({
-		level: z.strictObject({
-			value: z.number().optional(),
-			display_string: LocaleResponse,
-		}).optional(),
-		faction: z
-			.strictObject({
-				value: Faction,
-				display_string: LocaleResponse,
-			})
-			.optional(),
-		playable_classes: z
-			.strictObject({
-				links: z.array(KeyNameIdResponse),
-				display_string: LocaleResponse,
-			})
-			.optional(),
-		playable_races: z
-			.strictObject({
-				links: z.array(KeyNameIdResponse),
-				display_string: LocaleResponse,
-			}).optional(),
-		reputation: z
-			.strictObject({
-				faction: KeyNameIdResponse,
-				min_reputation_level: z.number(),
-				display_string: LocaleResponse,
-			})
-			.optional(),
-	}).optional(),
+	requirements: z
+		.strictObject({
+			level: z
+				.strictObject({
+					value: z.number().optional(),
+					display_string: LocaleResponse,
+				})
+				.optional(),
+			faction: z
+				.strictObject({
+					value: Faction,
+					display_string: LocaleResponse,
+				})
+				.optional(),
+			playable_classes: z
+				.strictObject({
+					links: z.array(KeyNameIdResponse),
+					display_string: LocaleResponse,
+				})
+				.optional(),
+			playable_races: z
+				.strictObject({
+					links: z.array(KeyNameIdResponse),
+					display_string: LocaleResponse,
+				})
+				.optional(),
+			reputation: z
+				.strictObject({
+					faction: KeyNameIdResponse,
+					min_reputation_level: z.number(),
+					display_string: LocaleResponse,
+				})
+				.optional(),
+		})
+		.optional(),
 	sockets: z
 		.array(
 			z.strictObject({
@@ -272,7 +277,7 @@ export const HeirloomItem = BaseItem.omit({
 	})
 	.extend({
 		// New fields
-		upgrades: Upgrade
+		upgrades: Upgrade,
 	});
 
 const PreviewItemBase = BaseItem.extend({
@@ -288,7 +293,8 @@ const PreviewItemBase = BaseItem.extend({
 		quality: ItemQuality.extend({
 			type: ItemQuality.shape.type.exclude(["HEIRLOOM"]),
 		}),
-		requirements: BaseItem.shape.requirements.unwrap()
+		requirements: BaseItem.shape.requirements
+			.unwrap()
 			.extend({
 				skill: z
 					.strictObject({
@@ -416,9 +422,13 @@ export const CharacterEquipmentItem = BaseItem.extend({
 				}),
 			)
 			.optional(),
-		modified_crafting_stat: z.array(NameIdResponse.extend({
-			type: StatEnum
-		})).optional(),
+		modified_crafting_stat: z
+			.array(
+				NameIdResponse.extend({
+					type: StatEnum,
+				}),
+			)
+			.optional(),
 		timewalker_level: z.number().optional(),
 		upgrades: Upgrade.optional(),
 	});

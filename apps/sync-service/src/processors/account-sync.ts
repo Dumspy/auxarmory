@@ -40,9 +40,7 @@ export async function processAccountDataSync(
 	try {
 		const accountProfile = await apiClient.wow.AccountProfileSummary();
 		if (!accountProfile.success) {
-			throw new Error(
-				`Failed to fetch account profile for ${accountId}`,
-			);
+			throw new Error(`Failed to fetch account profile for ${accountId}`);
 		}
 
 		const characters = accountProfile.data.wow_accounts.flatMap(
@@ -65,9 +63,11 @@ export async function processAccountDataSync(
 			);
 
 			const realmData = {
-				name: character.realm.name ? localeToString(character.realm.name) ?? "Unknown Realm" : "Unknown Realm",
+				name: character.realm.name
+					? (localeToString(character.realm.name) ?? "Unknown Realm")
+					: "Unknown Realm",
 				slug: character.realm.slug,
-			}
+			};
 
 			await dbClient.realm.upsert({
 				where: { id: character.realm.id },
@@ -76,7 +76,7 @@ export async function processAccountDataSync(
 					region,
 					...realmData,
 				},
-				update: realmData
+				update: realmData,
 			});
 
 			await syncServiceClient.addJob("sync-character-data", {
@@ -90,7 +90,9 @@ export async function processAccountDataSync(
 			await job.updateProgress(progress);
 		}
 
-		{ /* Todo pass updatedAt/Created at to sync-character job to cleanup old characters that are no longer existing */}
+		{
+			/* Todo pass updatedAt/Created at to sync-character job to cleanup old characters that are no longer existing */
+		}
 
 		console.log(`Successfully synced account data for ${accountId}`);
 

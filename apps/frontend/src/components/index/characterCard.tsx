@@ -1,4 +1,5 @@
 import type { RouterOutputs } from "@/utils/trpc";
+import { formatDistance } from "date-fns";
 import { Star } from "lucide-react";
 
 import {
@@ -10,7 +11,6 @@ import { Card, CardContent } from "@auxarmory/ui/components/card";
 // import { Progress } from "@auxarmory/ui/components/progress";
 import { Separator } from "@auxarmory/ui/components/separator";
 import { Skeleton } from "@auxarmory/ui/components/skeleton";
-import { formatDistance } from "date-fns";
 
 export function CharacterCardSkeleton() {
 	return (
@@ -92,10 +92,13 @@ export function CharacterCard({
 							<h3 className="text-foreground font-semibold">
 								{character.name}
 							</h3>
-							<div className={`bg-class-${character.class.name.toLowerCase().replace(/\s+/g, "")} h-3 w-3 rounded-full`} />
+							<div
+								className={`bg-class-${character.class.name.toLowerCase().replace(/\s+/g, "")} h-3 w-3 rounded-full`}
+							/>
 						</div>
 						<p className="text-muted-foreground text-sm">
-							Level {character.level} {character.activeSpec} {character.class.name}
+							Level {character.level} {character.activeSpec}{" "}
+							{character.class.name}
 						</p>
 					</div>
 				</div>
@@ -113,24 +116,31 @@ export function CharacterCard({
 						<span className="text-muted-foreground text-sm">
 							M+ Score
 						</span>
-						{
-							character.mythicRating ? (
-								<span style={{color: `rgba(${character.mythicRatingColor})`}} className="text-sm font-medium">
-									{character.mythicRating.toFixed(0)}
-								</span>
-							) : (
-								<span className="text-sm font-medium text-foreground">
-									N/A
-								</span>
-							)
-						}
+						{character.mythicRating ? (
+							<span
+								style={{
+									color: `rgba(${character.mythicRatingColor})`,
+								}}
+								className="text-sm font-medium"
+							>
+								{character.mythicRating.toFixed(0)}
+							</span>
+						) : (
+							<span className="text-foreground text-sm font-medium">
+								N/A
+							</span>
+						)}
 					</div>
 					<div className="flex items-center justify-between">
 						<span className="text-muted-foreground text-sm">
 							Last Played
 						</span>
 						<span className="text-muted-foreground text-sm">
-							{formatDistance(new Date(character.lastLogin), new Date(), { addSuffix: true })}
+							{formatDistance(
+								new Date(character.lastLogin),
+								new Date(),
+								{ addSuffix: true },
+							)}
 						</span>
 					</div>
 				</div>

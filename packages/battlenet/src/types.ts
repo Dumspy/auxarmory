@@ -102,4 +102,4 @@ export const BattlenetError = z.strictObject({
 	code: z.number(),
 	type: z.string(),
 	detail: z.string(),
-})
+});

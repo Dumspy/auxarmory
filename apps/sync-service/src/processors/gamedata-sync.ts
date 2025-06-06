@@ -3,8 +3,7 @@ import type { Job } from "bullmq";
 import { ApplicationClient, localeToString } from "@auxarmory/battlenet";
 import { dbClient } from "@auxarmory/db";
 
-import type { JobPayloads } from "../types";
-import type { JobTypes } from "../types";
+import type { JobPayloads, JobTypes } from "../types";
 import { env } from "../env";
 
 export async function processGamedataSync(
@@ -13,12 +12,12 @@ export async function processGamedataSync(
 	const client = new ApplicationClient({
 		clientId: env.BATTLENET_CLIENT_ID,
 		clientSecret: env.BATTLENET_CLIENT_SECRET,
-		region: env.BATTLENET_REGION
+		region: env.BATTLENET_REGION,
 	});
 
 	try {
 		await job.updateProgress(0);
-		const classes = await client.wow.PlayableClassIndex()
+		const classes = await client.wow.PlayableClassIndex();
 		if (!classes.success) {
 			throw new Error("Failed to fetch playable classes");
 		}
@@ -33,7 +32,7 @@ export async function processGamedataSync(
 
 		await job.updateProgress(50);
 
-		const races = await client.wow.PlayableRaceIndex()
+		const races = await client.wow.PlayableRaceIndex();
 		if (!races.success) {
 			throw new Error("Failed to fetch playable races");
 		}

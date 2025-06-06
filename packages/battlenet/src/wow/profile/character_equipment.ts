@@ -12,25 +12,27 @@ import { CharacterEquipmentItem } from "../types/item";
 export const CharacterEquipmentSummaryResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
 	equipped_items: z.array(CharacterEquipmentItem),
-	equipped_item_sets: z.array(
-		z.strictObject({
-			item_set: KeyNameIdResponse,
-			items: z.array(
-				z.strictObject({
-					item: KeyNameIdResponse,
-					is_equipped: z.boolean().optional(),
-				}),
-			),
-			effects: z.array(
-				z.strictObject({
-					display_string: LocaleResponse,
-					required_count: z.int(),
-					is_active: z.boolean(),
-				}),
-			),
-			display_string: LocaleResponse,
-		}),
-	),
+	equipped_item_sets: z
+		.array(
+			z.strictObject({
+				item_set: KeyNameIdResponse,
+				items: z.array(
+					z.strictObject({
+						item: KeyNameIdResponse,
+						is_equipped: z.boolean().optional(),
+					}),
+				),
+				effects: z.array(
+					z.strictObject({
+						display_string: LocaleResponse,
+						required_count: z.int(),
+						is_active: z.boolean().optional(),
+					}),
+				),
+				display_string: LocaleResponse,
+			}),
+		)
+		.optional(),
 });
 export function CharacterEquipmentSummary(
 	this: WoWGameDataClient,

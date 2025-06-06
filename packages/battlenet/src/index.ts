@@ -24,13 +24,13 @@ interface BaseRequestOptions<T> {
 }
 
 type ClientReturn<T> =
-	| { success: true; data: T; raw_data: T, error?: never, error_type?: never }
+	| { success: true; data: T; raw_data: T; error?: never; error_type?: never }
 	| {
 			success: false;
 			error: ZodError<T>;
 			error_type: "zod";
 			raw_data: T;
-			data?: never
+			data?: never;
 	  }
 	| {
 			success: false;

@@ -1,12 +1,8 @@
 import fs from "fs";
 
 import { ApplicationClient } from ".";
-import {
-	AuctionsResponse,
-} from "./wow/game_data/auction";
-import {
-	ConnectedRealmIndexResponse,
-} from "./wow/game_data/connected_realm";
+import { AuctionsResponse } from "./wow/game_data/auction";
+import { ConnectedRealmIndexResponse } from "./wow/game_data/connected_realm";
 
 type EndpointFn<T, R> = (input: T) => Promise<R>;
 type Validator<R> = {

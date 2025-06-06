@@ -7,7 +7,7 @@ import {
 	processAccountDataSync,
 	processCharacterDataSync,
 	processGamedataSync,
-	processGuildSync
+	processGuildSync,
 } from "./processors/index";
 import { createRedisConnection } from "./redis";
 import { JobTypes } from "./types";

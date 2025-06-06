@@ -44,6 +44,7 @@ export const ItemIventoryType = z.strictObject({
 		"TABARD",
 		"HANDS",
 		"SHIRT",
+		"BODY",
 	]),
 	name: LocaleResponse,
 });
@@ -62,12 +63,36 @@ export const ItemQuality = z.strictObject({
 	name: LocaleResponse,
 });
 
+const StatEnum = z.enum([
+	"INTELLECT",
+	"AGILITY",
+	"STRENGTH",
+	"STAMINA",
+	"HASTE_RATING",
+	"CRIT_RATING",
+	"VERSATILITY",
+	"MASTERY_RATING",
+	"DODGE_RATING",
+	"PARRY_RATING",
+	"FROST_RESISTANCE",
+	"COMBAT_RATING_AVOIDANCE",
+	"COMBAT_RATING_LIFESTEAL",
+	"COMBAT_RATING_SPEED",
+	"CORRUPTION_RESISTANCE",
+]);
+
+const Upgrade = z.strictObject({
+	value: z.number(),
+	max_value: z.number(),
+	display_string: LocaleResponse,
+});
+
 const BaseItem = z.strictObject({
 	item: z.strictObject({
 		id: z.number(),
 		key: KeyResponse,
 	}),
-	context: z.number(),
+	context: z.number().optional(),
 	quality: ItemQuality,
 	name: LocaleResponse,
 	media: MediaKeyResponse,
@@ -84,6 +109,7 @@ const BaseItem = z.strictObject({
 			z.strictObject({
 				spell: KeyNameIdResponse,
 				description: LocaleResponse,
+				display_color: ColorObject.optional(),
 			}),
 		)
 		.optional(),
@@ -107,7 +133,7 @@ const BaseItem = z.strictObject({
 				max_value: z.number(),
 				display_string: LocaleResponse,
 				damage_class: z.strictObject({
-					type: z.enum(["PHYSICAL"]),
+					type: z.enum(["PHYSICAL", "NATURE"]),
 					name: LocaleResponse,
 				}),
 			}),
@@ -142,19 +168,7 @@ const BaseItem = z.strictObject({
 	stats: z.array(
 		z.strictObject({
 			type: z.strictObject({
-				type: z.enum([
-					"INTELLECT",
-					"AGILITY",
-					"STRENGTH",
-					"STAMINA",
-					"HASTE_RATING",
-					"CRIT_RATING",
-					"VERSATILITY",
-					"MASTERY_RATING",
-					"DODGE_RATING",
-					"PARRY_RATING",
-					"FROST_RESISTANCE",
-				]),
+				type: StatEnum,
 				name: LocaleResponse,
 			}),
 			is_equip_bonus: z.boolean().optional(),
@@ -170,31 +184,41 @@ const BaseItem = z.strictObject({
 		value: z.number(),
 		display_string: LocaleResponse,
 	}),
-	requirements: z.strictObject({
-		level: z.strictObject({
-			value: z.number(),
-			display_string: LocaleResponse,
-		}),
-		faction: z
-			.strictObject({
-				value: Faction,
-				display_string: LocaleResponse,
-			})
-			.optional(),
-		playable_classes: z
-			.strictObject({
-				links: z.array(KeyNameIdResponse),
-				display_string: LocaleResponse,
-			})
-			.optional(),
-		reputation: z
-			.strictObject({
-				faction: KeyNameIdResponse,
-				min_reputation_level: z.number(),
-				display_string: LocaleResponse,
-			})
-			.optional(),
-	}),
+	requirements: z
+		.strictObject({
+			level: z
+				.strictObject({
+					value: z.number().optional(),
+					display_string: LocaleResponse,
+				})
+				.optional(),
+			faction: z
+				.strictObject({
+					value: Faction,
+					display_string: LocaleResponse,
+				})
+				.optional(),
+			playable_classes: z
+				.strictObject({
+					links: z.array(KeyNameIdResponse),
+					display_string: LocaleResponse,
+				})
+				.optional(),
+			playable_races: z
+				.strictObject({
+					links: z.array(KeyNameIdResponse),
+					display_string: LocaleResponse,
+				})
+				.optional(),
+			reputation: z
+				.strictObject({
+					faction: KeyNameIdResponse,
+					min_reputation_level: z.number(),
+					display_string: LocaleResponse,
+				})
+				.optional(),
+		})
+		.optional(),
 	sockets: z
 		.array(
 			z.strictObject({
@@ -205,6 +229,8 @@ const BaseItem = z.strictObject({
 						"SINGING_THUNDER",
 						"SINGING_SEA",
 						"SINGING_WIND",
+						"TINKER",
+						"COGWHEEL",
 					]),
 					name: LocaleResponse,
 				}),
@@ -241,7 +267,6 @@ export const HeirloomItem = BaseItem.omit({
 })
 	.extend({
 		// BaseItem optional shapes
-		context: BaseItem.shape.context.optional(),
 		set: BaseItem.shape.set.optional(),
 	})
 	.extend({
@@ -252,16 +277,11 @@ export const HeirloomItem = BaseItem.omit({
 	})
 	.extend({
 		// New fields
-		upgrades: z.strictObject({
-			value: z.number(),
-			max_value: z.number(),
-			display_string: LocaleResponse,
-		}),
+		upgrades: Upgrade,
 	});
 
 const PreviewItemBase = BaseItem.extend({
 	// BaseItem optional shapes
-	context: BaseItem.shape.context.optional(),
 	stats: BaseItem.shape.stats.optional(),
 	level: BaseItem.shape.level.optional(),
 	binding: BaseItem.shape.binding.optional(),
@@ -274,8 +294,8 @@ const PreviewItemBase = BaseItem.extend({
 			type: ItemQuality.shape.type.exclude(["HEIRLOOM"]),
 		}),
 		requirements: BaseItem.shape.requirements
+			.unwrap()
 			.extend({
-				level: BaseItem.shape.requirements.shape.level.optional(),
 				skill: z
 					.strictObject({
 						profession: KeyNameIdResponse,
@@ -393,12 +413,22 @@ export const CharacterEquipmentItem = BaseItem.extend({
 			.array(
 				z.strictObject({
 					display_string: LocaleResponse,
+					source_item: KeyNameIdResponse.optional(),
 					enchantment_id: z.number(),
 					enchantment_slot: z.strictObject({
 						id: z.number(),
-						type: z.enum(["PERMANENT"]),
+						type: z.enum(["PERMANENT", "TEMPORARY"]),
 					}),
 				}),
 			)
 			.optional(),
+		modified_crafting_stat: z
+			.array(
+				NameIdResponse.extend({
+					type: StatEnum,
+				}),
+			)
+			.optional(),
+		timewalker_level: z.number().optional(),
+		upgrades: Upgrade.optional(),
 	});

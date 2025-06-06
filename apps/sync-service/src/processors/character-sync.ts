@@ -27,6 +27,7 @@ export async function processCharacterDataSync(
 		clientId: env.BATTLENET_CLIENT_ID,
 		clientSecret: env.BATTLENET_CLIENT_SECRET,
 		region: region,
+		suppressZodErrors: true
 	});
 
 	console.log(`Processing account data sync for ${accountId} (${region})`);

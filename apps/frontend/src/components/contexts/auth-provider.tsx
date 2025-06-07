@@ -10,7 +10,7 @@ const authClient = createClient({
 	issuer: "http://localhost:3001",
 });
 
-interface AuthContextType {
+export interface AuthContext {
 	accountId?: string;
 	loaded: boolean;
 	loggedIn: boolean;
@@ -19,7 +19,7 @@ interface AuthContextType {
 	getToken: () => Promise<string | undefined>;
 }
 
-const AuthContext = createContext({} as AuthContextType);
+const AuthContext = createContext<AuthContext | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const initializing = useRef(true);
@@ -116,7 +116,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	async function account() {
-		// Create a temporary tRPC client just for this call
 		const client = createTRPCClient<AppRouter>({
 			links: [
 				httpBatchLink({
@@ -161,5 +160,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuth() {
-	return useContext(AuthContext);
+	const context = useContext(AuthContext);
+
+	if (!context) {
+		throw new Error("useAuth must be used within an AuthProvider");
+	}
+
+	return context;
 }

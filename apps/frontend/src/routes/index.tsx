@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAuth } from "@/components/contexts/auth-provider";
 import {
 	CharacterCard,
 	CharacterCardSkeleton,
@@ -56,18 +55,7 @@ const weeklyResets = {
 };
 
 export default function Index() {
-	const { loggedIn } = useAuth();
 	const trpc = useTRPC();
-
-	if (!loggedIn) {
-		return (
-			<div className="flex h-screen items-center justify-center">
-				<p className="text-muted-foreground text-lg">
-					Please log in to view your dashboard.
-				</p>
-			</div>
-		);
-	}
 
 	const characterQuery = useQuery(trpc.index.listCharacters.queryOptions());
 	const [selectedCharacterId, setSelectedCharacterId] = useState(

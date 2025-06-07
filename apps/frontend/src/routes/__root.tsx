@@ -1,6 +1,6 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
-import { ContextProvider } from "@/components/contexts";
+import { useAuth } from "@/components/contexts/auth-provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
 	createRootRoute,
@@ -66,9 +66,34 @@ function BreadcrumbNav() {
 	);
 }
 
-export const Route = createRootRoute({
-	component: () => (
-		<ContextProvider>
+function RootLayot() {
+	const { loggedIn, login, loaded } = useAuth();
+
+	useEffect(() => {
+		if (!loggedIn && loaded) {
+			void login();
+		}
+	}, [loggedIn, loaded, login]);
+
+	if (!loggedIn) {
+		return (
+			<div className="bg-background flex h-screen w-screen flex-col items-center justify-center">
+				<div className="mb-6 flex flex-col items-center">
+					{/* Spinner */}
+					<div className="border-muted-foreground border-t-primary mb-4 h-12 w-12 animate-spin rounded-full border-4" />
+					<p className="text-primary mb-1 text-xl font-semibold">
+						Just a moment...
+					</p>
+					<p className="text-muted-foreground text-base">
+						We’re getting things ready for you.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<>
 			<AppSidebar />
 			<SidebarInset className="text-foreground">
 				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -88,6 +113,10 @@ export const Route = createRootRoute({
 			</SidebarInset>
 			<TanStackRouterDevtools position="bottom-right" />
 			<ReactQueryDevtools />
-		</ContextProvider>
-	),
+		</>
+	);
+}
+
+export const Route = createRootRoute({
+	component: RootLayot,
 });

@@ -1,4 +1,4 @@
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 
 import type { Context } from "./context";
 
@@ -8,7 +8,7 @@ export const router = t.router;
 export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
 	if (!ctx.accountId) {
-		throw new Error("Unauthorized");
+		throw new TRPCError({ code: "UNAUTHORIZED" });
 	}
 	return next({
 		ctx: {

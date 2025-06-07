@@ -100,7 +100,7 @@ export function NavMain() {
 
 	return (
 		<SidebarGroup>
-			<SidebarGroupLabel>Platform</SidebarGroupLabel>
+			<SidebarGroupLabel>Personal</SidebarGroupLabel>
 			<SidebarMenu>
 				{navItems.map((item) => {
 					const isActive =

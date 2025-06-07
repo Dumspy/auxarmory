@@ -9,6 +9,8 @@ class SyncService {
 	constructor() {
 		this.queueManager = new QueueManager();
 
+		void this.queueManager.addJob(JobTypes.SYNC_GAMEDATA, {});
+
 		this.setupGracefulShutdown();
 		void this.setupRecurringJobs();
 	}

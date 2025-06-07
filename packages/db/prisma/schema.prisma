@@ -1,143 +1,173 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+    provider = "prisma-client-js"
+    output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL")
+    provider = "postgres"
+    url      = env("DATABASE_URL")
 }
 
 model Account {
-  id              Int       @id @unique
-  battletag       String    @unique
-  bnetAccessToken String
-  bnetExpiresAt   DateTime
-  lastSync        DateTime?
+    id              Int       @id @unique
+    battletag       String    @unique
+    bnetAccessToken String
+    bnetExpiresAt   DateTime
+    lastSync        DateTime?
 
-  characters Character[]
+    characters Character[]
 }
 
 model Realm {
-  id     Int        @id
-  name   String
-  slug   String
-  region RegionEnum
+    id     Int        @id
+    name   String
+    slug   String
+    region RegionEnum
 
-  guilds Guild[]
+    guilds Guild[]
 
-  characters Character[]
+    characters Character[]
 }
 
 model Guild {
-  id          Int    @id
-  name        String
-  slug        String
-  memberCount Int    @default(0)
+    id          Int    @id
+    name        String
+    slug        String
+    memberCount Int    @default(0)
 
-  realm   Realm @relation(fields: [realmId], references: [id])
-  realmId Int
+    realm   Realm @relation(fields: [realmId], references: [id])
+    realmId Int
 
-  members GuildMember[]
+    members GuildMember[]
 }
 
 model Character {
-  id                Int      @id
-  name              String
-  gender            String
-  level             Int
-  averageItemLevel  Int
-  equippedItemLevel Int
-  lastLogin         DateTime
-  avatarUrl         String?
-  favorite          Boolean  @default(false)
-  activeSpec        String?
-  mythicRating      Float?   @default(0)
-  mythicRatingColor String?  @default("0,0,0,0")
+    id                Int      @id
+    name              String
+    gender            String
+    level             Int
+    averageItemLevel  Int
+    equippedItemLevel Int
+    lastLogin         DateTime
+    avatarUrl         String?
+    favorite          Boolean  @default(false)
+    activeSpec        String?
+    mythicRating      Float?   @default(0)
+    mythicRatingColor String?  @default("0,0,0,0")
 
-  faction FactionEnum
+    faction FactionEnum
 
-  race   Race @relation(fields: [raceId], references: [id])
-  raceId Int
+    race   Race @relation(fields: [raceId], references: [id])
+    raceId Int
 
-  class   Class @relation(fields: [classId], references: [id])
-  classId Int
+    class   Class @relation(fields: [classId], references: [id])
+    classId Int
 
-  realm   Realm @relation(fields: [realmId], references: [id])
-  realmId Int
+    realm   Realm @relation(fields: [realmId], references: [id])
+    realmId Int
 
-  guildMember GuildMember?
+    guildMember GuildMember?
 
-  account   Account @relation(fields: [accountId], references: [id])
-  accountId Int
+    account   Account @relation(fields: [accountId], references: [id])
+    accountId Int
 
-  Equipment CharacterEquipment[]
+    Equipment CharacterEquipment[]
 }
 
 model GuildMember {
-  character   Character @relation(fields: [characterId], references: [id])
-  characterId Int       @id @unique
+    character   Character @relation(fields: [characterId], references: [id])
+    characterId Int       @id @unique
 
-  guild   Guild @relation(fields: [guildId], references: [id])
-  guildId Int
+    guild   Guild @relation(fields: [guildId], references: [id])
+    guildId Int
 
-  isMain Boolean @default(false)
+    isMain Boolean @default(false)
 }
 
 model Class {
-  id   Int    @id @unique
-  name String
+    id   Int    @id @unique
+    name String
 
-  Character Character[]
+    Character Character[]
 }
 
 model Race {
-  id   Int    @id @unique
-  name String
+    id   Int    @id @unique
+    name String
 
-  characters Character[]
+    characters Character[]
 }
 
 model EquipmentMedia {
-  id                 Int                  @id @unique
-  mediaUrl           String
-  CharacterEquipment CharacterEquipment[]
+    id                 Int                  @id @unique
+    mediaUrl           String
+    CharacterEquipment CharacterEquipment[]
 }
 
 model CharacterEquipment {
-  character   Character @relation(fields: [characterId], references: [id])
-  characterId Int
+    character   Character @relation(fields: [characterId], references: [id])
+    characterId Int
 
-  slot    String
-  ilvl    Int
-  id      Int
-  name    String
-  quality String
+    slot    String
+    ilvl    Int
+    id      Int
+    name    String
+    quality String
 
-  media   EquipmentMedia? @relation(fields: [mediaId], references: [id])
-  mediaId Int?
+    media   EquipmentMedia? @relation(fields: [mediaId], references: [id])
+    mediaId Int?
 
-  track     String?
-  enchantId Int?
+    track     String?
+    enchantId Int?
 
-  gemIds       Int[]
-  bonusIds     Int[]
-  craftedStats Int[]
+    gemIds       Int[]
+    bonusIds     Int[]
+    craftedStats Int[]
 
-  @@id([characterId, slot])
-  @@unique([characterId, slot])
+    @@id([characterId, slot])
+    @@unique([characterId, slot])
+}
+
+model JournalExpansion {
+    id   Int    @id @unique
+    name String
+
+    JournalInstance JournalInstance[]
+}
+
+model JournalInstance {
+    id           Int                @id @unique
+    name         String
+    expansions    JournalExpansion[]
+    instanceType InstanceTypeEnum
+
+    JournalEncounters JournalEncounter[]
+}
+
+model JournalEncounter {
+    id                Int             @id @unique
+    name              String
+    journalInstance   JournalInstance @relation(fields: [journalInstanceId], references: [id])
+    journalInstanceId Int
+}
+
+enum InstanceTypeEnum {
+    RAID
+    DUNGEON
+	WORLD_BOSS
+    OTHER
 }
 
 enum RegionEnum {
-  us
-  eu
-  kr
-  tw
-  cn
+    us
+    eu
+    kr
+    tw
+    cn
 }
 
 enum FactionEnum {
-  ALLIANCE
-  HORDE
-  NEUTRAL
+    ALLIANCE
+    HORDE
+    NEUTRAL
 }

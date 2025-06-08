@@ -15,7 +15,8 @@ model Account {
     bnetExpiresAt   DateTime
     lastSync        DateTime?
 
-    characters Character[]
+    characters      Character[]
+    GuildPermission GuildPermission[]
 }
 
 model Realm {
@@ -39,6 +40,10 @@ model Guild {
     realmId Int
 
     members GuildMember[]
+
+    GuildPermission GuildPermission[]
+
+    GuildRank GuildRank[]
 }
 
 model Character {
@@ -82,6 +87,38 @@ model GuildMember {
     guildId Int
 
     isMain Boolean @default(false)
+
+    guildRank   GuildRank @relation(fields: [guildRankId], references: [id])
+    guildRankId Int
+}
+
+model GuildRank {
+    id          Int     @id @unique @default(autoincrement())
+    guild       Guild   @relation(fields: [guildId], references: [id])
+    guildId     Int
+    name        String
+    description String?
+    order       Int     @default(0)
+
+    members GuildMember[]
+
+    guildPermission GuildPermission[]
+}
+
+model GuildPermission {
+    id          Int     @id @unique
+    guild       Guild   @relation(fields: [guildId], references: [id])
+    guildId     Int
+    scope       String
+    description String?
+
+    type PermissionType @default(RANK)
+
+    targetAccount   Account? @relation(fields: [targetAccountId], references: [id])
+    targetAccountId Int?
+
+    targetGuildRank   GuildRank? @relation(fields: [targetGuildRankId], references: [id])
+    targetGuildRankId Int?
 }
 
 model Class {
@@ -138,7 +175,7 @@ model JournalExpansion {
 model JournalInstance {
     id           Int                @id @unique
     name         String
-    expansions    JournalExpansion[]
+    expansions   JournalExpansion[]
     instanceType InstanceTypeEnum
 
     JournalEncounters JournalEncounter[]
@@ -151,10 +188,15 @@ model JournalEncounter {
     journalInstanceId Int
 }
 
+enum PermissionType {
+    RANK
+    ACCOUNT
+}
+
 enum InstanceTypeEnum {
     RAID
     DUNGEON
-	WORLD_BOSS
+    WORLD_BOSS
     OTHER
 }
 

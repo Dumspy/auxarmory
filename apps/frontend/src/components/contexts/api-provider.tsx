@@ -19,8 +19,10 @@ export function ApiProvider({ children }: { children: React.ReactNode }) {
 					url: "http://localhost:3000",
 					async headers() {
 						const token = await getToken();
+
 						return {
 							Authorization: token ? `Bearer ${token}` : "",
+							// TODO: Set  the guild ID in the headers if available
 						};
 					},
 				}),

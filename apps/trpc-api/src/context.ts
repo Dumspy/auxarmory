@@ -26,15 +26,25 @@ export async function createContext({
 				return null;
 			}
 
-			return verified.subject.properties.id;
+			return Number(verified.subject.properties.id);
+		}
+		return null;
+	}
+
+	function getGuildIdFromHeader() {
+		const guildIdHeader = req.headers.guildId;
+		if (guildIdHeader && typeof guildIdHeader === "string") {
+			return guildIdHeader;
 		}
 		return null;
 	}
 
 	const accountId = await getAccountIdFromHeader();
+	const guildId = getGuildIdFromHeader();
 
 	return {
 		accountId,
+		guildId,
 	};
 }
 export type Context = Awaited<ReturnType<typeof createContext>>;

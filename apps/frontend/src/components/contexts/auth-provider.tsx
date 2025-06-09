@@ -11,7 +11,7 @@ const authClient = createClient({
 });
 
 export interface AuthContext {
-	accountId?: string;
+	accountId?: number;
 	loaded: boolean;
 	loggedIn: boolean;
 	logout: () => void;
@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [loaded, setLoaded] = useState(false);
 	const [loggedIn, setLoggedIn] = useState(false);
 	const token = useRef<string | undefined>(undefined);
-	const [accountId, setAccountId] = useState<string | undefined>();
+	const [accountId, setAccountId] = useState<number | undefined>();
 
 	useEffect(() => {
 		const hash = new URLSearchParams(location.search.slice(1));
@@ -128,7 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		});
 
 		try {
-			const id = await client.getAccountId.query();
+			const id = await client.account.getAccountId.query();
 			setAccountId(id);
 			setLoggedIn(true);
 		} catch {
@@ -162,9 +162,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
 	const context = useContext(AuthContext);
 
-	if (!context) {
+	if (!context)
 		throw new Error("useAuth must be used within an AuthProvider");
-	}
 
 	return context;
 }

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useGuild } from "@/components/contexts/guild-provider";
 import {
 	CharacterCard,
 	CharacterCardSkeleton,
@@ -6,8 +7,8 @@ import {
 import { CharacterDetailedView } from "@/components/index/characterDetailedView";
 import { useTRPC } from "@/utils/trpc";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import { Calendar, ExternalLink, Server, Users } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Calendar, Server, Users } from "lucide-react";
 
 import { Badge } from "@auxarmory/ui/components/badge";
 import { Button } from "@auxarmory/ui/components/button";
@@ -56,6 +57,7 @@ const weeklyResets = {
 
 export default function Index() {
 	const trpc = useTRPC();
+	const { activeGuildId } = useGuild();
 
 	const characterQuery = useQuery(trpc.index.listCharacters.queryOptions());
 	const [selectedCharacterId, setSelectedCharacterId] = useState(
@@ -76,6 +78,17 @@ export default function Index() {
 			setCurrentPage(page);
 		}
 	};
+
+	React.useEffect(() => {
+		if (characterQuery.data && characterQuery.data.length > 0) {
+			if (
+				!selectedCharacterId ||
+				!characterQuery.data.some((c) => c.id === selectedCharacterId)
+			) {
+				setSelectedCharacterId(characterQuery.data[0].id);
+			}
+		}
+	}, [characterQuery.data]);
 
 	return (
 		<div className="space-y-6 p-6">
@@ -114,6 +127,7 @@ export default function Index() {
 				)}
 			</div>
 
+			{/* Pagination */}
 			<Pagination className="mt-4">
 				<PaginationContent>
 					<PaginationItem>
@@ -210,9 +224,18 @@ export default function Index() {
 								variant="outline"
 								size="sm"
 								className="w-full"
+								disabled={!activeGuildId}
+								asChild
 							>
-								<ExternalLink className="mr-2 h-4 w-4" />
-								View Guild Profile
+								<Link
+									to={"/guild/$guildId"}
+									params={{
+										guildId:
+											activeGuildId?.toString() ?? "",
+									}}
+								>
+									View Guild Profile
+								</Link>
 							</Button>
 						</CardContent>
 					</Card>

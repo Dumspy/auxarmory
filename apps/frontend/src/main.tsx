@@ -1,17 +1,22 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { StrictMode } from "react";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import ReactDOM from "react-dom/client";
 
 import "@auxarmory/ui/globals.css";
 
-import { ContextProvider } from "./components/contexts";
-import { useAuth } from "./components/contexts/auth-provider";
-import { routeTree } from "./routeTree.gen";
+import { AuthProvider, useAuth } from "@/components/contexts/auth-provider";
+import { routeTree } from "@/routeTree.gen";
+
+import { ApiProvider } from "./components/contexts/api-provider";
+import { GuildProvider, useGuild } from "./components/contexts/guild-provider";
+import { ThemeProvider } from "./components/contexts/theme-provider";
 
 const router = createRouter({
 	routeTree,
 	context: {
-		auth: undefined,
+		auth: undefined!,
+		guild: undefined!,
 	},
 });
 
@@ -23,19 +28,25 @@ declare module "@tanstack/react-router" {
 
 function InnerApp() {
 	const auth = useAuth();
+	const guild = useGuild();
 
-	return <RouterProvider router={router} context={{ auth }} />;
+	return <RouterProvider router={router} context={{ auth, guild }} />;
 }
 
 function App() {
 	return (
-		<ContextProvider>
-			<InnerApp />
-		</ContextProvider>
+		<AuthProvider>
+			<GuildProvider>
+				<ApiProvider>
+					<ThemeProvider>
+						<InnerApp />
+					</ThemeProvider>
+				</ApiProvider>
+			</GuildProvider>
+		</AuthProvider>
 	);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const rootElement = document.getElementById("root")!;
 
 if (!rootElement.innerHTML) {

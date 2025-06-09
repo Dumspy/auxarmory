@@ -4,16 +4,15 @@ import React, { createContext, useContext, useState } from "react";
 export type Guild = RouterOutputs["account"]["getGuilds"][number];
 
 interface GuildContextType {
-	activeGuildId?: number;
 	setActiveGuildId: (guildId: number) => void;
+	activeGuildId: number | undefined;
 }
 
 const GuildContext = createContext<GuildContextType | undefined>(undefined);
 
 export function GuildProvider({ children }: { children: React.ReactNode }) {
-	const [activeGuildId, setActiveGuildId] = useState<number | undefined>(
-		undefined,
-	);
+	const [activeGuildId, setActiveGuildId] = useState<number | undefined>(undefined);
+
 
 	return (
 		<GuildContext.Provider value={{ activeGuildId, setActiveGuildId }}>

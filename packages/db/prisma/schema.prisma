@@ -16,7 +16,7 @@ model Account {
     lastSync        DateTime?
 
     characters      Character[]
-    GuildPermission GuildPermission[]
+    guildPermission GuildPermission[]
 }
 
 model Realm {
@@ -41,9 +41,9 @@ model Guild {
 
     members GuildMember[]
 
-    GuildPermission GuildPermission[]
+    guildPermission GuildPermission[]
 
-    GuildRank GuildRank[]
+    guildRank GuildRank[]
 }
 
 model Character {
@@ -125,7 +125,7 @@ model Class {
     id   Int    @id @unique
     name String
 
-    Character Character[]
+    character Character[]
 }
 
 model Race {
@@ -138,7 +138,7 @@ model Race {
 model EquipmentMedia {
     id                 Int                  @id @unique
     mediaUrl           String
-    CharacterEquipment CharacterEquipment[]
+    characterEquipment CharacterEquipment[]
 }
 
 model CharacterEquipment {
@@ -169,7 +169,7 @@ model JournalExpansion {
     id   Int    @id @unique
     name String
 
-    JournalInstance JournalInstance[]
+    journalInstance JournalInstance[]
 }
 
 model JournalInstance {
@@ -178,7 +178,7 @@ model JournalInstance {
     expansions   JournalExpansion[]
     instanceType InstanceTypeEnum
 
-    JournalEncounters JournalEncounter[]
+    journalEncounters JournalEncounter[]
 }
 
 model JournalEncounter {

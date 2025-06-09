@@ -34,7 +34,7 @@ export async function createContext({
 	function getGuildIdFromHeader() {
 		const guildIdHeader = req.headers.guildId;
 		if (guildIdHeader && typeof guildIdHeader === "string") {
-			return guildIdHeader;
+			return Number(guildIdHeader);
 		}
 		return null;
 	}

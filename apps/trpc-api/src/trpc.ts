@@ -1,6 +1,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 
 import type { Context } from "./context";
+import { dbClient } from "@auxarmory/db";
 
 interface Meta {
 	scopeRequired?: string;
@@ -27,9 +28,52 @@ export const protectedProcedure = t.procedure.use(
 				});
 			}
 
-			const scopes: string[] = []; // Replace with actual logic to get scopes for the account on x guildId
+			const accountRank = (await dbClient.guildMember.findFirst({
+				where: {
+					character: {
+						accountId: ctx.accountId,
+					},
+					guildId: ctx.guildId,
+				},
+				orderBy: {
+					guildRank: {
+						order: "asc",
+					}
+				},
+				select: {
+					guildRankId: true,
+				}
+			}))?.guildRankId
 
-			if (!scopes.includes(meta.scopeRequired)) {
+			if (!accountRank) {
+				throw new TRPCError({
+					code: "FORBIDDEN",
+					message: "You do not have any ranks in this guild",
+				});
+			}
+
+			const accountScopes = (await dbClient.guildPermission.findMany({
+				where: {
+					guildId: ctx.guildId,
+					OR: [
+						{
+							targetGuildRank: {
+								order: {
+									gte: accountRank,
+								}
+							}
+						},
+						{
+							targetAccountId: ctx.accountId,
+						}
+					]
+				},
+				select: {
+					scope: true,
+				},
+			})).map((p) => p.scope);
+
+			if (!accountScopes.includes(meta.scopeRequired)) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
 					message: `You do not have the required scope: ${meta.scopeRequired}`,

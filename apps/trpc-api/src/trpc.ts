@@ -42,8 +42,13 @@ export const protectedProcedure = t.procedure.use(
 				},
 				select: {
 					guildRankId: true,
+					guildRank: {
+						select: {
+							order: true,
+						}
+					},
 				}
-			}))?.guildRankId
+			}))
 
 			if (!accountRank) {
 				throw new TRPCError({
@@ -59,7 +64,7 @@ export const protectedProcedure = t.procedure.use(
 						{
 							targetGuildRank: {
 								order: {
-									gte: accountRank,
+									gte: accountRank.guildRank.order,
 								}
 							}
 						},

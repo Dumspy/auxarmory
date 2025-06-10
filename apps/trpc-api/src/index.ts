@@ -2,17 +2,13 @@ import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import cors from "cors";
 
 import { createContext } from "./context";
-import { indexRouter } from "./routes";
-import { protectedProcedure, publicProcedure, router } from "./trpc";
+import { accountRouter } from "./routes/account";
+import { indexRouter } from "./routes/index";
+import { router } from "./trpc";
 
 const appRouter = router({
-	helloWorld: publicProcedure.query(() => {
-		return "Hello world!";
-	}),
-	getAccountId: protectedProcedure.query(({ ctx }) => {
-		return ctx.accountId;
-	}),
 	index: indexRouter,
+	account: accountRouter,
 });
 
 export type AppRouter = typeof appRouter;

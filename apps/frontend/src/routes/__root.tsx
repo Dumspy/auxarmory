@@ -1,9 +1,10 @@
+import type { useGuild } from "@/components/contexts/guild-provider";
 import { Fragment, useEffect } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { useAuth } from "@/components/contexts/auth-provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
-	createRootRoute,
+	createRootRouteWithContext,
 	Link,
 	Outlet,
 	useRouterState,
@@ -19,7 +20,11 @@ import {
 	BreadcrumbSeparator,
 } from "@auxarmory/ui/components/breadcrumb";
 import { Separator } from "@auxarmory/ui/components/separator";
-import { SidebarInset, SidebarTrigger } from "@auxarmory/ui/components/sidebar";
+import {
+	SidebarInset,
+	SidebarProvider,
+	SidebarTrigger,
+} from "@auxarmory/ui/components/sidebar";
 
 function BreadcrumbNav() {
 	const state = useRouterState();
@@ -66,7 +71,7 @@ function BreadcrumbNav() {
 	);
 }
 
-function RootLayot() {
+function RootLayout() {
 	const { loggedIn, login, loaded } = useAuth();
 
 	useEffect(() => {
@@ -93,7 +98,7 @@ function RootLayot() {
 	}
 
 	return (
-		<>
+		<SidebarProvider>
 			<AppSidebar />
 			<SidebarInset className="text-foreground">
 				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -113,10 +118,15 @@ function RootLayot() {
 			</SidebarInset>
 			<TanStackRouterDevtools position="bottom-right" />
 			<ReactQueryDevtools />
-		</>
+		</SidebarProvider>
 	);
 }
 
-export const Route = createRootRoute({
-	component: RootLayot,
+interface RootRouterContext {
+	auth: ReturnType<typeof useAuth>;
+	guild: ReturnType<typeof useGuild>;
+}
+
+export const Route = createRootRouteWithContext<RootRouterContext>()({
+	component: RootLayout,
 });

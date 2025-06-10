@@ -15,6 +15,8 @@ import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 import { Route as WishlistPersonalImport } from './routes/wishlist/personal'
 import { Route as WishlistOverviewImport } from './routes/wishlist/overview'
+import { Route as GuildGuildIdRouteImport } from './routes/guild.$guildId/route'
+import { Route as GuildGuildIdIndexImport } from './routes/guild.$guildId/index'
 
 // Create/Update Routes
 
@@ -42,6 +44,18 @@ const WishlistOverviewRoute = WishlistOverviewImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const GuildGuildIdRouteRoute = GuildGuildIdRouteImport.update({
+  id: '/guild/$guildId',
+  path: '/guild/$guildId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const GuildGuildIdIndexRoute = GuildGuildIdIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GuildGuildIdRouteRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -60,6 +74,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/guild/$guildId': {
+      id: '/guild/$guildId'
+      path: '/guild/$guildId'
+      fullPath: '/guild/$guildId'
+      preLoaderRoute: typeof GuildGuildIdRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/wishlist/overview': {
       id: '/wishlist/overview'
       path: '/wishlist/overview'
@@ -74,16 +95,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WishlistPersonalImport
       parentRoute: typeof rootRoute
     }
+    '/guild/$guildId/': {
+      id: '/guild/$guildId/'
+      path: '/'
+      fullPath: '/guild/$guildId/'
+      preLoaderRoute: typeof GuildGuildIdIndexImport
+      parentRoute: typeof GuildGuildIdRouteImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface GuildGuildIdRouteRouteChildren {
+  GuildGuildIdIndexRoute: typeof GuildGuildIdIndexRoute
+}
+
+const GuildGuildIdRouteRouteChildren: GuildGuildIdRouteRouteChildren = {
+  GuildGuildIdIndexRoute: GuildGuildIdIndexRoute,
+}
+
+const GuildGuildIdRouteRouteWithChildren =
+  GuildGuildIdRouteRoute._addFileChildren(GuildGuildIdRouteRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/guild/$guildId': typeof GuildGuildIdRouteRouteWithChildren
   '/wishlist/overview': typeof WishlistOverviewRoute
   '/wishlist/personal': typeof WishlistPersonalRoute
+  '/guild/$guildId/': typeof GuildGuildIdIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -91,28 +132,50 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/wishlist/overview': typeof WishlistOverviewRoute
   '/wishlist/personal': typeof WishlistPersonalRoute
+  '/guild/$guildId': typeof GuildGuildIdIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/guild/$guildId': typeof GuildGuildIdRouteRouteWithChildren
   '/wishlist/overview': typeof WishlistOverviewRoute
   '/wishlist/personal': typeof WishlistPersonalRoute
+  '/guild/$guildId/': typeof GuildGuildIdIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/wishlist/overview' | '/wishlist/personal'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/guild/$guildId'
+    | '/wishlist/overview'
+    | '/wishlist/personal'
+    | '/guild/$guildId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/wishlist/overview' | '/wishlist/personal'
-  id: '__root__' | '/' | '/about' | '/wishlist/overview' | '/wishlist/personal'
+  to:
+    | '/'
+    | '/about'
+    | '/wishlist/overview'
+    | '/wishlist/personal'
+    | '/guild/$guildId'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/guild/$guildId'
+    | '/wishlist/overview'
+    | '/wishlist/personal'
+    | '/guild/$guildId/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  GuildGuildIdRouteRoute: typeof GuildGuildIdRouteRouteWithChildren
   WishlistOverviewRoute: typeof WishlistOverviewRoute
   WishlistPersonalRoute: typeof WishlistPersonalRoute
 }
@@ -120,6 +183,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  GuildGuildIdRouteRoute: GuildGuildIdRouteRouteWithChildren,
   WishlistOverviewRoute: WishlistOverviewRoute,
   WishlistPersonalRoute: WishlistPersonalRoute,
 }
@@ -136,6 +200,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
+        "/guild/$guildId",
         "/wishlist/overview",
         "/wishlist/personal"
       ]
@@ -146,11 +211,21 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.tsx"
     },
+    "/guild/$guildId": {
+      "filePath": "guild.$guildId/route.tsx",
+      "children": [
+        "/guild/$guildId/"
+      ]
+    },
     "/wishlist/overview": {
       "filePath": "wishlist/overview.tsx"
     },
     "/wishlist/personal": {
       "filePath": "wishlist/personal.tsx"
+    },
+    "/guild/$guildId/": {
+      "filePath": "guild.$guildId/index.tsx",
+      "parent": "/guild/$guildId"
     }
   }
 }

@@ -40,7 +40,7 @@
     "eslint": "catalog:",
     "globals": "^16.0.0",
     "prettier": "catalog:",
-    "vite": "^6.3.5"
+    "vite": "^6.3.6"
   },
   "prettier": "@auxarmory/prettier-config"
 }

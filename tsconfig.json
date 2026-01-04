@@ -1,0 +1,3 @@
+{
+  "extends": "@auxarmory/config/tsconfig.base.json"
+}

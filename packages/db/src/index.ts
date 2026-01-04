@@ -1,5 +1,6 @@
-import "./env";
+import { env } from "@auxarmory/env/server";
+import { drizzle } from "drizzle-orm/node-postgres";
 
-import { PrismaClient } from "../generated/prisma";
+import * as schema from "./schema";
 
-export const dbClient = new PrismaClient();
+export const db = drizzle(env.DATABASE_URL, { schema });

@@ -1,0 +1,24 @@
+{
+  "name": "@auxarmory/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@auxarmory/db": "workspace:*",
+    "@auxarmory/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@auxarmory/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

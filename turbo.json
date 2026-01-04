@@ -1,44 +1,54 @@
 {
-  "$schema": "https://turborepo.com/schema.json",
+  "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": ["generate", "^build"],
-    "outputs": ["dist/**"]
-    },
-    "clean": {
-      "cache": false
-    },
-    "format": {
-      "outputs": [".cache/.prettiercache"],
-      "outputLogs": "new-only"
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**"]
     },
     "lint": {
-      "outputs": [".cache/.eslintcache"]
+      "dependsOn": ["^lint"]
     },
-    "generate": {
-      "dependsOn": ["^generate"],
-      "cache": false,
-      "env": [
-        "PRISMA_SCHEMA_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_LIBRARY",
-        "PRISMA_FMT_BINARY"
-      ]
+    "check-types": {
+      "dependsOn": ["^check-types"]
     },
     "dev": {
       "cache": false,
-      "persistent": true,
-      "env": [
-        "DATABASE_URL",
-        "REDIS_URL",
-        "BATTLENET_CLIENT_ID",
-        "BATTLENET_CLIENT_SECRET",
-        "PRISMA_SCHEMA_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_LIBRARY",
-        "PRISMA_FMT_BINARY"
-      ]
+      "persistent": true
+    },
+    "db:push": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:studio": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:migrate": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:generate": {
+      "cache": false,
+      "persistent": true
+    },
+
+    "db:start": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:stop": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:down": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

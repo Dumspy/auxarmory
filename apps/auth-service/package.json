@@ -21,7 +21,7 @@
     "@hono/node-server": "^1.14.2",
     "@openauthjs/openauth": "catalog:",
     "@t3-oss/env-core": "catalog:",
-    "hono": "^4.7.10",
+    "hono": "^4.11.10",
     "ioredis": "catalog:",
     "zod": "catalog:"
   },

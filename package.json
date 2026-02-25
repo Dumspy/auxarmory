@@ -5,10 +5,12 @@
     "build": "turbo run build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
+    "dev": "turbo run dev --parallel",
     "format": "oxfmt --check",
     "format:fix": "oxfmt .",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
+    "ui:add": "pnpm --dir packages/ui dlx shadcn@latest add",
     "prepare": "husky"
   },
   "devDependencies": {

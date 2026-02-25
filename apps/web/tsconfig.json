@@ -1,0 +1,16 @@
+{
+  "extends": "@auxarmory/typescript-config/base.json",
+  "include": ["**/*.ts", "**/*.tsx"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "#/*": ["./src/*"],
+      "@auxarmory/ui": ["../../packages/ui/src/index.ts"],
+      "@auxarmory/ui/*": ["../../packages/ui/src/*"]
+    },
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"],
+    "noEmit": true
+  }
+}

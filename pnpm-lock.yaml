@@ -26,6 +26,9 @@ importers:
       '@oxlint/migrate':
         specifier: ^1.50.0
         version: 1.50.0
+      husky:
+        specifier: ^9.1.7
+        version: 9.1.7
       oxfmt:
         specifier: ^0.35.0
         version: 0.35.0
@@ -614,6 +617,11 @@ packages:
     resolution: {integrity: sha512-yMqGUQVVCkD4tqjOJf3TnrvaaHDMYp4VlUSObbkIiuCPe/ofdMBFIAcBbCSRFWOnos6qRiTVStDwqPLUclaxIw==}
     engines: {node: '>=18'}
 
+  husky@9.1.7:
+    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   oxc-parser@0.114.0:
     resolution: {integrity: sha512-V+tATPyadb6MP51BpK2OMnB27Ln/pDwG7Uk5cAi5jPHRyZwdb72zacuPI6umafcV3VJjh9Jc9WWp0rwEM0AjSQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -1037,6 +1045,8 @@ snapshots:
       resolve-pkg-maps: 1.0.0
 
   globals@17.3.0: {}
+
+  husky@9.1.7: {}
 
   oxc-parser@0.114.0:
     dependencies:

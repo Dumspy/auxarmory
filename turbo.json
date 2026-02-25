@@ -3,8 +3,8 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": ["generate", "^build"],
-    "outputs": ["dist/**"]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
     },
     "clean": {
       "cache": false
@@ -15,30 +15,6 @@
     },
     "lint": {
       "outputs": [".cache/.eslintcache"]
-    },
-    "generate": {
-      "dependsOn": ["^generate"],
-      "cache": false,
-      "env": [
-        "PRISMA_SCHEMA_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_LIBRARY",
-        "PRISMA_FMT_BINARY"
-      ]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true,
-      "env": [
-        "DATABASE_URL",
-        "REDIS_URL",
-        "BATTLENET_CLIENT_ID",
-        "BATTLENET_CLIENT_SECRET",
-        "PRISMA_SCHEMA_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_LIBRARY",
-        "PRISMA_FMT_BINARY"
-      ]
     }
   }
 }

@@ -5,20 +5,21 @@
     "build": "turbo run build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
-    "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
-    "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
-    "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
-    "lint:fix": "turbo run lint --continue -- --fix --cache --cache-location .cache/.eslintcache"
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix ."
   },
   "devDependencies": {
-    "@auxarmory/prettier-config": "workspace:*",
-    "prettier": "catalog:",
+    "@auxarmory/typescript-config": "workspace:*",
+    "@oxlint/migrate": "^1.50.0",
+    "oxfmt": "^0.35.0",
+    "oxlint": "^1.50.0",
     "turbo": "^2.5.3",
     "typescript": "catalog:"
   },
   "packageManager": "pnpm@10.11.0",
   "engines": {
     "node": ">=22.14.0"
-  },
-  "prettier": "@auxarmory/prettier-config"
+  }
 }

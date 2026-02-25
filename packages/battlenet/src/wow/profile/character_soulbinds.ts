@@ -1,12 +1,12 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
-import { CharacterResponse } from "../types/character";
+} from '../../types';
+import { CharacterResponse } from '../types/character';
 
 const TraitUnion = z.union([
 	z.strictObject({
@@ -17,7 +17,7 @@ const TraitUnion = z.union([
 	z.strictObject({
 		conduit_socket: z.strictObject({
 			type: z.strictObject({
-				type: z.enum(["POTENCY", "ENDURANCE", "FINESSE"]),
+				type: z.enum(['POTENCY', 'ENDURANCE', 'FINESSE']),
 				name: LocaleResponse,
 			}),
 			socket: z
@@ -51,7 +51,7 @@ export function CharacterSoulbinds(
 ) {
 	return this.request<z.infer<typeof CharacterSoulbindsResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/soulbinds`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterSoulbindsResponse,
 	});
 }

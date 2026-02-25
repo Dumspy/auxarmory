@@ -1,8 +1,8 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
-import { KeyNameIdResponse, KeyResponse, LinkSelfResponse } from "../../types";
-import { CharacterResponse } from "../types/character";
+import type { WoWGameDataClient } from '..';
+import { KeyNameIdResponse, KeyResponse, LinkSelfResponse } from '../../types';
+import { CharacterResponse } from '../types/character';
 
 export const CharacterQuestsResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
@@ -16,7 +16,7 @@ export function CharacterQuests(
 ) {
 	return this.request<z.infer<typeof CharacterQuestsResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/quests`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterQuestsResponse,
 	});
 }
@@ -32,7 +32,7 @@ export function CharacterCompletedQuests(
 ) {
 	return this.request<z.infer<typeof CharacterCompletedQuestsResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/quests/completed`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterCompletedQuestsResponse,
 	});
 }

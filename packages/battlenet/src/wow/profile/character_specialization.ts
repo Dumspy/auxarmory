@@ -1,14 +1,14 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	KeyNameResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
-import { SpellTooltips } from "../types";
-import { CharacterResponse } from "../types/character";
+} from '../../types';
+import { SpellTooltips } from '../types';
+import { CharacterResponse } from '../types/character';
 
 const ToolTip = z.strictObject({
 	talent: KeyNameIdResponse.extend({
@@ -79,7 +79,7 @@ export function CharacterSpecializationsSummary(
 		z.infer<typeof CharacterSpecializationsSummaryResponse>
 	>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/specializations`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterSpecializationsSummaryResponse,
 	});
 }

@@ -1,11 +1,11 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 
 export function ItemAppearance(this: WoWGameDataClient, id: number) {
 	return this.request<unknown>({
 		endpoint: `data/wow/item-appearance/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 	});
 }
@@ -16,7 +16,7 @@ export function ItemAppearanceSearch(
 ) {
 	return this.request<unknown>({
 		endpoint: `data/wow/search/item-appearance`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 		params,
 	});
@@ -25,7 +25,7 @@ export function ItemAppearanceSearch(
 export function ItemAppearanceSetIndex(this: WoWGameDataClient) {
 	return this.request<unknown>({
 		endpoint: `data/wow/item-appearance/set/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 	});
 }
@@ -33,7 +33,7 @@ export function ItemAppearanceSetIndex(this: WoWGameDataClient) {
 export function ItemAppearanceSet(this: WoWGameDataClient, id: number) {
 	return this.request<unknown>({
 		endpoint: `data/wow/item-appearance/set/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 	});
 }
@@ -41,7 +41,7 @@ export function ItemAppearanceSet(this: WoWGameDataClient, id: number) {
 export function ItemAppearanceSlotIndex(this: WoWGameDataClient) {
 	return this.request<unknown>({
 		endpoint: `data/wow/item-appearance/slot/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 	});
 }
@@ -49,7 +49,7 @@ export function ItemAppearanceSlotIndex(this: WoWGameDataClient) {
 export function ItemAppearanceSlot(this: WoWGameDataClient, slotType: string) {
 	return this.request<unknown>({
 		endpoint: `data/wow/item-appearance/slot/${slotType}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 	});
 }

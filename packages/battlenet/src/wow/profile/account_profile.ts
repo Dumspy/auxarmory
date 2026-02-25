@@ -1,16 +1,16 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWProfileClient } from "..";
+import type { WoWProfileClient } from '..';
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
 	KeyResponse,
 	LocaleResponse,
 	NameIdResponse,
-} from "../../types";
-import { Faction, Gender, Realm } from "../types";
-import { CharacterResponse } from "../types/character";
-import { ItemIventoryType } from "../types/item";
+} from '../../types';
+import { Faction, Gender, Realm } from '../types';
+import { CharacterResponse } from '../types/character';
+import { ItemIventoryType } from '../types/item';
 
 const ProfileLinkSelf = z.strictObject({
 	_links: z.strictObject({
@@ -154,7 +154,7 @@ export const AccountPetsCollectionSummaryResponse = ProfileLinkSelf.extend({
 			species: KeyNameIdResponse,
 			level: z.number(),
 			quality: z.strictObject({
-				type: z.enum(["POOR", "COMMON", "UNCOMMON", "RARE"]),
+				type: z.enum(['POOR', 'COMMON', 'UNCOMMON', 'RARE']),
 				name: LocaleResponse,
 			}),
 			stats: z.strictObject({

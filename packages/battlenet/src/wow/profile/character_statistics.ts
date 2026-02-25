@@ -1,8 +1,8 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
-import { KeyNameIdResponse, LinkSelfResponse } from "../../types";
-import { CharacterResponse } from "../types/character";
+import type { WoWGameDataClient } from '..';
+import { KeyNameIdResponse, LinkSelfResponse } from '../../types';
+import { CharacterResponse } from '../types/character';
 
 const RatingResponse = z.strictObject({
 	rating_bonus: z.number(),
@@ -68,7 +68,7 @@ export function CharacterStatisticsSummary(
 ) {
 	return this.request<z.infer<typeof CharacterStatisticsSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/statistics`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterStatisticsSummaryResponse,
 	});
 }

@@ -1,8 +1,8 @@
-import type { z } from "zod/v4";
+import type { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
-import { LinkSelfResponse, MediaAssetArray } from "../../types";
-import { CharacterResponse } from "../types/character";
+import type { WoWGameDataClient } from '..';
+import { LinkSelfResponse, MediaAssetArray } from '../../types';
+import { CharacterResponse } from '../types/character';
 
 export const CharacterMediaSummaryResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
@@ -15,7 +15,7 @@ export function CharacterMediaSummary(
 ) {
 	return this.request<z.infer<typeof CharacterMediaSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/character-media`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterMediaSummaryResponse,
 	});
 }

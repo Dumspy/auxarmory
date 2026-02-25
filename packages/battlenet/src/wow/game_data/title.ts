@@ -1,11 +1,11 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
+} from '../../types';
 
 export const TitleIndexResponse = LinkSelfResponse.extend({
 	titles: z.array(KeyNameIdResponse),
@@ -13,7 +13,7 @@ export const TitleIndexResponse = LinkSelfResponse.extend({
 export function TitleIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof TitleIndexResponse>>({
 		endpoint: `data/wow/title/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: TitleIndexResponse,
 	});
 }
@@ -21,14 +21,14 @@ export function TitleIndex(this: WoWGameDataClient) {
 const Source = z.union([
 	z.strictObject({
 		type: z.strictObject({
-			type: z.literal("ACHIEVEMENT"),
+			type: z.literal('ACHIEVEMENT'),
 			name: LocaleResponse,
 		}),
 		achievements: z.array(KeyNameIdResponse),
 	}),
 	z.strictObject({
 		type: z.strictObject({
-			type: z.literal("QUEST"),
+			type: z.literal('QUEST'),
 			name: LocaleResponse,
 		}),
 		quests: z.array(KeyNameIdResponse),
@@ -47,7 +47,7 @@ export const TitleResponse = LinkSelfResponse.extend({
 export function Title(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof TitleResponse>>({
 		endpoint: `data/wow/title/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: TitleResponse,
 	});
 }

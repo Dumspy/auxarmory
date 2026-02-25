@@ -1,7 +1,7 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
-import { LinkSelfResponse } from "../../types";
+import type { WoWGameDataClient } from '..';
+import { LinkSelfResponse } from '../../types';
 
 export const WoWTokenResponse = LinkSelfResponse.extend({
 	last_updated_timestamp: z.number(),
@@ -10,7 +10,7 @@ export const WoWTokenResponse = LinkSelfResponse.extend({
 export function WoWTokenIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof WoWTokenResponse>>({
 		endpoint: `data/wow/token/index`,
-		namespace: "dynamic",
+		namespace: 'dynamic',
 		zod: WoWTokenResponse,
 	});
 }

@@ -1,12 +1,12 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
-import { KeyNameIdResponse, LinkSelfResponse, RegionsEnum } from "../../types";
-import { FactionEnum, Realm } from "../types";
+import type { WoWGameDataClient } from '..';
+import { KeyNameIdResponse, LinkSelfResponse, RegionsEnum } from '../../types';
+import { FactionEnum, Realm } from '../types';
 
 export const MythicRaidLeaderboardResponse = LinkSelfResponse.extend({
 	slug: z.string(),
-	criteria_type: z.enum(["hall-of-fame"]),
+	criteria_type: z.enum(['hall-of-fame']),
 	entries: z.array(
 		z.strictObject({
 			guild: z.strictObject({
@@ -27,11 +27,11 @@ export const MythicRaidLeaderboardResponse = LinkSelfResponse.extend({
 export function MythicRaidLeaderboard(
 	this: WoWGameDataClient,
 	raid: string,
-	faction: "horde" | "alliance",
+	faction: 'horde' | 'alliance',
 ) {
 	return this.request<z.infer<typeof MythicRaidLeaderboardResponse>>({
 		endpoint: `data/wow/leaderboard/hall-of-fame/${raid}/${faction}`,
-		namespace: "dynamic",
+		namespace: 'dynamic',
 		zod: MythicRaidLeaderboardResponse,
 	});
 }

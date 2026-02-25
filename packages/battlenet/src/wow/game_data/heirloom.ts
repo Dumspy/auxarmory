@@ -1,13 +1,13 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	LinkSelfResponse,
 	LocaleResponse,
 	MediaKeyResponse,
-} from "../../types";
-import { HeirloomItem } from "../types/item";
+} from '../../types';
+import { HeirloomItem } from '../types/item';
 
 export const HeirloomIndexResponse = LinkSelfResponse.extend({
 	heirlooms: z.array(KeyNameIdResponse),
@@ -15,7 +15,7 @@ export const HeirloomIndexResponse = LinkSelfResponse.extend({
 export function HeirloomIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof HeirloomIndexResponse>>({
 		endpoint: `data/wow/heirloom/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: HeirloomIndexResponse,
 	});
 }
@@ -24,7 +24,7 @@ export const HeirloomResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	item: KeyNameIdResponse,
 	source: z.strictObject({
-		type: z.enum(["VENDOR", "WORLDEVENT", "DROP", "OTHER", "QUEST"]),
+		type: z.enum(['VENDOR', 'WORLDEVENT', 'DROP', 'OTHER', 'QUEST']),
 		name: LocaleResponse,
 	}),
 	source_description: LocaleResponse.optional(),
@@ -39,7 +39,7 @@ export const HeirloomResponse = LinkSelfResponse.extend({
 export function Heirloom(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof HeirloomResponse>>({
 		endpoint: `data/wow/heirloom/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: HeirloomResponse,
 	});
 }

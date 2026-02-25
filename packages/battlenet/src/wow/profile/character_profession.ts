@@ -1,8 +1,8 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
-import { KeyNameIdResponse, LinkSelfResponse } from "../../types";
-import { CharacterResponse } from "../types/character";
+import type { WoWGameDataClient } from '..';
+import { KeyNameIdResponse, LinkSelfResponse } from '../../types';
+import { CharacterResponse } from '../types/character';
 
 const ProfessionTier = z.array(
 	z.strictObject({
@@ -45,7 +45,7 @@ export function CharacterProfessionSummary(
 ) {
 	return this.request<z.infer<typeof CharacterProfessionSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/professions`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterProfessionSummaryResponse,
 	});
 }

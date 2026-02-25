@@ -9,12 +9,13 @@
     "clean": {
       "cache": false
     },
-    "format": {
-      "outputs": [".cache/.prettiercache"],
-      "outputLogs": "new-only"
+    "//#lint": {},
+    "//#lint:fix": {
+      "cache": false
     },
-    "lint": {
-      "outputs": [".cache/.eslintcache"]
+    "//#format": {},
+    "//#format:fix": {
+      "cache": false
     }
   }
 }

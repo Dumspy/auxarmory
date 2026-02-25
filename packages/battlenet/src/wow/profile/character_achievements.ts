@@ -1,13 +1,13 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
-import { CharacterResponse } from "../types/character";
+} from '../../types';
+import { CharacterResponse } from '../types/character';
 
 export interface ChildCriteriaType {
 	id: number;
@@ -66,7 +66,7 @@ export function CharacterAchievementsSummary(
 ) {
 	return this.request<z.infer<typeof CharacterAchievementsSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/achievements`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterAchievementsSummaryResponse,
 	});
 }
@@ -117,7 +117,7 @@ export function CharacterAchievementsStatistics(
 		z.infer<typeof CharacterAchievementsStatisticsResponse>
 	>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/achievements/statistics`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterAchievementsStatisticsResponse,
 	});
 }

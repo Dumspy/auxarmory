@@ -1,11 +1,11 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
+} from '../../types';
 
 export const PowerTypeIndexResponse = LinkSelfResponse.extend({
 	power_types: z.array(KeyNameIdResponse),
@@ -13,7 +13,7 @@ export const PowerTypeIndexResponse = LinkSelfResponse.extend({
 export function PowerTypeIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof PowerTypeIndexResponse>>({
 		endpoint: `data/wow/power-type/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PowerTypeIndexResponse,
 	});
 }
@@ -25,7 +25,7 @@ export const PowerTypeResponse = LinkSelfResponse.extend({
 export function PowerType(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof PowerTypeResponse>>({
 		endpoint: `data/wow/power-type/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PowerTypeResponse,
 	});
 }

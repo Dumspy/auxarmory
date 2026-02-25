@@ -1,14 +1,14 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	KeyNameResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
-import { SpellTooltips } from "../types";
+} from '../../types';
+import { SpellTooltips } from '../types';
 
 export const TalentTreeIndexResponse = LinkSelfResponse.extend({
 	spec_talent_trees: z.array(KeyNameResponse),
@@ -18,7 +18,7 @@ export const TalentTreeIndexResponse = LinkSelfResponse.extend({
 export function TalentTreeIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof TalentTreeIndexResponse>>({
 		endpoint: `data/wow/talent-tree/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: TalentTreeIndexResponse,
 	});
 }
@@ -35,7 +35,7 @@ const TalentTreeNode = z.array(
 		unlocks: z.array(z.number()).optional(),
 		node_type: z.strictObject({
 			id: z.number(),
-			type: z.enum(["CHOICE", "PASSIVE", "ACTIVE"]),
+			type: z.enum(['CHOICE', 'PASSIVE', 'ACTIVE']),
 		}),
 		ranks: z
 			.array(
@@ -92,7 +92,7 @@ export function TalentTree(
 ) {
 	return this.request<z.infer<typeof TalentTreeResponse>>({
 		endpoint: `data/wow/talent-tree/${talentTreeId}/playable-specialization/${specId}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: TalentTreeResponse,
 	});
 }
@@ -105,7 +105,7 @@ export const TalentTreeNodesResponse = LinkSelfResponse.extend({
 export function TalentTreeNodes(this: WoWGameDataClient, talentTreeId: number) {
 	return this.request<z.infer<typeof TalentTreeNodesResponse>>({
 		endpoint: `data/wow/talent-tree/${talentTreeId}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: TalentTreeNodesResponse,
 	});
 }
@@ -116,7 +116,7 @@ export const TalentIndexResponse = LinkSelfResponse.extend({
 export function TalentIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof TalentIndexResponse>>({
 		endpoint: `data/wow/talent/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: TalentIndexResponse,
 	});
 }
@@ -140,7 +140,7 @@ export const TalentResponse = LinkSelfResponse.extend({
 export function Talent(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof TalentResponse>>({
 		endpoint: `data/wow/talent/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: TalentResponse,
 	});
 }
@@ -151,7 +151,7 @@ export const PvPTalentIndexResponse = LinkSelfResponse.extend({
 export function PvPTalentIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof PvPTalentIndexResponse>>({
 		endpoint: `data/wow/pvp-talent/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PvPTalentIndexResponse,
 	});
 }
@@ -168,7 +168,7 @@ export const PvPTalentResponse = LinkSelfResponse.extend({
 export function PvPTalent(this: WoWGameDataClient, pvpTalentId: number) {
 	return this.request<z.infer<typeof PvPTalentResponse>>({
 		endpoint: `data/wow/pvp-talent/${pvpTalentId}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PvPTalentResponse,
 	});
 }

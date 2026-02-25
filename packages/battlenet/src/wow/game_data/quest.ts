@@ -1,13 +1,13 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
-import { Faction } from "../types";
+} from '../../types';
+import { Faction } from '../types';
 
 export const QuestIndexResponse = LinkSelfResponse.extend({
 	categories: KeyResponse,
@@ -17,7 +17,7 @@ export const QuestIndexResponse = LinkSelfResponse.extend({
 export function QuestIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof QuestIndexResponse>>({
 		endpoint: `data/wow/quest/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: QuestIndexResponse,
 	});
 }
@@ -75,7 +75,7 @@ export const QuestResponse = LinkSelfResponse.extend({
 export function Quest(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof QuestResponse>>({
 		endpoint: `data/wow/quest/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: QuestResponse,
 	});
 }
@@ -86,7 +86,7 @@ export const QuestCategoriesIndexResponse = LinkSelfResponse.extend({
 export function QuestCategoriesIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof QuestCategoriesIndexResponse>>({
 		endpoint: `data/wow/quest/category/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: QuestCategoriesIndexResponse,
 	});
 }
@@ -99,7 +99,7 @@ export const QuestCategoryResponse = LinkSelfResponse.extend({
 export function QuestCategory(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof QuestCategoryResponse>>({
 		endpoint: `data/wow/quest/category/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: QuestCategoryResponse,
 	});
 }
@@ -110,7 +110,7 @@ export const QuestAreasIndexResponse = LinkSelfResponse.extend({
 export function QuestAreasIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof QuestAreasIndexResponse>>({
 		endpoint: `data/wow/quest/area/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: QuestAreasIndexResponse,
 	});
 }
@@ -123,7 +123,7 @@ export const QuestAreaResponse = LinkSelfResponse.extend({
 export function QuestArea(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof QuestAreaResponse>>({
 		endpoint: `data/wow/quest/area/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: QuestAreaResponse,
 	});
 }
@@ -134,7 +134,7 @@ export const QuestTypeIndexResponse = LinkSelfResponse.extend({
 export function QuestTypeIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof QuestTypeIndexResponse>>({
 		endpoint: `data/wow/quest/type/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: QuestTypeIndexResponse,
 	});
 }
@@ -147,7 +147,7 @@ export const QuestTypeResponse = LinkSelfResponse.extend({
 export function QuestType(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof QuestTypeResponse>>({
 		endpoint: `data/wow/quest/type/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: QuestTypeResponse,
 	});
 }

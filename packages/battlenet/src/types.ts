@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
 export const CompleteLocaleResponse = z.strictObject({
 	en_US: z.string(),
@@ -59,13 +59,13 @@ export const MediaKeyResponse = z.strictObject({
 export const MediaAssetArray = z.array(
 	z.strictObject({
 		key: z.enum([
-			"icon",
-			"zoom",
-			"image",
-			"tile",
-			"avatar",
-			"inset",
-			"main-raw",
+			'icon',
+			'zoom',
+			'image',
+			'tile',
+			'avatar',
+			'inset',
+			'main-raw',
 		]),
 		value: z.string(),
 		file_data_id: z.number().optional(),
@@ -73,19 +73,19 @@ export const MediaAssetArray = z.array(
 );
 
 export const LocaleString = z.enum([
-	"enUS",
-	"esMX",
-	"ptBR",
-	"enGB",
-	"esES",
-	"frFR",
-	"ruRU",
-	"deDE",
-	"ptPT",
-	"itIT",
-	"koKR",
-	"zhTW",
-	"zhCN",
+	'enUS',
+	'esMX',
+	'ptBR',
+	'enGB',
+	'esES',
+	'frFR',
+	'ruRU',
+	'deDE',
+	'ptPT',
+	'itIT',
+	'koKR',
+	'zhTW',
+	'zhCN',
 ]);
 
 export const ApplicationAuthResponse = z.strictObject({
@@ -95,7 +95,7 @@ export const ApplicationAuthResponse = z.strictObject({
 	sub: z.string(),
 });
 
-export const RegionsConst = ["us", "eu", "kr", "tw", "cn"] as const;
+export const RegionsConst = ['us', 'eu', 'kr', 'tw', 'cn'] as const;
 export const RegionsEnum = z.enum(RegionsConst);
 
 export const BattlenetError = z.strictObject({

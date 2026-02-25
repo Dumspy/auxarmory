@@ -1,6 +1,6 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	KeyResponse,
@@ -8,7 +8,7 @@ import {
 	LocaleResponse,
 	MediaAssetArray,
 	MediaKeyResponse,
-} from "../../types";
+} from '../../types';
 
 export const CreatureResponse = LinkSelfResponse.extend({
 	id: z.number(),
@@ -23,7 +23,7 @@ export const CreatureResponse = LinkSelfResponse.extend({
 export function Creature(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof CreatureResponse>>({
 		endpoint: `data/wow/creature/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: CreatureResponse,
 	});
 }
@@ -34,7 +34,7 @@ export function CreatureSearch(
 ) {
 	return this.request<unknown>({
 		endpoint: `data/wow/search/creature`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 		params,
 	});
@@ -47,7 +47,7 @@ export const CreatureMediaResponse = LinkSelfResponse.extend({
 export function CreatureMedia(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof CreatureMediaResponse>>({
 		endpoint: `data/wow/media/creature-display/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: CreatureMediaResponse,
 	});
 }
@@ -58,7 +58,7 @@ export const CreatureFamilyIndexResponse = LinkSelfResponse.extend({
 export function CreatureFamilyIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof CreatureFamilyIndexResponse>>({
 		endpoint: `data/wow/creature-family/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: CreatureFamilyIndexResponse,
 	});
 }
@@ -72,7 +72,7 @@ export const CreatureFamilyResponse = LinkSelfResponse.extend({
 export function CreatureFamily(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof CreatureFamilyResponse>>({
 		endpoint: `data/wow/creature-family/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: CreatureFamilyResponse,
 	});
 }
@@ -84,7 +84,7 @@ export const CreatureFamilyMediaResponse = LinkSelfResponse.extend({
 export function CreatureFamilyMedia(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof CreatureFamilyMediaResponse>>({
 		endpoint: `data/wow/media/creature-family/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: CreatureFamilyMediaResponse,
 	});
 }
@@ -95,7 +95,7 @@ export const CreatureTypeIndexResponse = LinkSelfResponse.extend({
 export function CreatureTypeIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof CreatureTypeIndexResponse>>({
 		endpoint: `data/wow/creature-type/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: CreatureTypeIndexResponse,
 	});
 }
@@ -107,7 +107,7 @@ export const CreatureTypeResponse = LinkSelfResponse.extend({
 export function CreatureType(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof CreatureTypeResponse>>({
 		endpoint: `data/wow/creature-type/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: CreatureTypeResponse,
 	});
 }

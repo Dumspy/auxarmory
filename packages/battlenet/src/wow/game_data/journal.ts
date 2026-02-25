@@ -1,6 +1,6 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
@@ -9,8 +9,8 @@ import {
 	MediaAssetArray,
 	MediaKeyResponse,
 	NameIdResponse,
-} from "../../types";
-import { Faction } from "../types";
+} from '../../types';
+import { Faction } from '../types';
 
 export const JournalExpansionsIndexResponse = LinkSelfResponse.extend({
 	tiers: z.array(KeyNameIdResponse),
@@ -18,7 +18,7 @@ export const JournalExpansionsIndexResponse = LinkSelfResponse.extend({
 export function JournalExpansionsIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof JournalExpansionsIndexResponse>>({
 		endpoint: `data/wow/journal-expansion/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: JournalExpansionsIndexResponse,
 	});
 }
@@ -32,7 +32,7 @@ export const JournalExpansionsResponse = LinkSelfResponse.extend({
 export function JournalExpansions(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof JournalExpansionsResponse>>({
 		endpoint: `data/wow/journal-expansion/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: JournalExpansionsResponse,
 	});
 }
@@ -43,7 +43,7 @@ export const JournalEncounterIndexResponse = LinkSelfResponse.extend({
 export function JournalEncounterIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof JournalEncounterIndexResponse>>({
 		endpoint: `data/wow/journal-encounter/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: JournalEncounterIndexResponse,
 	});
 }
@@ -96,22 +96,22 @@ export const JournalEncounterResponse = LinkSelfResponse.extend({
 		name: KeyNameIdResponse.shape.name.optional(),
 	}),
 	category: z.strictObject({
-		type: z.enum(["DUNGEON", "RAID", "WORLD_BOSS", "EVENT"]).optional(),
+		type: z.enum(['DUNGEON', 'RAID', 'WORLD_BOSS', 'EVENT']).optional(),
 	}),
 	modes: z
 		.array(
 			z
 				.strictObject({
 					type: z.enum([
-						"NORMAL",
-						"HEROIC",
-						"MYTHIC",
-						"MYTHIC_KEYSTONE",
-						"LEGACY_10_MAN",
-						"LEGACY_25_MAN",
-						"LEGACY_10_MAN_HEROIC",
-						"LEGACY_25_MAN_HEROIC",
-						"LFR",
+						'NORMAL',
+						'HEROIC',
+						'MYTHIC',
+						'MYTHIC_KEYSTONE',
+						'LEGACY_10_MAN',
+						'LEGACY_25_MAN',
+						'LEGACY_10_MAN_HEROIC',
+						'LEGACY_25_MAN_HEROIC',
+						'LFR',
 					]),
 					name: LocaleResponse,
 				})
@@ -123,7 +123,7 @@ export const JournalEncounterResponse = LinkSelfResponse.extend({
 export function JournalEncounter(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof JournalEncounterResponse>>({
 		endpoint: `data/wow/journal-encounter/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: JournalEncounterResponse,
 	});
 }
@@ -134,7 +134,7 @@ export function JournalEncounterSearch(
 ) {
 	return this.request<unknown>({
 		endpoint: `data/wow/search/journal-encounter`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 		params,
 	});
@@ -146,7 +146,7 @@ export const JournalInstanceIndexResponse = LinkSelfResponse.extend({
 export function JournalInstanceIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof JournalInstanceIndexResponse>>({
 		endpoint: `data/wow/journal-instance/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: JournalInstanceIndexResponse,
 	});
 }
@@ -165,15 +165,15 @@ export const JournalInstanceResponse = LinkSelfResponse.extend({
 			z.strictObject({
 				mode: z.strictObject({
 					type: z.enum([
-						"NORMAL",
-						"HEROIC",
-						"MYTHIC",
-						"MYTHIC_KEYSTONE",
-						"LEGACY_10_MAN",
-						"LEGACY_25_MAN",
-						"LEGACY_10_MAN_HEROIC",
-						"LEGACY_25_MAN_HEROIC",
-						"LFR",
+						'NORMAL',
+						'HEROIC',
+						'MYTHIC',
+						'MYTHIC_KEYSTONE',
+						'LEGACY_10_MAN',
+						'LEGACY_25_MAN',
+						'LEGACY_10_MAN_HEROIC',
+						'LEGACY_25_MAN_HEROIC',
+						'LFR',
 					]),
 					name: LocaleResponse,
 				}),
@@ -186,14 +186,14 @@ export const JournalInstanceResponse = LinkSelfResponse.extend({
 	media: MediaKeyResponse,
 	minimum_level: z.number().optional(),
 	category: z.strictObject({
-		type: z.enum(["DUNGEON", "RAID", "WORLD_BOSS", "EVENT"]),
+		type: z.enum(['DUNGEON', 'RAID', 'WORLD_BOSS', 'EVENT']),
 	}),
 	order_index: z.number(),
 });
 export function JournalInstance(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof JournalInstanceResponse>>({
 		endpoint: `data/wow/journal-instance/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: JournalInstanceResponse,
 	});
 }
@@ -205,7 +205,7 @@ export const JournalInstanceMediaResponse = LinkSelfResponse.extend({
 export function JournalInstanceMedia(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof JournalInstanceMediaResponse>>({
 		endpoint: `data/wow/media/journal-instance/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: JournalInstanceMediaResponse,
 	});
 }

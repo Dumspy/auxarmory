@@ -1,13 +1,13 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
-import { CharacterResponse } from "../types/character";
+} from '../../types';
+import { CharacterResponse } from '../types/character';
 
 export const CharacterEncounterSummaryResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
@@ -21,7 +21,7 @@ export function CharacterEncounterSummary(
 ) {
 	return this.request<z.infer<typeof CharacterEncounterSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/encounters`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterEncounterSummaryResponse,
 	});
 }
@@ -38,16 +38,16 @@ export const CharacterDungeonsResponse = LinkSelfResponse.extend({
 							difficulty: z
 								.strictObject({
 									type: z.enum([
-										"NORMAL",
-										"HEROIC",
-										"MYTHIC",
-										"MYTHIC_KEYSTONE",
+										'NORMAL',
+										'HEROIC',
+										'MYTHIC',
+										'MYTHIC_KEYSTONE',
 									]),
 									name: LocaleResponse,
 								})
 								.or(z.strictObject({})),
 							status: z.strictObject({
-								type: z.enum(["COMPLETE", "IN_PROGRESS"]),
+								type: z.enum(['COMPLETE', 'IN_PROGRESS']),
 								name: LocaleResponse,
 							}),
 							progress: z.strictObject({
@@ -75,7 +75,7 @@ export function CharacterDungeons(
 ) {
 	return this.request<z.infer<typeof CharacterDungeonsResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/encounters/dungeons`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterDungeonsResponse,
 	});
 }
@@ -92,18 +92,18 @@ export const CharacterRaidResponse = LinkSelfResponse.extend({
 						z.strictObject({
 							difficulty: z.strictObject({
 								type: z.enum([
-									"LFR",
-									"NORMAL",
-									"HEROIC",
-									"MYTHIC",
-									"LEGACY_25_MAN_HEROIC",
-									"LEGACY_10_MAN",
-									"LEGACY_10_MAN_HEROIC",
+									'LFR',
+									'NORMAL',
+									'HEROIC',
+									'MYTHIC',
+									'LEGACY_25_MAN_HEROIC',
+									'LEGACY_10_MAN',
+									'LEGACY_10_MAN_HEROIC',
 								]),
 								name: LocaleResponse,
 							}),
 							status: z.strictObject({
-								type: z.enum(["COMPLETE", "IN_PROGRESS"]),
+								type: z.enum(['COMPLETE', 'IN_PROGRESS']),
 								name: LocaleResponse,
 							}),
 							progress: z.strictObject({
@@ -132,7 +132,7 @@ export function CharacterRaid(
 ) {
 	return this.request<z.infer<typeof CharacterRaidResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/encounters/raids`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterRaidResponse,
 	});
 }

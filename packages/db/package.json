@@ -1,0 +1,36 @@
+{
+  "name": "@auxarmory/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "build": "tsc",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.44.4",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "@auxarmory/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pg": "^8.11.6",
+    "drizzle-kit": "^0.31.4",
+    "typescript": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./client": {
+      "default": "./src/client.ts"
+    },
+    "./schema": {
+      "default": "./src/schema.ts"
+    }
+  }
+}

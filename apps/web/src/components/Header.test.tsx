@@ -11,9 +11,7 @@ vi.mock('@tanstack/react-router', () => ({
 		...props
 	}: PropsWithChildren<
 		AnchorHTMLAttributes<HTMLAnchorElement> & { activeProps?: unknown }
-	>) => (
-		<a {...props}>{children}</a>
-	),
+	>) => <a {...props}>{children}</a>,
 }));
 
 describe('Header', () => {

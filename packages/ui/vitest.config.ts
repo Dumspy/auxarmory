@@ -5,8 +5,7 @@ export default mergeConfig(
 	shared,
 	defineConfig({
 		test: {
-			environment: 'jsdom',
-			setupFiles: ['./test/setup.ts'],
+			name: 'ui',
 		},
 	}),
 );

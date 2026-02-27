@@ -9,7 +9,8 @@
     "dev": "vite dev --port 3000 --host",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts"
   },
   "dependencies": {
     "@auxarmory/ui": "workspace:*",
@@ -30,8 +31,10 @@
   },
   "devDependencies": {
     "@auxarmory/typescript-config": "workspace:*",
+    "@auxarmory/vitest-config": "workspace:*",
     "@tanstack/devtools-vite": "^0.3.11",
     "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.2.0",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

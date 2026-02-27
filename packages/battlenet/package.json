@@ -7,13 +7,17 @@
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "api:dev": "tsx src/dev.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "vitest run --config vitest.config.ts --passWithNoTests",
+    "test:watch": "vitest --config vitest.config.ts"
   },
   "devDependencies": {
     "@auxarmory/typescript-config": "workspace:*",
+    "@auxarmory/vitest-config": "workspace:*",
     "@types/node": "catalog:",
     "tsx": "^4.21.0",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "zod": "catalog:"

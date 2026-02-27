@@ -3,6 +3,7 @@ packages:
     - packages/*
     - tooling/*
 catalog:
+    '@t3-oss/env-core': ^0.13.8
     typescript: ^5.9.3
     '@types/node': ^22.14.8
     '@types/react': ^19.2.1

@@ -1,6 +1,7 @@
 import fs from 'fs';
 
 import { ApplicationClient } from '.';
+import { env } from './env';
 import { AuctionsResponse } from './wow/game_data/auction';
 import { ConnectedRealmIndexResponse } from './wow/game_data/connected_realm';
 
@@ -55,8 +56,8 @@ async function processChain<T, R>({
 (async () => {
 	const client = new ApplicationClient({
 		region: 'eu',
-		clientId: process.env['BATTLENET_CLIENT_ID'] || '',
-		clientSecret: process.env['BATTLENET_CLIENT_SECRET'] || '',
+		clientId: env.BATTLENET_CLIENT_ID,
+		clientSecret: env.BATTLENET_CLIENT_SECRET,
 		suppressZodErrors: true,
 	});
 

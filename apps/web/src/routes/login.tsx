@@ -10,7 +10,7 @@ import {
 import { Input } from '@auxarmory/ui/components/ui/input';
 import { Label } from '@auxarmory/ui/components/ui/label';
 
-import type { FormEvent} from 'react';
+import type { FormEvent } from 'react';
 import { useState } from 'react';
 
 import { authClient } from '../lib/auth-client';

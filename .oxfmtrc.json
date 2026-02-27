@@ -19,5 +19,5 @@
   "importOrderTypeScriptVersion": "4.4.0",
   "printWidth": 80,
   "sortPackageJson": false,
-  "ignorePatterns": ["**/*.prisma", "**/*.gen.ts"]
+  "ignorePatterns": ["**/*.gen.ts"]
 }

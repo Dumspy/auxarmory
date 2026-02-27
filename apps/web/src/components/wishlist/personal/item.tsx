@@ -1,9 +1,6 @@
 import { Axe } from 'lucide-react';
 
-import {
-	Card,
-	CardContent,
-} from '@auxarmory/ui/components/ui/card';
+import { Card, CardContent } from '@auxarmory/ui/components/ui/card';
 
 export function WishlistPersonalItem({
 	item,

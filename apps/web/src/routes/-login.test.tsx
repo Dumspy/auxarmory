@@ -27,9 +27,9 @@ vi.mock('../lib/auth-client', () => ({
 
 describe('LoginPage', () => {
 	beforeEach(() => {
-	navigateMock.mockReset();
-	signInEmailMock.mockReset();
-	signUpEmailMock.mockReset();
+		navigateMock.mockReset();
+		signInEmailMock.mockReset();
+		signUpEmailMock.mockReset();
 	});
 
 	it('submits credentials and navigates to / on success', async () => {

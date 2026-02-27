@@ -104,9 +104,9 @@ const weeklyResets = {
 };
 
 function Index() {
-	const [selectedCharacterId, setSelectedCharacterId] = useState<number | undefined>(
-		mockCharacters[0]?.id,
-	);
+	const [selectedCharacterId, setSelectedCharacterId] = useState<
+		number | undefined
+	>(mockCharacters[0]?.id);
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const totalPages = Math.max(1, Math.ceil(mockCharacters.length / 6));
@@ -129,9 +129,12 @@ function Index() {
 			<div className='space-y-6 p-2 md:p-4'>
 				<div className='flex items-center justify-between'>
 					<div>
-						<h1 className='text-foreground text-2xl font-bold'>Dashboard</h1>
+						<h1 className='text-foreground text-2xl font-bold'>
+							Dashboard
+						</h1>
 						<p className='text-muted-foreground'>
-							Welcome back! Here is what is happening with your characters.
+							Welcome back! Here is what is happening with your
+							characters.
 						</p>
 					</div>
 				</div>
@@ -148,8 +151,12 @@ function Index() {
 							<CharacterCard
 								key={`character-${character.id}`}
 								character={character}
-								isSelected={selectedCharacterId === character.id}
-								onClickCallback={() => setSelectedCharacterId(character.id)}
+								isSelected={
+									selectedCharacterId === character.id
+								}
+								onClickCallback={() =>
+									setSelectedCharacterId(character.id)
+								}
 							/>
 						))
 					)}
@@ -159,7 +166,9 @@ function Index() {
 					<PaginationContent>
 						<PaginationItem>
 							<PaginationPrevious
-								onClick={() => handlePageChange(currentPage - 1)}
+								onClick={() =>
+									handlePageChange(currentPage - 1)
+								}
 								className={
 									currentPage === 1
 										? 'pointer-events-none opacity-50'
@@ -181,7 +190,9 @@ function Index() {
 
 						<PaginationItem>
 							<PaginationNext
-								onClick={() => handlePageChange(currentPage + 1)}
+								onClick={() =>
+									handlePageChange(currentPage + 1)
+								}
 								className={
 									currentPage === totalPages
 										? 'pointer-events-none opacity-50'
@@ -214,13 +225,17 @@ function Index() {
 								</div>
 								<div className='space-y-2'>
 									<div className='flex justify-between text-sm'>
-										<span className='text-muted-foreground'>Members</span>
+										<span className='text-muted-foreground'>
+											Members
+										</span>
 										<span className='text-foreground'>
 											{guildInfo.members}
 										</span>
 									</div>
 									<div className='flex justify-between text-sm'>
-										<span className='text-muted-foreground'>Progress</span>
+										<span className='text-muted-foreground'>
+											Progress
+										</span>
 										<span className='text-foreground'>
 											{guildInfo.raidProgress}
 										</span>
@@ -237,7 +252,11 @@ function Index() {
 										{guildInfo.nextRaid}
 									</p>
 								</div>
-								<Button variant='outline' size='sm' className='w-full'>
+								<Button
+									variant='outline'
+									size='sm'
+									className='w-full'
+								>
 									<ExternalLink className='mr-2 h-4 w-4' />
 									View Guild Profile
 								</Button>
@@ -253,19 +272,27 @@ function Index() {
 							</CardHeader>
 							<CardContent>
 								<div className='space-y-3'>
-									{Object.entries(weeklyResets).map(([key, value]) => (
-										<div
-											key={key}
-											className='flex items-center justify-between'
-										>
-											<span className='text-sm capitalize'>
-												{key.replace(/([A-Z])/g, ' $1')}
-											</span>
-											<Badge variant='outline' className='text-xs'>
-												{value}
-											</Badge>
-										</div>
-									))}
+									{Object.entries(weeklyResets).map(
+										([key, value]) => (
+											<div
+												key={key}
+												className='flex items-center justify-between'
+											>
+												<span className='text-sm capitalize'>
+													{key.replace(
+														/([A-Z])/g,
+														' $1',
+													)}
+												</span>
+												<Badge
+													variant='outline'
+													className='text-xs'
+												>
+													{value}
+												</Badge>
+											</div>
+										),
+									)}
 								</div>
 							</CardContent>
 						</Card>

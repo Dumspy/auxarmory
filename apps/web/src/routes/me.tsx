@@ -51,11 +51,15 @@ export function MePage() {
 								Unable to load profile
 							</CardTitle>
 							<CardDescription>
-								Failed to load protected data: {meQuery.error.message}
+								Failed to load protected data:{' '}
+								{meQuery.error.message}
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<Link to='/login' className='text-primary underline'>
+							<Link
+								to='/login'
+								className='text-primary underline'
+							>
 								Go to login
 							</Link>
 						</CardContent>
@@ -85,16 +89,21 @@ export function MePage() {
 							Profile
 						</CardTitle>
 						<CardDescription>
-							Authenticated via Better Auth with protected tRPC data.
+							Authenticated via Better Auth with protected tRPC
+							data.
 						</CardDescription>
 					</CardHeader>
 					<CardContent className='space-y-2'>
 						<p>
-							<span className='text-muted-foreground'>Name: </span>
+							<span className='text-muted-foreground'>
+								Name:{' '}
+							</span>
 							{user.name}
 						</p>
 						<p>
-							<span className='text-muted-foreground'>Email: </span>
+							<span className='text-muted-foreground'>
+								Email:{' '}
+							</span>
 							{user.email}
 						</p>
 					</CardContent>

@@ -22,7 +22,8 @@ import { AppSidebar } from './app-sidebar';
 function BreadcrumbNav() {
 	const state = useRouterState();
 	const path = state.location.pathname;
-	const segments: string[] = path === '/' ? [] : path.split('/').filter(Boolean);
+	const segments: string[] =
+		path === '/' ? [] : path.split('/').filter(Boolean);
 
 	return (
 		<Breadcrumb>
@@ -35,7 +36,8 @@ function BreadcrumbNav() {
 				{segments.map((segment, index) => {
 					const segmentPath = `/${segments.slice(0, index + 1).join('/')}`;
 					const isLast = index === segments.length - 1;
-					const title = segment.charAt(0).toUpperCase() + segment.slice(1);
+					const title =
+						segment.charAt(0).toUpperCase() + segment.slice(1);
 
 					return (
 						<Fragment key={segmentPath}>

@@ -1,9 +1,5 @@
 import type { ComponentProps } from 'react';
-import {
-	AudioWaveform,
-	Command,
-	GalleryVerticalEnd,
-} from 'lucide-react';
+import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react';
 
 import {
 	Sidebar,

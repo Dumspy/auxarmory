@@ -5,10 +5,7 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from '@auxarmory/ui/components/ui/avatar';
-import {
-	Card,
-	CardContent,
-} from '@auxarmory/ui/components/ui/card';
+import { Card, CardContent } from '@auxarmory/ui/components/ui/card';
 import { Separator } from '@auxarmory/ui/components/ui/separator';
 import { Skeleton } from '@auxarmory/ui/components/ui/skeleton';
 

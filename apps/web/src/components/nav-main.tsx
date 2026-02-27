@@ -38,7 +38,12 @@ export function NavMain() {
 
 	const navItems = useMemo(() => {
 		const items: NavItem[] = [];
-		const allRoutes = ['/', '/about', '/wishlist/overview', '/wishlist/personal'];
+		const allRoutes = [
+			'/',
+			'/about',
+			'/wishlist/overview',
+			'/wishlist/personal',
+		];
 
 		allRoutes.forEach((route) => {
 			const segments = route.split('/').filter(Boolean);
@@ -98,7 +103,9 @@ export function NavMain() {
 				{navItems.map((item) => {
 					const isActive =
 						currentPath === item.path ||
-						(item.items?.some((subItem) => currentPath === subItem.path) ??
+						(item.items?.some(
+							(subItem) => currentPath === subItem.path,
+						) ??
 							false);
 
 					const hasChildren = !!item.items?.length;
@@ -114,8 +121,12 @@ export function NavMain() {
 								{hasChildren ? (
 									<>
 										<CollapsibleTrigger asChild>
-											<SidebarMenuButton tooltip={item.title}>
-												{item.icon ? <item.icon /> : null}
+											<SidebarMenuButton
+												tooltip={item.title}
+											>
+												{item.icon ? (
+													<item.icon />
+												) : null}
 												<span>{item.title}</span>
 												<ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
 											</SidebarMenuButton>
@@ -123,10 +134,22 @@ export function NavMain() {
 										<CollapsibleContent>
 											<SidebarMenuSub>
 												{item.items?.map((subItem) => (
-													<SidebarMenuSubItem key={subItem.path}>
-														<SidebarMenuSubButton asChild>
-															<Link to={subItem.path}>
-																<span>{subItem.title}</span>
+													<SidebarMenuSubItem
+														key={subItem.path}
+													>
+														<SidebarMenuSubButton
+															asChild
+														>
+															<Link
+																to={
+																	subItem.path
+																}
+															>
+																<span>
+																	{
+																		subItem.title
+																	}
+																</span>
 															</Link>
 														</SidebarMenuSubButton>
 													</SidebarMenuSubItem>

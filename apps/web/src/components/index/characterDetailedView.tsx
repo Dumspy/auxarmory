@@ -86,12 +86,17 @@ export function CharacterDetailedView({
 				<CardContent>
 					<Tabs defaultValue='progression' className='w-full'>
 						<TabsList className='grid w-full grid-cols-3'>
-							<TabsTrigger value='progression'>Progression</TabsTrigger>
+							<TabsTrigger value='progression'>
+								Progression
+							</TabsTrigger>
 							<TabsTrigger value='weekly'>Weekly</TabsTrigger>
 							<TabsTrigger value='stats'>Stats</TabsTrigger>
 						</TabsList>
 
-						<TabsContent value='progression' className='mt-4 space-y-4'>
+						<TabsContent
+							value='progression'
+							className='mt-4 space-y-4'
+						>
 							<div className='space-y-3'>
 								<h4 className='text-foreground flex items-center gap-2 font-medium'>
 									<Crown className='h-4 w-4' />
@@ -140,7 +145,9 @@ export function CharacterDetailedView({
 										</span>
 									</div>
 									<Progress
-										value={(character.mythicScore / 3000) * 100}
+										value={
+											(character.mythicScore / 3000) * 100
+										}
 										className='h-2'
 									/>
 								</div>
@@ -171,26 +178,55 @@ export function CharacterDetailedView({
 									<div>
 										<div className='mb-1 flex justify-between text-sm'>
 											<span>Raid</span>
-											<span>{character.weeklyVault.raid} / 3</span>
+											<span>
+												{character.weeklyVault.raid} / 3
+											</span>
 										</div>
-										<Progress value={(character.weeklyVault.raid / 3) * 100} className='h-2' />
+										<Progress
+											value={
+												(character.weeklyVault.raid /
+													3) *
+												100
+											}
+											className='h-2'
+										/>
 									</div>
 									<div>
 										<div className='mb-1 flex justify-between text-sm'>
 											<span>Mythic+</span>
-											<span>{character.weeklyVault.mythicPlus} / 3</span>
+											<span>
+												{
+													character.weeklyVault
+														.mythicPlus
+												}{' '}
+												/ 3
+											</span>
 										</div>
 										<Progress
-											value={(character.weeklyVault.mythicPlus / 3) * 100}
+											value={
+												(character.weeklyVault
+													.mythicPlus /
+													3) *
+												100
+											}
 											className='h-2'
 										/>
 									</div>
 									<div>
 										<div className='mb-1 flex justify-between text-sm'>
 											<span>PvP</span>
-											<span>{character.weeklyVault.pvp} / 3</span>
+											<span>
+												{character.weeklyVault.pvp} / 3
+											</span>
 										</div>
-										<Progress value={(character.weeklyVault.pvp / 3) * 100} className='h-2' />
+										<Progress
+											value={
+												(character.weeklyVault.pvp /
+													3) *
+												100
+											}
+											className='h-2'
+										/>
 									</div>
 								</div>
 							</div>
@@ -198,12 +234,14 @@ export function CharacterDetailedView({
 								<div className='mb-2 flex justify-between text-sm'>
 									<span>Weekly Conquest</span>
 									<span>
-										{character.conquest.current} / {character.conquest.max}
+										{character.conquest.current} /{' '}
+										{character.conquest.max}
 									</span>
 								</div>
 								<Progress
 									value={
-										(character.conquest.current / character.conquest.max) *
+										(character.conquest.current /
+											character.conquest.max) *
 										100
 									}
 									className='h-2'
@@ -285,7 +323,8 @@ export function CharacterDetailedView({
 										{activity.title}
 									</div>
 									<div className='text-muted-foreground text-xs'>
-										{activity.character} - {activity.timestamp}
+										{activity.character} -{' '}
+										{activity.timestamp}
 									</div>
 								</div>
 								<ChevronRight className='text-muted-foreground h-4 w-4' />

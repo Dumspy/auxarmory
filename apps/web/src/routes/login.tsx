@@ -86,7 +86,9 @@ export function LoginPage() {
 				<Card>
 					<CardHeader>
 						<CardTitle>
-							{mode === 'sign-in' ? 'Welcome back' : 'Create your account'}
+							{mode === 'sign-in'
+								? 'Welcome back'
+								: 'Create your account'}
 						</CardTitle>
 						<CardDescription>
 							{mode === 'sign-in'
@@ -98,7 +100,9 @@ export function LoginPage() {
 						<div className='mb-4 grid grid-cols-2 gap-2'>
 							<Button
 								type='button'
-								variant={mode === 'sign-in' ? 'default' : 'outline'}
+								variant={
+									mode === 'sign-in' ? 'default' : 'outline'
+								}
 								onClick={() => {
 									setMode('sign-in');
 									setError(null);
@@ -108,7 +112,9 @@ export function LoginPage() {
 							</Button>
 							<Button
 								type='button'
-								variant={mode === 'sign-up' ? 'default' : 'outline'}
+								variant={
+									mode === 'sign-up' ? 'default' : 'outline'
+								}
 								onClick={() => {
 									setMode('sign-up');
 									setError(null);
@@ -161,7 +167,10 @@ export function LoginPage() {
 							</div>
 
 							{error ? (
-								<p className='text-sm text-red-500' role='alert'>
+								<p
+									className='text-sm text-red-500'
+									role='alert'
+								>
 									{error}
 								</p>
 							) : null}

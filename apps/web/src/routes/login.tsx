@@ -10,7 +10,8 @@ import {
 import { Input } from '@auxarmory/ui/components/ui/input';
 import { Label } from '@auxarmory/ui/components/ui/label';
 
-import { FormEvent, useState } from 'react';
+import type { FormEvent} from 'react';
+import { useState } from 'react';
 
 import { authClient } from '../lib/auth-client';
 
@@ -62,7 +63,9 @@ export function LoginPage() {
 								id='email'
 								type='email'
 								value={email}
-								onChange={(event) => setEmail(event.target.value)}
+								onChange={(event) =>
+									setEmail(event.target.value)
+								}
 								required
 							/>
 						</div>
@@ -73,7 +76,9 @@ export function LoginPage() {
 								id='password'
 								type='password'
 								value={password}
-								onChange={(event) => setPassword(event.target.value)}
+								onChange={(event) =>
+									setPassword(event.target.value)
+								}
 								required
 							/>
 						</div>
@@ -84,7 +89,11 @@ export function LoginPage() {
 							</p>
 						) : null}
 
-						<Button type='submit' disabled={isSubmitting} className='w-full'>
+						<Button
+							type='submit'
+							disabled={isSubmitting}
+							className='w-full'
+						>
 							{isSubmitting ? 'Signing in...' : 'Sign in'}
 						</Button>
 					</form>

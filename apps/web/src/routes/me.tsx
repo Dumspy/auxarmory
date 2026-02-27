@@ -27,7 +27,9 @@ export function MePage() {
 	if (meQuery.error) {
 		return (
 			<main className='space-y-4 p-6'>
-				<h1 className='text-2xl font-bold text-white'>Protected route</h1>
+				<h1 className='text-2xl font-bold text-white'>
+					Protected route
+				</h1>
 				<p className='text-red-400'>
 					Failed to load protected data: {meQuery.error.message}
 				</p>
@@ -50,8 +52,8 @@ export function MePage() {
 				<CardHeader>
 					<CardTitle>Protected route</CardTitle>
 					<CardDescription>
-						You are authenticated and this data came from a protected
-						tRPC procedure.
+						You are authenticated and this data came from a
+						protected tRPC procedure.
 					</CardDescription>
 				</CardHeader>
 				<CardContent className='space-y-2'>

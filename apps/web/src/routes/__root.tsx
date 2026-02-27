@@ -1,4 +1,13 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router';
+import type { QueryClient } from '@tanstack/react-query';
+import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query';
+
+import type { AppRouter } from '@auxarmory/api/routers';
+
+import {
+	HeadContent,
+	Scripts,
+	createRootRouteWithContext,
+} from '@tanstack/react-router';
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 
@@ -7,7 +16,12 @@ import { env } from '../env';
 
 import appCss from '../styles.css?url';
 
-export const Route = createRootRoute({
+export interface RouterAppContext {
+	trpc: TRPCOptionsProxy<AppRouter>;
+	queryClient: QueryClient;
+}
+
+export const Route = createRootRouteWithContext<RouterAppContext>()({
 	head: () => ({
 		meta: [
 			{

@@ -1,0 +1,35 @@
+{
+  "name": "@auxarmory/api-service",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./app": {
+      "default": "./src/app.ts"
+    }
+  },
+  "scripts": {
+    "dev": "NODE_OPTIONS=--conditions=development tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest --passWithNoTests"
+  },
+  "dependencies": {
+    "@auxarmory/api": "workspace:*",
+    "@t3-oss/env-core": "catalog:",
+    "@hono/node-server": "^1.19.0",
+    "@trpc/server": "^11.7.2",
+    "hono": "^4.9.8",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@auxarmory/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "tsx": "^4.21.0",
+    "typescript": "catalog:",
+    "vitest": "^3.2.4"
+  }
+}

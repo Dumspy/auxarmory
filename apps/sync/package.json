@@ -1,0 +1,31 @@
+{
+  "name": "@auxarmory/sync",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@auxarmory/battlenet": "workspace:*",
+    "@auxarmory/db": "workspace:*",
+    "@t3-oss/env-core": "catalog:",
+    "bullmq": "^5.58.6",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@auxarmory/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "tsx": "^4.21.0",
+    "typescript": "catalog:",
+    "vitest": "^3.2.4"
+  },
+  "exports": {
+    ".": {
+      "default": "./src/queue.ts"
+    }
+  }
+}

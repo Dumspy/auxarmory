@@ -75,11 +75,7 @@ export function MePage() {
 					</p>
 				</CardContent>
 			</Card>
-			<Button
-				type='button'
-				onClick={onSignOut}
-				variant='outline'
-			>
+			<Button type='button' onClick={onSignOut} variant='outline'>
 				Sign out
 			</Button>
 		</main>

@@ -4,12 +4,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MePage } from './me';
 
-const { useQueryMock, signOutMock, queryClientClearMock, navigateMock } = vi.hoisted(() => ({
-	useQueryMock: vi.fn(),
-	signOutMock: vi.fn(),
-	queryClientClearMock: vi.fn(),
-	navigateMock: vi.fn(),
-}));
+const { useQueryMock, signOutMock, queryClientClearMock, navigateMock } =
+	vi.hoisted(() => ({
+		useQueryMock: vi.fn(),
+		signOutMock: vi.fn(),
+		queryClientClearMock: vi.fn(),
+		navigateMock: vi.fn(),
+	}));
 
 vi.mock('@tanstack/react-router', () => ({
 	createFileRoute: () => (config: unknown) => config,

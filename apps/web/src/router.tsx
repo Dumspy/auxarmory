@@ -9,34 +9,48 @@ import { env } from './env';
 import { TRPCProvider } from './lib/trpc';
 import { routeTree } from './routeTree.gen';
 
-export const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			staleTime: 60 * 1000,
-		},
-	},
-});
-
-const trpcClient = createTRPCClient<AppRouter>({
-	links: [
-		httpBatchLink({
-			url: `${env.VITE_API_URL}/trpc`,
-			fetch(url: string | URL, options?: RequestInit) {
-				return fetch(url, {
-					...options,
-					credentials: 'include',
-				});
+function makeQueryClient() {
+	return new QueryClient({
+		defaultOptions: {
+			queries: {
+				staleTime: 60 * 1000,
 			},
-		}),
-	],
-});
+		},
+	});
+}
 
-export const trpc = createTRPCOptionsProxy<AppRouter>({
-	client: trpcClient,
-	queryClient,
-});
+let browserQueryClient: QueryClient | undefined;
+
+function getQueryClient() {
+	if (typeof window === 'undefined') {
+		return makeQueryClient();
+	}
+
+	browserQueryClient ??= makeQueryClient();
+	return browserQueryClient;
+}
 
 export function getRouter() {
+	const queryClient = getQueryClient();
+	const trpcClient = createTRPCClient<AppRouter>({
+		links: [
+			httpBatchLink({
+				url: `${env.VITE_API_URL}/trpc`,
+				fetch(url: RequestInfo | URL, options?: RequestInit) {
+					return fetch(url, {
+						...options,
+						credentials: 'include',
+					});
+				},
+			}),
+		],
+	});
+
+	const trpc = createTRPCOptionsProxy<AppRouter>({
+		client: trpcClient,
+		queryClient,
+	});
+
 	const router = createTanStackRouter({
 		routeTree,
 		context: {

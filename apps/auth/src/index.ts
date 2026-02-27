@@ -17,7 +17,7 @@ app.use(
 		allowMethods: ['GET', 'POST', 'OPTIONS'],
 		allowHeaders: ['Content-Type', 'Authorization'],
 		credentials: true,
-	})
+	}),
 );
 
 app.on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw));
@@ -32,6 +32,8 @@ serve(
 		port: env.AUTH_SERVICE_PORT,
 	},
 	(info) => {
-		console.log(`Auth service listening on ${env.AUTH_SERVICE_ORIGIN} (port ${info.port})`);
-	}
+		console.log(
+			`Auth service listening on ${env.AUTH_SERVICE_ORIGIN} (port ${info.port})`,
+		);
+	},
 );

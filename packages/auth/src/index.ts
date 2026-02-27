@@ -7,7 +7,7 @@ import * as schema from '@auxarmory/db/schema';
 import { env } from './env';
 
 const trustedOrigins = env.AUTH_TRUSTED_ORIGINS.split(',').map((origin) =>
-	origin.trim()
+	origin.trim(),
 );
 
 export const auth = betterAuth({

@@ -7,7 +7,9 @@ export const env = createEnv({
 		BETTER_AUTH_URL: z.string().url(),
 		AUTH_COOKIE_DOMAIN: z.string().min(1),
 		AUTH_TRUSTED_ORIGINS: z.string().min(1),
-		NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+		NODE_ENV: z
+			.enum(['development', 'test', 'production'])
+			.default('development'),
 	},
 	runtimeEnv: process.env,
 	emptyStringAsUndefined: true,

@@ -19,7 +19,7 @@ app.use(
 		allowMethods: ['GET', 'POST', 'OPTIONS'],
 		allowHeaders: ['Content-Type', 'Authorization'],
 		credentials: true,
-	})
+	}),
 );
 
 app.all('/trpc/*', (c) => {
@@ -41,6 +41,8 @@ serve(
 		port: env.API_SERVICE_PORT,
 	},
 	(info) => {
-		console.log(`API service listening on ${env.API_SERVICE_ORIGIN} (port ${info.port})`);
-	}
+		console.log(
+			`API service listening on ${env.API_SERVICE_ORIGIN} (port ${info.port})`,
+		);
+	},
 );

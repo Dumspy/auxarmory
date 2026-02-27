@@ -1,0 +1,25 @@
+{
+  "name": "@auxarmory/e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run --config vitest.config.ts",
+    "test:e2e": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@auxarmory/api": "workspace:*",
+    "@auxarmory/api-service": "workspace:*",
+    "@auxarmory/auth-service": "workspace:*",
+    "@trpc/client": "^11.7.2",
+    "set-cookie-parser": "^2.7.2"
+  },
+  "devDependencies": {
+    "@auxarmory/typescript-config": "workspace:*",
+    "@auxarmory/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/set-cookie-parser": "^2.4.10",
+    "typescript": "catalog:",
+    "vitest": "^3.2.4"
+  }
+}

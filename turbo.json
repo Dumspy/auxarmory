@@ -10,12 +10,39 @@
         "DATABASE_URL",
         "BATTLENET_CLIENT_ID",
         "BATTLENET_CLIENT_SECRET",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "AUTH_COOKIE_DOMAIN",
+        "AUTH_TRUSTED_ORIGINS",
+        "AUTH_SERVICE_PORT",
+        "AUTH_SERVICE_ORIGIN",
+        "API_SERVICE_PORT",
+        "API_SERVICE_ORIGIN",
+        "WEB_ORIGIN",
         "NODE_ENV",
         "VITE_*"
       ]
     },
     "test": {
       "dependsOn": ["^test"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "env": [
+        "DATABASE_URL",
+        "DATABASE_URL_TEST",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "AUTH_COOKIE_DOMAIN",
+        "AUTH_TRUSTED_ORIGINS",
+        "AUTH_SERVICE_PORT",
+        "AUTH_SERVICE_ORIGIN",
+        "API_SERVICE_PORT",
+        "API_SERVICE_ORIGIN",
+        "WEB_ORIGIN",
+        "NODE_ENV"
+      ]
     },
     "test:watch": {
       "cache": false,
@@ -24,7 +51,18 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".output/**"],
-      "env": ["VITE_*"]
+      "env": [
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "AUTH_COOKIE_DOMAIN",
+        "AUTH_TRUSTED_ORIGINS",
+        "AUTH_SERVICE_PORT",
+        "AUTH_SERVICE_ORIGIN",
+        "API_SERVICE_PORT",
+        "API_SERVICE_ORIGIN",
+        "WEB_ORIGIN",
+        "VITE_*"
+      ]
     },
     "clean": {
       "cache": false

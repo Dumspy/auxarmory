@@ -1,0 +1,38 @@
+{
+  "name": "@auxarmory/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@auxarmory/auth": "workspace:*",
+    "@trpc/server": "^11.7.2",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@auxarmory/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./context": {
+      "types": "./src/context.ts",
+      "development": "./src/context.ts",
+      "default": "./dist/context.js"
+    },
+    "./routers": {
+      "types": "./src/routers/index.ts",
+      "development": "./src/routers/index.ts",
+      "default": "./dist/routers/index.js"
+    }
+  }
+}

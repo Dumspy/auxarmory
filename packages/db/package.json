@@ -29,15 +29,18 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./client": {
-      "types": "./dist/client.d.ts",
+      "types": "./src/client.ts",
+      "development": "./src/client.ts",
       "default": "./dist/client.js"
     },
     "./schema": {
-      "types": "./dist/schema.d.ts",
+      "types": "./src/schema.ts",
+      "development": "./src/schema.ts",
       "default": "./dist/schema.js"
     }
   }

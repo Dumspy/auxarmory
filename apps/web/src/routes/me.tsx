@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@auxarmory/ui/components/ui/button';
 import {
 	Card,
@@ -17,8 +17,16 @@ export const Route = createFileRoute('/me')({
 });
 
 export function MePage() {
+	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 	const trpc = useTRPC();
 	const meQuery = useQuery(trpc.privateData.queryOptions());
+
+	async function onSignOut() {
+		await authClient.signOut();
+		queryClient.clear();
+		await navigate({ to: '/login' });
+	}
 
 	if (meQuery.isLoading) {
 		return <main className='p-6 text-white'>Loading your profile...</main>;
@@ -69,7 +77,7 @@ export function MePage() {
 			</Card>
 			<Button
 				type='button'
-				onClick={() => authClient.signOut()}
+				onClick={onSignOut}
 				variant='outline'
 			>
 				Sign out

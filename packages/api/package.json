@@ -20,13 +20,16 @@
   },
   "exports": {
     ".": {
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./context": {
-      "default": "./src/context.ts"
+      "types": "./dist/context.d.ts",
+      "default": "./dist/context.js"
     },
     "./routers": {
-      "default": "./src/routers/index.ts"
+      "types": "./dist/routers/index.d.ts",
+      "default": "./dist/routers/index.js"
     }
   }
 }

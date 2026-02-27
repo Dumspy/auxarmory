@@ -29,13 +29,16 @@
   },
   "exports": {
     ".": {
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./client": {
-      "default": "./src/client.ts"
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
     },
     "./schema": {
-      "default": "./src/schema.ts"
+      "types": "./dist/schema.d.ts",
+      "default": "./dist/schema.js"
     }
   }
 }

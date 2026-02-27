@@ -7,9 +7,12 @@
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "build": "tsc",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push"
+    "db:generate": "pnpm --dir ../.. exec drizzle-kit generate --config drizzle.config.ts",
+    "db:migrate": "pnpm --dir ../.. exec drizzle-kit migrate --config drizzle.config.ts",
+    "db:migrate:test": "DATABASE_URL=${DATABASE_URL_TEST:-$DATABASE_URL} pnpm --dir ../.. exec drizzle-kit migrate --config drizzle.config.ts",
+    "db:sync": "pnpm --dir ../.. exec drizzle-kit push --config drizzle.config.ts",
+    "db:sync:test": "DATABASE_URL=${DATABASE_URL_TEST:-$DATABASE_URL} pnpm --dir ../.. exec drizzle-kit push --config drizzle.config.ts",
+    "db:push": "pnpm --dir ../.. exec drizzle-kit push --config drizzle.config.ts"
   },
   "dependencies": {
     "@t3-oss/env-core": "catalog:",

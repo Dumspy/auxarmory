@@ -2,6 +2,14 @@
   "name": "@auxarmory/api-service",
   "private": true,
   "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./app": {
+      "default": "./src/app.ts"
+    }
+  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",

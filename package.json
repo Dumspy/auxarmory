@@ -15,7 +15,7 @@
     "format:fix": "oxfmt .",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
-    "ui:add": "pnpm --dir packages/ui dlx shadcn@latest add",
+    "ui:add": "pnpm dlx shadcn@latest add --cwd packages/ui",
     "prepare": "husky"
   },
   "devDependencies": {

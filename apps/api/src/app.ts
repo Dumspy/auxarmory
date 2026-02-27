@@ -19,7 +19,7 @@ export function createApiApp() {
 			allowMethods: ['GET', 'POST', 'OPTIONS'],
 			allowHeaders: ['Content-Type', 'Authorization'],
 			credentials: true,
-		})
+		}),
 	);
 
 	app.all('/trpc/*', (c) => {

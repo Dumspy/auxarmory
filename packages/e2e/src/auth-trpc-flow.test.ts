@@ -5,7 +5,10 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 import type { AppRouter } from '@auxarmory/api/routers';
 
 interface HonoApp {
-	request: (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
+	request: (
+		input: string | URL | Request,
+		init?: RequestInit,
+	) => Promise<Response>;
 }
 
 const TEST_PASSWORD = 'S3cure!Passw0rd123';
@@ -43,7 +46,10 @@ function getResponseCookies(response: Response): string[] {
 	return header ? [header] : [];
 }
 
-function mergeCookieJar(existingCookieHeader: string, response: Response): string {
+function mergeCookieJar(
+	existingCookieHeader: string,
+	response: Response,
+): string {
 	const jar = new Map<string, string>();
 
 	for (const cookie of existingCookieHeader.split(';')) {
@@ -62,7 +68,9 @@ function mergeCookieJar(existingCookieHeader: string, response: Response): strin
 		jar.set(cookie.name, cookie.value);
 	}
 
-	return [...jar.entries()].map(([name, value]) => `${name}=${value}`).join('; ');
+	return [...jar.entries()]
+		.map(([name, value]) => `${name}=${value}`)
+		.join('; ');
 }
 
 async function createApps() {
@@ -89,7 +97,9 @@ describe('auth + trpc integration flow', () => {
 	});
 
 	it('returns service health responses', async () => {
-		const authHealth = await authApp.request('http://auth.localhost/health');
+		const authHealth = await authApp.request(
+			'http://auth.localhost/health',
+		);
 		const apiHealth = await apiApp.request('http://api.localhost/health');
 
 		expect(authHealth.status).toBe(200);

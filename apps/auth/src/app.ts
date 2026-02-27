@@ -17,7 +17,7 @@ export function createAuthApp() {
 			allowMethods: ['GET', 'POST', 'OPTIONS'],
 			allowHeaders: ['Content-Type', 'Authorization'],
 			credentials: true,
-		})
+		}),
 	);
 
 	app.on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw));

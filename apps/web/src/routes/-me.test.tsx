@@ -15,6 +15,9 @@ const { useQueryMock, signOutMock, queryClientClearMock, navigateMock } =
 vi.mock('@tanstack/react-router', () => ({
 	createFileRoute: () => (config: unknown) => config,
 	useNavigate: () => navigateMock,
+	useRouterState: () => ({
+		location: { pathname: '/me' },
+	}),
 	Link: ({ children, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) => (
 		<a {...props}>{children}</a>
 	),
@@ -38,6 +41,7 @@ vi.mock('../lib/trpc', () => ({
 vi.mock('../lib/auth-client', () => ({
 	authClient: {
 		signOut: signOutMock,
+		useSession: () => ({ data: { session: { id: 'session-1' } } }),
 	},
 }));
 
@@ -65,7 +69,7 @@ describe('MePage', () => {
 
 		render(<MePage />);
 
-		expect(screen.getByText(/Protected route/i)).toBeInTheDocument();
+		expect(screen.getByText(/Profile/i)).toBeInTheDocument();
 		expect(screen.getByText('Demo User')).toBeInTheDocument();
 		expect(screen.getByText('demo@example.com')).toBeInTheDocument();
 

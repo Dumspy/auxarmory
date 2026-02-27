@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { AlertTriangle, UserRound } from 'lucide-react';
 import { Button } from '@auxarmory/ui/components/ui/button';
 import {
 	Card,
@@ -9,10 +10,13 @@ import {
 	CardTitle,
 } from '@auxarmory/ui/components/ui/card';
 
+import { DashboardLayout } from '../components/dashboard-layout';
 import { authClient } from '../lib/auth-client';
+import { requireAuth } from '../lib/require-auth';
 import { useTRPC } from '../lib/trpc';
 
 export const Route = createFileRoute('/me')({
+	beforeLoad: requireAuth,
 	component: MePage,
 });
 
@@ -29,55 +33,76 @@ export function MePage() {
 	}
 
 	if (meQuery.isLoading) {
-		return <main className='p-6 text-white'>Loading your profile...</main>;
+		return (
+			<DashboardLayout>
+				<main className='p-6'>Loading your profile...</main>
+			</DashboardLayout>
+		);
 	}
 
 	if (meQuery.error) {
 		return (
-			<main className='space-y-4 p-6'>
-				<h1 className='text-2xl font-bold text-white'>
-					Protected route
-				</h1>
-				<p className='text-red-400'>
-					Failed to load protected data: {meQuery.error.message}
-				</p>
-				<Link to='/login' className='text-cyan-400 underline'>
-					Go to login
-				</Link>
-			</main>
+			<DashboardLayout>
+				<main className='p-6'>
+					<Card className='max-w-2xl'>
+						<CardHeader>
+							<CardTitle className='flex items-center gap-2'>
+								<AlertTriangle className='h-5 w-5 text-red-500' />
+								Unable to load profile
+							</CardTitle>
+							<CardDescription>
+								Failed to load protected data: {meQuery.error.message}
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<Link to='/login' className='text-primary underline'>
+								Go to login
+							</Link>
+						</CardContent>
+					</Card>
+				</main>
+			</DashboardLayout>
 		);
 	}
 
 	if (!meQuery.data) {
-		return <main className='p-6 text-white'>No user data available.</main>;
+		return (
+			<DashboardLayout>
+				<main className='p-6'>No user data available.</main>
+			</DashboardLayout>
+		);
 	}
 
 	const user = meQuery.data.user;
 
 	return (
-		<main className='space-y-4 p-6 text-white'>
-			<Card>
-				<CardHeader>
-					<CardTitle>Protected route</CardTitle>
-					<CardDescription>
-						You are authenticated and this data came from a
-						protected tRPC procedure.
-					</CardDescription>
-				</CardHeader>
-				<CardContent className='space-y-2'>
-					<p>
-						<span className='text-gray-400'>Name: </span>
-						{user.name}
-					</p>
-					<p>
-						<span className='text-gray-400'>Email: </span>
-						{user.email}
-					</p>
-				</CardContent>
-			</Card>
-			<Button type='button' onClick={onSignOut} variant='outline'>
-				Sign out
-			</Button>
-		</main>
+		<DashboardLayout>
+			<main className='space-y-4 p-6'>
+				<Card className='max-w-2xl'>
+					<CardHeader>
+						<CardTitle className='flex items-center gap-2'>
+							<UserRound className='h-5 w-5' />
+							Profile
+						</CardTitle>
+						<CardDescription>
+							Authenticated via Better Auth with protected tRPC data.
+						</CardDescription>
+					</CardHeader>
+					<CardContent className='space-y-2'>
+						<p>
+							<span className='text-muted-foreground'>Name: </span>
+							{user.name}
+						</p>
+						<p>
+							<span className='text-muted-foreground'>Email: </span>
+							{user.email}
+						</p>
+					</CardContent>
+				</Card>
+				<Button type='button' onClick={onSignOut} variant='outline'>
+					Sign out
+				</Button>
+			</main>
+		</DashboardLayout>
 	);
 }

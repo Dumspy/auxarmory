@@ -4,9 +4,9 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '@auxarmory/db/client';
 import * as schema from '@auxarmory/db/schema';
 
-import { env } from './env';
+import { env } from './env.js';
 
-const trustedOrigins = env.AUTH_TRUSTED_ORIGINS.split(',').map((origin) =>
+const trustedOrigins = env.AUTH_TRUSTED_ORIGINS.split(',').map((origin: string) =>
 	origin.trim(),
 );
 

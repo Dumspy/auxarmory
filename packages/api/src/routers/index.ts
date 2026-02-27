@@ -1,4 +1,4 @@
-import { protectedProcedure, publicProcedure, router } from '../index';
+import { protectedProcedure, publicProcedure, router } from '../index.js';
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => 'OK'),

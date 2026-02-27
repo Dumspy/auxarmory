@@ -6,7 +6,7 @@ import { logger } from 'hono/logger';
 import { createContext } from '@auxarmory/api/context';
 import { appRouter } from '@auxarmory/api/routers';
 
-import { env } from './env';
+import { env } from './env.js';
 
 export function createApiApp() {
 	const app = new Hono();

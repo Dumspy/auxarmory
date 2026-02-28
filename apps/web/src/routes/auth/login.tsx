@@ -1,6 +1,7 @@
 import type { FormEvent } from 'react'
 import { useState } from 'react'
 import {
+	Navigate,
 	createFileRoute,
 	useNavigate,
 	useRouterState,
@@ -8,6 +9,7 @@ import {
 
 import { AuthFormCard } from '../../components/auth/auth-form-card'
 import { authClient } from '../../lib/auth-client'
+import { useAuthPageState } from '../../lib/use-auth-page-state'
 import {
 	getRedirectFromSearchStr,
 	normalizeRedirectPath,
@@ -15,8 +17,8 @@ import {
 } from '../../lib/require-auth'
 
 export const Route = createFileRoute('/auth/login')({
-	beforeLoad: async ({ location }) => {
-		await redirectAuthenticatedUser({ location })
+	beforeLoad: async () => {
+		await redirectAuthenticatedUser()
 	},
 	component: LoginPage,
 })
@@ -24,11 +26,21 @@ export const Route = createFileRoute('/auth/login')({
 export function LoginPage() {
 	const navigate = useNavigate()
 	const { location } = useRouterState()
+	const { isPending: isSessionPending, isAuthenticated } = useAuthPageState()
 	const redirectTo = getRedirectFromSearchStr(location.searchStr)
+	const normalizedRedirectTo = normalizeRedirectPath(redirectTo, '/dashboard')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState<string | null>(null)
 	const [isSubmitting, setIsSubmitting] = useState(false)
+
+	if (isSessionPending) {
+		return null
+	}
+
+	if (isAuthenticated) {
+		return <Navigate to='/dashboard' />
+	}
 
 	async function onSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault()
@@ -47,12 +59,10 @@ export function LoginPage() {
 			return
 		}
 
-		await navigate({ to: normalizeRedirectPath(redirectTo, '/dashboard') })
+		await navigate({ to: normalizedRedirectTo })
 	}
 
-	const safeRedirect = encodeURIComponent(
-		normalizeRedirectPath(redirectTo, '/dashboard'),
-	)
+	const safeRedirect = encodeURIComponent(normalizedRedirectTo)
 
 	return (
 		<AuthFormCard

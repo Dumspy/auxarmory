@@ -30,6 +30,7 @@ import {
 } from '@auxarmory/ui/components/ui/sidebar'
 
 import { authClient } from '../lib/auth-client'
+import { getUserInitial } from '../lib/user'
 
 export function NavUser() {
 	const { isMobile } = useSidebar()
@@ -42,15 +43,18 @@ export function NavUser() {
 		email: session?.user?.email ?? 'Not signed in',
 		avatar: session?.user?.image ?? '',
 	}
+	const userInitial = getUserInitial(user.name)
 
 	async function handleAuthClick() {
 		if (loggedIn) {
 			await authClient.signOut()
-			await navigate({ to: '/auth/login' })
-			return
 		}
 
 		await navigate({ to: '/auth/login' })
+	}
+
+	async function handleAccountClick() {
+		await navigate({ to: '/account' })
 	}
 
 	return (
@@ -68,7 +72,7 @@ export function NavUser() {
 									alt={user.name}
 								/>
 								<AvatarFallback className='rounded-lg'>
-									{user.name.slice(0, 1).toUpperCase() || 'U'}
+									{userInitial}
 								</AvatarFallback>
 							</Avatar>
 							<div className='grid flex-1 text-left text-sm leading-tight'>
@@ -96,8 +100,7 @@ export function NavUser() {
 										alt={user.name}
 									/>
 									<AvatarFallback className='rounded-lg'>
-										{user.name.slice(0, 1).toUpperCase() ||
-											'U'}
+										{userInitial}
 									</AvatarFallback>
 								</Avatar>
 								<div className='grid flex-1 text-left text-sm leading-tight'>
@@ -119,7 +122,7 @@ export function NavUser() {
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
+							<DropdownMenuItem onClick={handleAccountClick}>
 								<BadgeCheck />
 								Account
 							</DropdownMenuItem>

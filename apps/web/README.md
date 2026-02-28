@@ -69,10 +69,10 @@ import { Link } from '@tanstack/react-router'
 Then anywhere in your JSX you can use it like so:
 
 ```tsx
-<Link to='/about'>About</Link>
+<Link to='/account'>Account</Link>
 ```
 
-This will create a link that will navigate to the `/about` route.
+This will create a link that will navigate to the `/account` route.
 
 More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
 
@@ -105,7 +105,7 @@ export const Route = createRootRoute({
 				<header>
 					<nav>
 						<Link to='/'>Home</Link>
-						<Link to='/about'>About</Link>
+						<Link to='/account'>Account</Link>
 					</nav>
 				</header>
 				{children}

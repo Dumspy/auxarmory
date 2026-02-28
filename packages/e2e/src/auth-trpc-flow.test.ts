@@ -181,4 +181,114 @@ describe('auth + trpc integration flow', () => {
 		expect(privateData.message).toBe('This is private')
 		expect(privateData.user.email).toBe(email)
 	})
+
+	it('supports multiple organizations and teams per user', async () => {
+		const email = `e2e-orgs-${Date.now()}-${Math.random().toString(16).slice(2)}@example.com`
+		let cookieHeader = ''
+
+		const signUpResponse = await authApp.request(
+			'http://auth.localhost/api/auth/sign-up/email',
+			{
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+					origin: 'http://localhost:3000',
+				},
+				body: JSON.stringify({
+					email,
+					password: TEST_PASSWORD,
+					name: 'E2E Org User',
+				}),
+			},
+		)
+
+		expect(signUpResponse.status).toBe(200)
+		cookieHeader = mergeCookieJar(cookieHeader, signUpResponse)
+
+		const slugA = `guild-a-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`
+		const slugB = `guild-b-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`
+
+		const createGuildAResponse = await authApp.request(
+			'http://auth.localhost/api/auth/organization/create',
+			{
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+					origin: 'http://localhost:3000',
+					cookie: cookieHeader,
+				},
+				body: JSON.stringify({
+					name: 'Guild A',
+					slug: slugA,
+				}),
+			},
+		)
+
+		expect(createGuildAResponse.status).toBe(200)
+		cookieHeader = mergeCookieJar(cookieHeader, createGuildAResponse)
+
+		const createGuildBResponse = await authApp.request(
+			'http://auth.localhost/api/auth/organization/create',
+			{
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+					origin: 'http://localhost:3000',
+					cookie: cookieHeader,
+				},
+				body: JSON.stringify({
+					name: 'Guild B',
+					slug: slugB,
+				}),
+			},
+		)
+
+		expect(createGuildBResponse.status).toBe(200)
+		cookieHeader = mergeCookieJar(cookieHeader, createGuildBResponse)
+
+		const listOrganizationsResponse = await authApp.request(
+			'http://auth.localhost/api/auth/organization/list',
+			{
+				headers: {
+					origin: 'http://localhost:3000',
+					cookie: cookieHeader,
+				},
+			},
+		)
+
+		expect(listOrganizationsResponse.status).toBe(200)
+
+		const organizations = (await listOrganizationsResponse.json()) as {
+			id: string
+			slug: string
+		}[]
+
+		expect(organizations.some((org) => org.slug === slugA)).toBe(true)
+		expect(organizations.some((org) => org.slug === slugB)).toBe(true)
+
+		const guildA = organizations.find((org) => org.slug === slugA)
+		expect(guildA).toBeDefined()
+
+		const listTeamsResponse = await authApp.request(
+			`http://auth.localhost/api/auth/organization/list-teams?organizationId=${guildA?.id}`,
+			{
+				headers: {
+					origin: 'http://localhost:3000',
+					cookie: cookieHeader,
+				},
+			},
+		)
+
+		expect(listTeamsResponse.status).toBe(200)
+
+		const teams = (await listTeamsResponse.json()) as {
+			id: string
+			organizationId: string
+		}[]
+
+		expect(teams.length).toBeGreaterThan(0)
+		expect(teams.some((team) => team.organizationId === guildA?.id)).toBe(
+			true,
+		)
+	})
 })

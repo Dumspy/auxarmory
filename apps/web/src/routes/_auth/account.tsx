@@ -142,8 +142,8 @@ function AccountPage() {
 		const callbackURL = `${window.location.origin}/account`
 
 		try {
-			const result = await authClient.linkSocial({
-				provider: selectedBattlenetProvider,
+			const result = await authClient.oauth2.link({
+				providerId: selectedBattlenetProvider,
 				callbackURL,
 				errorCallbackURL: callbackURL,
 			})

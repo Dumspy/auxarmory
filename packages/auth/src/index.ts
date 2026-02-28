@@ -51,9 +51,9 @@ const battlenetProviders = battlenetRegionConfig
 	)
 	.map((provider) => ({
 		providerId: provider.providerId,
-		authorizationUrl: `https://${provider.region}.battle.net/oauth/authorize`,
-		tokenUrl: `https://${provider.region}.battle.net/oauth/token`,
-		userInfoUrl: `https://${provider.region}.battle.net/oauth/userinfo`,
+		authorizationUrl: 'https://oauth.battle.net/authorize',
+		tokenUrl: 'https://oauth.battle.net/token',
+		userInfoUrl: 'https://oauth.battle.net/userinfo',
 		clientId: provider.clientId,
 		clientSecret: provider.clientSecret,
 		scopes: ['openid', 'wow.profile'],
@@ -62,14 +62,11 @@ const battlenetProviders = battlenetRegionConfig
 				return null
 			}
 
-			const response = await fetch(
-				`https://${provider.region}.battle.net/oauth/userinfo`,
-				{
-					headers: {
-						Authorization: `Bearer ${tokens.accessToken}`,
-					},
+			const response = await fetch('https://oauth.battle.net/userinfo', {
+				headers: {
+					Authorization: `Bearer ${tokens.accessToken}`,
 				},
-			)
+			})
 
 			if (!response.ok) {
 				return null

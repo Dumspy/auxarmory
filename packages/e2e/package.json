@@ -1,6 +1,7 @@
 {
   "name": "@auxarmory/e2e",
   "private": true,
+  "license": "Elastic-2.0",
   "type": "module",
   "scripts": {
     "test": "vitest run --config vitest.config.ts",

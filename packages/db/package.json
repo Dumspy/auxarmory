@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "license": "MIT",
+  "license": "Elastic-2.0",
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "build": "tsc",

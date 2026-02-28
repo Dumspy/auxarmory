@@ -174,7 +174,7 @@ importers:
         version: 0.561.0(react@19.2.4)
       nitro:
         specifier: npm:nitro-nightly@latest
-        version: nitro-nightly@3.0.1-20260227-142232-5ccf672a(drizzle-orm@0.44.7(@types/pg@8.16.0)(kysely@0.28.11)(pg@8.19.0))(jiti@2.6.1)(lru-cache@11.2.6)(rollup@4.59.0)(vite@7.3.1(@types/node@22.15.24)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0))
+        version: nitro-nightly@3.0.1-20260227-181935-bfbb207c(drizzle-orm@0.44.7(@types/pg@8.16.0)(kysely@0.28.11)(pg@8.19.0))(jiti@2.6.1)(lru-cache@11.2.6)(rollup@4.59.0)(vite@7.3.1(@types/node@22.15.24)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0))
       react:
         specifier: 'catalog:'
         version: 19.2.4
@@ -394,6 +394,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      lucide-react:
+        specifier: ^0.561.0
+        version: 0.561.0(react@19.2.4)
       radix-ui:
         specifier: ^1.4.3
         version: 1.4.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -3478,8 +3481,8 @@ packages:
   nf3@0.3.10:
     resolution: {integrity: sha512-UlqmHkZiHGgSkRj17yrOXEsSu5ECvtlJ3Xm1W5WsWrTKgu9m7OjrMZh9H/ME2LcWrTlMD0/vmmNVpyBG4yRdGg==}
 
-  nitro-nightly@3.0.1-20260227-142232-5ccf672a:
-    resolution: {integrity: sha512-O9vxOipHg9UiingfoXkD1Rqsv/Qpsv1a8lx6CTsKlc+1bJkZM1QKyTTIlcpIcB+od5eYsJDlEyLfXdtXNHP88A==}
+  nitro-nightly@3.0.1-20260227-181935-bfbb207c:
+    resolution: {integrity: sha512-J9dNAHHuZqzDra4Zr9N6+4hkRPgfrUVw++9I32BHDmwo6MkyRdvmqucWTB5T+J8G3xAMc4+XskExmUEEqxpbZw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -6883,7 +6886,7 @@ snapshots:
 
   nf3@0.3.10: {}
 
-  nitro-nightly@3.0.1-20260227-142232-5ccf672a(drizzle-orm@0.44.7(@types/pg@8.16.0)(kysely@0.28.11)(pg@8.19.0))(jiti@2.6.1)(lru-cache@11.2.6)(rollup@4.59.0)(vite@7.3.1(@types/node@22.15.24)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)):
+  nitro-nightly@3.0.1-20260227-181935-bfbb207c(drizzle-orm@0.44.7(@types/pg@8.16.0)(kysely@0.28.11)(pg@8.19.0))(jiti@2.6.1)(lru-cache@11.2.6)(rollup@4.59.0)(vite@7.3.1(@types/node@22.15.24)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)):
     dependencies:
       consola: 3.4.2
       crossws: 0.4.4(srvx@0.11.8)

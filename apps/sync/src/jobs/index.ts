@@ -31,6 +31,9 @@ export const handleJob = async (
 ) => {
 	const handler = resolveHandler(job.name);
 
-	if (handler) return handler(job);
-	return { ok: true };
+	if (!handler) {
+		throw new Error(`No handler registered for job: ${job.name}`);
+	}
+
+	return handler(job);
 };

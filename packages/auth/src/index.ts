@@ -15,30 +15,62 @@ const battlenetRegionConfig = [
 	{
 		region: 'us',
 		providerId: 'battlenet-us',
-		clientId: env.BATTLENET_US_CLIENT_ID,
-		clientSecret: env.BATTLENET_US_CLIENT_SECRET,
+		clientId: env.BATTLENET_CLIENT_ID,
+		clientSecret: env.BATTLENET_CLIENT_SECRET,
 	},
 	{
 		region: 'eu',
 		providerId: 'battlenet-eu',
-		clientId: env.BATTLENET_EU_CLIENT_ID,
-		clientSecret: env.BATTLENET_EU_CLIENT_SECRET,
+		clientId: env.BATTLENET_CLIENT_ID,
+		clientSecret: env.BATTLENET_CLIENT_SECRET,
 	},
 	{
 		region: 'kr',
 		providerId: 'battlenet-kr',
-		clientId: env.BATTLENET_KR_CLIENT_ID,
-		clientSecret: env.BATTLENET_KR_CLIENT_SECRET,
+		clientId: env.BATTLENET_CLIENT_ID,
+		clientSecret: env.BATTLENET_CLIENT_SECRET,
 	},
 	{
 		region: 'tw',
 		providerId: 'battlenet-tw',
-		clientId: env.BATTLENET_TW_CLIENT_ID,
-		clientSecret: env.BATTLENET_TW_CLIENT_SECRET,
+		clientId: env.BATTLENET_CLIENT_ID,
+		clientSecret: env.BATTLENET_CLIENT_SECRET,
+	},
+] as const
+
+const warcraftLogsRegionConfig = [
+	{
+		region: 'us',
+		providerId: 'warcraftlogs-us',
+		clientId: env.WARCRAFTLOGS_CLIENT_ID,
+		clientSecret: env.WARCRAFTLOGS_CLIENT_SECRET,
+	},
+	{
+		region: 'eu',
+		providerId: 'warcraftlogs-eu',
+		clientId: env.WARCRAFTLOGS_CLIENT_ID,
+		clientSecret: env.WARCRAFTLOGS_CLIENT_SECRET,
+	},
+	{
+		region: 'kr',
+		providerId: 'warcraftlogs-kr',
+		clientId: env.WARCRAFTLOGS_CLIENT_ID,
+		clientSecret: env.WARCRAFTLOGS_CLIENT_SECRET,
+	},
+	{
+		region: 'tw',
+		providerId: 'warcraftlogs-tw',
+		clientId: env.WARCRAFTLOGS_CLIENT_ID,
+		clientSecret: env.WARCRAFTLOGS_CLIENT_SECRET,
 	},
 ] as const
 
 type BattlenetProviderConfig = (typeof battlenetRegionConfig)[number] & {
+	clientId: string
+	clientSecret: string
+}
+
+type WarcraftLogsProviderConfig = (typeof warcraftLogsRegionConfig)[number] & {
 	clientId: string
 	clientSecret: string
 }
@@ -94,6 +126,85 @@ const battlenetProviders = battlenetRegionConfig
 		},
 	}))
 
+const warcraftLogsProviders = warcraftLogsRegionConfig
+	.filter(
+		(provider): provider is WarcraftLogsProviderConfig =>
+			typeof provider.clientId === 'string' &&
+			typeof provider.clientSecret === 'string',
+	)
+	.map((provider) => ({
+		providerId: provider.providerId,
+		authorizationUrl: 'https://www.warcraftlogs.com/oauth/authorize',
+		tokenUrl: 'https://www.warcraftlogs.com/oauth/token',
+		clientId: provider.clientId,
+		clientSecret: provider.clientSecret,
+		scopes: ['view-user-profile'],
+		getUserInfo: async (tokens: { accessToken?: string }) => {
+			if (!tokens.accessToken) {
+				return null
+			}
+
+			const response = await fetch(
+				'https://www.warcraftlogs.com/api/v2/user',
+				{
+					method: 'POST',
+					headers: {
+						Authorization: `Bearer ${tokens.accessToken}`,
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						query: '{ userData { currentUser { id name avatar battleTag } } }',
+					}),
+				},
+			)
+
+			if (!response.ok) {
+				return null
+			}
+
+			const payload = (await response.json()) as {
+				data?: {
+					userData?: {
+						currentUser?: {
+							id?: number | string
+							name?: string
+							avatar?: string
+							battleTag?: string
+						}
+					}
+				}
+			}
+			const currentUser = payload.data?.userData?.currentUser
+			const accountId = String(currentUser?.id ?? '')
+			const name = currentUser?.name ?? ''
+
+			if (!accountId || !name) {
+				return null
+			}
+
+			return {
+				id: accountId,
+				email: `wcl-${provider.region}-${accountId}@linked.local`,
+				emailVerified: true,
+				name,
+				image: currentUser?.avatar,
+				battleTag: currentUser?.battleTag,
+				region: provider.region,
+			}
+		},
+	}))
+
+if (env.NODE_ENV !== 'production') {
+	const enabledProviders = [...battlenetProviders, ...warcraftLogsProviders]
+		.map((provider) => provider.providerId)
+		.join(', ')
+	console.log(
+		`[auth] enabled OAuth providers: ${
+			enabledProviders.length > 0 ? enabledProviders : 'none'
+		}`,
+	)
+}
+
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: 'pg',
@@ -127,10 +238,13 @@ export const auth = betterAuth({
 				enabled: true,
 			},
 		}),
-		...(battlenetProviders.length > 0
+		...(battlenetProviders.length > 0 || warcraftLogsProviders.length > 0
 			? [
 					genericOAuth({
-						config: battlenetProviders,
+						config: [
+							...battlenetProviders,
+							...warcraftLogsProviders,
+						],
 					}),
 				]
 			: []),

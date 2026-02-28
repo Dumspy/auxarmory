@@ -34,7 +34,15 @@ const battlenetRegions = [
 	{ providerId: 'battlenet-tw', label: 'TW' },
 ] as const
 
+const warcraftLogsRegions = [
+	{ providerId: 'warcraftlogs-us', label: 'US' },
+	{ providerId: 'warcraftlogs-eu', label: 'EU' },
+	{ providerId: 'warcraftlogs-kr', label: 'KR' },
+	{ providerId: 'warcraftlogs-tw', label: 'TW' },
+] as const
+
 type BattlenetProviderId = (typeof battlenetRegions)[number]['providerId']
+type WarcraftLogsProviderId = (typeof warcraftLogsRegions)[number]['providerId']
 
 interface LinkedAccount {
 	id: string
@@ -76,6 +84,10 @@ function AccountPage() {
 	const [linkedBattlenetAccounts, setLinkedBattlenetAccounts] = useState<
 		LinkedAccount[]
 	>([])
+	const [selectedWarcraftLogsProvider, setSelectedWarcraftLogsProvider] =
+		useState<WarcraftLogsProviderId>('warcraftlogs-us')
+	const [linkedWarcraftLogsAccounts, setLinkedWarcraftLogsAccounts] =
+		useState<LinkedAccount[]>([])
 	const [isLoadingLinkedAccounts, setIsLoadingLinkedAccounts] =
 		useState(false)
 	const [linkingProviderId, setLinkingProviderId] = useState<string | null>(
@@ -91,6 +103,7 @@ function AccountPage() {
 	const loadLinkedBattlenetAccounts = useCallback(async () => {
 		if (!user?.id) {
 			setLinkedBattlenetAccounts([])
+			setLinkedWarcraftLogsAccounts([])
 			return
 		}
 
@@ -113,6 +126,11 @@ function AccountPage() {
 					account.providerId.startsWith('battlenet-'),
 				),
 			)
+			setLinkedWarcraftLogsAccounts(
+				accounts.filter((account) =>
+					account.providerId.startsWith('warcraftlogs-'),
+				),
+			)
 		} finally {
 			setIsLoadingLinkedAccounts(false)
 		}
@@ -130,6 +148,15 @@ function AccountPage() {
 			),
 		}))
 	}, [linkedBattlenetAccounts])
+
+	const warcraftLogsAccountsByProvider = useMemo(() => {
+		return warcraftLogsRegions.map((region) => ({
+			...region,
+			accounts: linkedWarcraftLogsAccounts.filter(
+				(account) => account.providerId === region.providerId,
+			),
+		}))
+	}, [linkedWarcraftLogsAccounts])
 
 	async function handleLinkBattlenetAccount() {
 		if (typeof window === 'undefined') {
@@ -171,6 +198,46 @@ function AccountPage() {
 		}
 	}
 
+	async function handleLinkWarcraftLogsAccount() {
+		if (typeof window === 'undefined') {
+			return
+		}
+
+		setLinkedAccountError(null)
+		setLinkingProviderId(selectedWarcraftLogsProvider)
+
+		const callbackURL = `${window.location.origin}/account`
+
+		try {
+			const result = await authClient.linkSocial({
+				provider: selectedWarcraftLogsProvider,
+				callbackURL,
+				errorCallbackURL: callbackURL,
+			})
+
+			if (result.error) {
+				setLinkedAccountError(
+					result.error.message ??
+						'Unable to start Warcraft Logs linking flow.',
+				)
+				return
+			}
+
+			const shouldRedirect = result.data?.redirect !== false
+			const redirectUrl =
+				typeof result.data?.url === 'string' ? result.data.url : null
+
+			if (shouldRedirect && redirectUrl) {
+				window.location.assign(redirectUrl)
+				return
+			}
+
+			await loadLinkedBattlenetAccounts()
+		} finally {
+			setLinkingProviderId(null)
+		}
+	}
+
 	async function handleUnlinkBattlenetAccount(account: LinkedAccount) {
 		setLinkedAccountError(null)
 		setUnlinkingAccountId(account.id)
@@ -185,6 +252,30 @@ function AccountPage() {
 				setLinkedAccountError(
 					result.error.message ??
 						'Unable to unlink Battle.net account right now.',
+				)
+				return
+			}
+
+			await loadLinkedBattlenetAccounts()
+		} finally {
+			setUnlinkingAccountId(null)
+		}
+	}
+
+	async function handleUnlinkWarcraftLogsAccount(account: LinkedAccount) {
+		setLinkedAccountError(null)
+		setUnlinkingAccountId(account.id)
+
+		try {
+			const result = await authClient.unlinkAccount({
+				providerId: account.providerId,
+				accountId: account.accountId,
+			})
+
+			if (result.error) {
+				setLinkedAccountError(
+					result.error.message ??
+						'Unable to unlink Warcraft Logs account right now.',
 				)
 				return
 			}
@@ -462,6 +553,162 @@ function AccountPage() {
 											)}
 										</div>
 									))
+								: null}
+						</CardContent>
+					</Card>
+
+					<Card>
+						<CardHeader>
+							<CardTitle className='flex items-center gap-2'>
+								<Link2 className='h-5 w-5' />
+								Warcraft Logs
+							</CardTitle>
+							<CardDescription>
+								Link one Warcraft Logs account per region.
+							</CardDescription>
+						</CardHeader>
+						<CardContent className='space-y-3'>
+							<div className='flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-end'>
+								<div className='space-y-1'>
+									<p className='text-xs font-medium uppercase'>
+										Warcraft Logs region
+									</p>
+									<select
+										className='bg-background h-9 min-w-36 rounded-md border px-2 text-sm'
+										value={selectedWarcraftLogsProvider}
+										onChange={(event) =>
+											setSelectedWarcraftLogsProvider(
+												event.target
+													.value as WarcraftLogsProviderId,
+											)
+										}
+									>
+										{warcraftLogsRegions.map((region) => (
+											<option
+												key={region.providerId}
+												value={region.providerId}
+											>
+												{region.label}
+											</option>
+										))}
+									</select>
+								</div>
+								<Button
+									onClick={handleLinkWarcraftLogsAccount}
+									disabled={
+										!user?.id ||
+										!!linkingProviderId ||
+										isLoadingLinkedAccounts
+									}
+								>
+									{linkingProviderId ===
+									selectedWarcraftLogsProvider
+										? 'Redirecting...'
+										: 'Link Warcraft Logs account'}
+								</Button>
+							</div>
+
+							{linkedAccountError ? (
+								<p className='text-destructive text-sm'>
+									{linkedAccountError}
+								</p>
+							) : null}
+
+							{isLoadingLinkedAccounts ? (
+								<p className='text-muted-foreground text-sm'>
+									Loading linked Warcraft Logs accounts...
+								</p>
+							) : null}
+
+							{!isLoadingLinkedAccounts
+								? warcraftLogsAccountsByProvider.map(
+										(region) => (
+											<div
+												key={region.providerId}
+												className='space-y-2 rounded-lg border p-3'
+											>
+												<div className='flex items-center justify-between'>
+													<div>
+														<p className='text-sm font-medium'>
+															Warcraft Logs{' '}
+															{region.label}
+														</p>
+														<p className='text-muted-foreground text-xs'>
+															{
+																region.accounts
+																	.length
+															}{' '}
+															linked account
+															{region.accounts
+																.length === 1
+																? ''
+																: 's'}
+														</p>
+													</div>
+													<Badge
+														variant={
+															region.accounts
+																.length > 0
+																? 'default'
+																: 'outline'
+														}
+													>
+														{region.accounts
+															.length > 0
+															? 'Linked'
+															: 'Not linked'}
+													</Badge>
+												</div>
+
+												{region.accounts.length > 0 ? (
+													region.accounts.map(
+														(account) => (
+															<div
+																key={account.id}
+																className='flex items-center justify-between gap-2 rounded-md border p-2'
+															>
+																<div className='min-w-0'>
+																	<p className='truncate text-sm font-medium'>
+																		{
+																			account.accountId
+																		}
+																	</p>
+																	<p className='text-muted-foreground truncate text-xs'>
+																		{
+																			account.providerId
+																		}
+																	</p>
+																</div>
+																<Button
+																	variant='outline'
+																	size='sm'
+																	onClick={() =>
+																		handleUnlinkWarcraftLogsAccount(
+																			account,
+																		)
+																	}
+																	disabled={
+																		unlinkingAccountId ===
+																		account.id
+																	}
+																>
+																	{unlinkingAccountId ===
+																	account.id
+																		? 'Unlinking...'
+																		: 'Unlink'}
+																</Button>
+															</div>
+														),
+													)
+												) : (
+													<p className='text-muted-foreground text-xs'>
+														No linked accounts for
+														this region.
+													</p>
+												)}
+											</div>
+										),
+									)
 								: null}
 						</CardContent>
 					</Card>

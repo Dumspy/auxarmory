@@ -1,24 +1,24 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from '../../types';
-import { Faction } from '../types';
+} from '../../types'
+import { Faction } from '../types'
 
 export const ReputationFactionIndexResponse = LinkSelfResponse.extend({
 	factions: z.array(KeyNameIdResponse),
 	root_factions: z.array(KeyNameIdResponse),
-});
+})
 export function ReputationFactionIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof ReputationFactionIndexResponse>>({
 		endpoint: `data/wow/reputation-faction/index`,
 		namespace: 'static',
 		zod: ReputationFactionIndexResponse,
-	});
+	})
 }
 
 export const ReputationFactionResponse = LinkSelfResponse.extend({
@@ -41,24 +41,24 @@ export const ReputationFactionResponse = LinkSelfResponse.extend({
 			}),
 		)
 		.optional(),
-});
+})
 export function ReputationFaction(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof ReputationFactionResponse>>({
 		endpoint: `data/wow/reputation-faction/${id}`,
 		namespace: 'static',
 		zod: ReputationFactionResponse,
-	});
+	})
 }
 
 export const ReputationTiersIndexResponse = LinkSelfResponse.extend({
 	reputation_tiers: z.array(z.union([KeyIdResponse, KeyNameIdResponse])),
-});
+})
 export function ReputationTiersIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof ReputationTiersIndexResponse>>({
 		endpoint: `data/wow/reputation-tiers/index`,
 		namespace: 'static',
 		zod: ReputationTiersIndexResponse,
-	});
+	})
 }
 
 export const ReputationTiersResponse = LinkSelfResponse.extend({
@@ -72,11 +72,11 @@ export const ReputationTiersResponse = LinkSelfResponse.extend({
 		}),
 	),
 	faction: KeyNameIdResponse.optional(),
-});
+})
 export function ReputationTiers(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof ReputationTiersResponse>>({
 		endpoint: `data/wow/reputation-tiers/${id}`,
 		namespace: 'static',
 		zod: ReputationTiersResponse,
-	});
+	})
 }

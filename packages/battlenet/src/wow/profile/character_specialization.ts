@@ -1,21 +1,21 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyNameIdResponse,
 	KeyNameResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from '../../types';
-import { SpellTooltips } from '../types';
-import { CharacterResponse } from '../types/character';
+} from '../../types'
+import { SpellTooltips } from '../types'
+import { CharacterResponse } from '../types/character'
 
 const ToolTip = z.strictObject({
 	talent: KeyNameIdResponse.extend({
 		name: LocaleResponse.optional(),
 	}),
 	spell_tooltip: SpellTooltips,
-});
+})
 
 export const CharacterSpecializationsSummaryResponse = LinkSelfResponse.extend({
 	specializations: z.array(
@@ -69,7 +69,7 @@ export const CharacterSpecializationsSummaryResponse = LinkSelfResponse.extend({
 	active_specialization: KeyNameIdResponse,
 	character: CharacterResponse,
 	active_hero_talent_tree: KeyNameIdResponse,
-});
+})
 export function CharacterSpecializationsSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -81,5 +81,5 @@ export function CharacterSpecializationsSummary(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/specializations`,
 		namespace: 'profile',
 		zod: CharacterSpecializationsSummaryResponse,
-	});
+	})
 }

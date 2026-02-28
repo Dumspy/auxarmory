@@ -1,29 +1,29 @@
-import './env';
+import './env'
 
-import { createQueue } from './queue';
-import { registerRepeatables, startScheduler } from './scheduler';
-import { registerWorkerShutdown, startWorker } from './worker';
+import { createQueue } from './queue'
+import { registerRepeatables, startScheduler } from './scheduler'
+import { registerWorkerShutdown, startWorker } from './worker'
 
 const start = async () => {
-	const scheduler = startScheduler();
-	await registerRepeatables(scheduler);
+	const scheduler = startScheduler()
+	await registerRepeatables(scheduler)
 
-	const queue = createQueue();
-	const worker = startWorker();
+	const queue = createQueue()
+	const worker = startWorker()
 
-	console.log('[sync] worker ready');
+	console.log('[sync] worker ready')
 
-	registerWorkerShutdown(worker);
+	registerWorkerShutdown(worker)
 
 	process.on('SIGINT', async () => {
-		await scheduler.close();
-		await queue.close();
-	});
+		await scheduler.close()
+		await queue.close()
+	})
 
 	process.on('SIGTERM', async () => {
-		await scheduler.close();
-		await queue.close();
-	});
-};
+		await scheduler.close()
+		await queue.close()
+	})
+}
 
-void start();
+void start()

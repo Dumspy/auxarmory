@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
 export const CompleteLocaleResponse = z.strictObject({
 	en_US: z.string(),
@@ -14,47 +14,47 @@ export const CompleteLocaleResponse = z.strictObject({
 	zh_TW: z.string().optional(),
 	zh_CN: z.string().optional(),
 	pt_PT: z.string().optional(),
-});
+})
 
 export const LocaleResponse = CompleteLocaleResponse.or(z.string())
 	.or(z.strictObject({}))
-	.or(z.null());
+	.or(z.null())
 
 export const KeyResponse = z.strictObject({
 	href: z.string(),
-});
+})
 
 export const LinkSelfResponse = z.strictObject({
 	_links: z.strictObject({
 		self: KeyResponse,
 	}),
-});
+})
 
 export const KeyIdResponse = z.strictObject({
 	key: KeyResponse,
 	id: z.number(),
-});
+})
 
 export const KeyNameIdResponse = z.strictObject({
 	key: KeyResponse,
 	name: LocaleResponse,
 	id: z.number(),
-});
+})
 
 export const NameIdResponse = z.strictObject({
 	name: LocaleResponse,
 	id: z.number(),
-});
+})
 
 export const KeyNameResponse = z.strictObject({
 	key: KeyResponse,
 	name: LocaleResponse,
-});
+})
 
 export const MediaKeyResponse = z.strictObject({
 	key: KeyResponse,
 	id: z.number(),
-});
+})
 
 export const MediaAssetArray = z.array(
 	z.strictObject({
@@ -70,7 +70,7 @@ export const MediaAssetArray = z.array(
 		value: z.string(),
 		file_data_id: z.number().optional(),
 	}),
-);
+)
 
 export const LocaleString = z.enum([
 	'enUS',
@@ -86,20 +86,20 @@ export const LocaleString = z.enum([
 	'koKR',
 	'zhTW',
 	'zhCN',
-]);
+])
 
 export const ApplicationAuthResponse = z.strictObject({
 	access_token: z.string(),
 	expires_in: z.number(),
 	token_type: z.string(),
 	sub: z.string(),
-});
+})
 
-export const RegionsConst = ['us', 'eu', 'kr', 'tw', 'cn'] as const;
-export const RegionsEnum = z.enum(RegionsConst);
+export const RegionsConst = ['us', 'eu', 'kr', 'tw', 'cn'] as const
+export const RegionsEnum = z.enum(RegionsConst)
 
 export const BattlenetError = z.strictObject({
 	code: z.number(),
 	type: z.string(),
 	detail: z.string(),
-});
+})

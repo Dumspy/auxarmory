@@ -1,14 +1,14 @@
-import { betterAuth } from 'better-auth';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { betterAuth } from 'better-auth'
+import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 
-import { db } from '@auxarmory/db/client';
-import * as schema from '@auxarmory/db/schema';
+import { db } from '@auxarmory/db/client'
+import * as schema from '@auxarmory/db/schema'
 
-import { env } from './env.js';
+import { env } from './env.js'
 
 const trustedOrigins = env.AUTH_TRUSTED_ORIGINS.split(',').map(
 	(origin: string) => origin.trim(),
-);
+)
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
@@ -32,4 +32,4 @@ export const auth = betterAuth({
 			sameSite: 'lax',
 		},
 	},
-});
+})

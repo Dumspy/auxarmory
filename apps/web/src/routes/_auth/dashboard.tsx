@@ -1,15 +1,15 @@
-import { useMemo, useState } from 'react';
-import { createFileRoute } from '@tanstack/react-router';
-import { Calendar, ExternalLink, Server, Users } from 'lucide-react';
+import { useMemo, useState } from 'react'
+import { createFileRoute } from '@tanstack/react-router'
+import { Calendar, ExternalLink, Server, Users } from 'lucide-react'
 
-import { Badge } from '@auxarmory/ui/components/ui/badge';
-import { Button } from '@auxarmory/ui/components/ui/button';
+import { Badge } from '@auxarmory/ui/components/ui/badge'
+import { Button } from '@auxarmory/ui/components/ui/button'
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
-} from '@auxarmory/ui/components/ui/card';
+} from '@auxarmory/ui/components/ui/card'
 import {
 	Pagination,
 	PaginationContent,
@@ -17,18 +17,18 @@ import {
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
-} from '@auxarmory/ui/components/ui/pagination';
+} from '@auxarmory/ui/components/ui/pagination'
 
 import {
 	CharacterCard,
 	CharacterCardSkeleton,
-} from '../../components/index/characterCard';
-import { CharacterDetailedView } from '../../components/index/characterDetailedView';
-import type { CharacterDetail } from '../../components/index/types';
+} from '../../components/index/characterCard'
+import { CharacterDetailedView } from '../../components/index/characterDetailedView'
+import type { CharacterDetail } from '../../components/index/types'
 
 export const Route = createFileRoute('/_auth/dashboard')({
 	component: DashboardPage,
-});
+})
 
 const mockCharacters: CharacterDetail[] = [
 	{
@@ -83,7 +83,7 @@ const mockCharacters: CharacterDetail[] = [
 		weeklyVault: { raid: 2, mythicPlus: 1, pvp: 0 },
 		conquest: { current: 100, max: 1000 },
 	},
-];
+]
 
 const guildInfo = {
 	name: 'Average Pillagers',
@@ -91,35 +91,35 @@ const guildInfo = {
 	members: 127,
 	raidProgress: '8/8 H, 3/8 M',
 	nextRaid: 'Tonight 8:00 PM',
-};
+}
 
 const weeklyResets = {
 	vault: '3 days',
 	conquest: '3 days',
 	mythicDungeons: '3 days',
 	raid: '3 days',
-};
+}
 
 function DashboardPage() {
 	const [selectedCharacterId, setSelectedCharacterId] = useState<
 		number | undefined
-	>(mockCharacters[0]?.id);
-	const [currentPage, setCurrentPage] = useState(1);
+	>(mockCharacters[0]?.id)
+	const [currentPage, setCurrentPage] = useState(1)
 
-	const totalPages = Math.max(1, Math.ceil(mockCharacters.length / 6));
-	const startIndex = (currentPage - 1) * 6;
-	const paginatedItems = mockCharacters.slice(startIndex, startIndex + 6);
+	const totalPages = Math.max(1, Math.ceil(mockCharacters.length / 6))
+	const startIndex = (currentPage - 1) * 6
+	const paginatedItems = mockCharacters.slice(startIndex, startIndex + 6)
 
 	const selectedCharacter = useMemo(
 		() => mockCharacters.find((item) => item.id === selectedCharacterId),
 		[selectedCharacterId],
-	);
+	)
 
 	const handlePageChange = (page: number) => {
 		if (page >= 1 && page <= totalPages) {
-			setCurrentPage(page);
+			setCurrentPage(page)
 		}
-	};
+	}
 
 	return (
 		<div className='space-y-6 p-2 md:p-4'>
@@ -286,5 +286,5 @@ function DashboardPage() {
 				</div>
 			</div>
 		</div>
-	);
+	)
 }

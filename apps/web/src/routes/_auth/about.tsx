@@ -1,15 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router'
 
 import {
 	Tabs,
 	TabsContent,
 	TabsList,
 	TabsTrigger,
-} from '@auxarmory/ui/components/ui/tabs';
+} from '@auxarmory/ui/components/ui/tabs'
 
 export const Route = createFileRoute('/_auth/about')({
 	component: About,
-});
+})
 
 function About() {
 	return (
@@ -27,5 +27,5 @@ function About() {
 				</TabsContent>
 			</Tabs>
 		</div>
-	);
+	)
 }

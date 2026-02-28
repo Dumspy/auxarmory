@@ -1,22 +1,22 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyNameIdResponse,
 	LinkSelfResponse,
 	LocaleResponse,
 	MediaKeyResponse,
-} from '../../types';
+} from '../../types'
 
 export const ToyIndexResponse = LinkSelfResponse.extend({
 	toys: z.array(KeyNameIdResponse),
-});
+})
 export function ToyIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof ToyIndexResponse>>({
 		endpoint: `data/wow/toy/index`,
 		namespace: 'static',
 		zod: ToyIndexResponse,
-	});
+	})
 }
 
 export const ToyResponse = LinkSelfResponse.extend({
@@ -42,11 +42,11 @@ export const ToyResponse = LinkSelfResponse.extend({
 	source_description: LocaleResponse.optional(),
 	should_exclude_if_uncollected: z.boolean().optional(),
 	media: MediaKeyResponse,
-});
+})
 export function Toy(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof ToyResponse>>({
 		endpoint: `data/wow/toy/${id}`,
 		namespace: 'static',
 		zod: ToyResponse,
-	});
+	})
 }

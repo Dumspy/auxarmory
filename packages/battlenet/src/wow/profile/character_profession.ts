@@ -1,8 +1,8 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
-import { KeyNameIdResponse, LinkSelfResponse } from '../../types';
-import { CharacterResponse } from '../types/character';
+import type { WoWGameDataClient } from '..'
+import { KeyNameIdResponse, LinkSelfResponse } from '../../types'
+import { CharacterResponse } from '../types/character'
 
 const ProfessionTier = z.array(
 	z.strictObject({
@@ -14,7 +14,7 @@ const ProfessionTier = z.array(
 		}),
 		known_recipes: z.array(KeyNameIdResponse).optional(),
 	}),
-);
+)
 
 export const CharacterProfessionSummaryResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
@@ -36,7 +36,7 @@ export const CharacterProfessionSummaryResponse = LinkSelfResponse.extend({
 			}),
 		)
 		.optional(),
-});
+})
 
 export function CharacterProfessionSummary(
 	this: WoWGameDataClient,
@@ -47,5 +47,5 @@ export function CharacterProfessionSummary(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/professions`,
 		namespace: 'profile',
 		zod: CharacterProfessionSummaryResponse,
-	});
+	})
 }

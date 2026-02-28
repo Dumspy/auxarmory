@@ -1,25 +1,25 @@
-import fs from 'fs';
+import fs from 'fs'
 
-import { ApplicationClient } from '.';
-import { env } from './env';
-import { AuctionsResponse } from './wow/game_data/auction';
-import { ConnectedRealmIndexResponse } from './wow/game_data/connected_realm';
+import { ApplicationClient } from '.'
+import { env } from './env'
+import { AuctionsResponse } from './wow/game_data/auction'
+import { ConnectedRealmIndexResponse } from './wow/game_data/connected_realm'
 
-type EndpointFn<T, R> = (input: T) => Promise<R>;
+type EndpointFn<T, R> = (input: T) => Promise<R>
 interface Validator<R> {
 	safeParse: (data: unknown) => {
-		success: boolean;
-		error?: unknown;
-		data?: R;
-	};
+		success: boolean
+		error?: unknown
+		data?: R
+	}
 }
 
 interface ProcessChainParams<T, R> {
-	inputs: T[];
-	endpoint: EndpointFn<T, unknown>;
-	validator: Validator<R>;
-	saveId: (input: T) => string | number;
-	next?: (result: R, input: T) => Promise<void>;
+	inputs: T[]
+	endpoint: EndpointFn<T, unknown>
+	validator: Validator<R>
+	saveId: (input: T) => string | number
+	next?: (result: R, input: T) => Promise<void>
 }
 
 async function processChain<T, R>({
@@ -30,36 +30,36 @@ async function processChain<T, R>({
 	next,
 }: ProcessChainParams<T, R>) {
 	for (const input of inputs) {
-		const id = saveId(input);
+		const id = saveId(input)
 		try {
-			const data = await endpoint(input);
-			const res = validator.safeParse(data);
+			const data = await endpoint(input)
+			const res = validator.safeParse(data)
 			if (res.success) {
-				console.log('ok', id);
-				if (next) await next(res.data as R, input);
+				console.log('ok', id)
+				if (next) await next(res.data as R, input)
 			} else {
-				const errorFile = `./out/error-${id}.txt`;
-				const dataFile = `./out/data-${id}.json`;
-				fs.writeFileSync(errorFile, String(res.error));
-				fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
+				const errorFile = `./out/error-${id}.txt`
+				const dataFile = `./out/data-${id}.json`
+				fs.writeFileSync(errorFile, String(res.error))
+				fs.writeFileSync(dataFile, JSON.stringify(data, null, 2))
 				console.error(
 					`Parse error for ${id}, saved to ${errorFile} and ${dataFile}`,
-				);
+				)
 			}
 		} catch (error) {
-			console.error(`Error fetching data for ${id}:`);
-			console.error(error);
+			console.error(`Error fetching data for ${id}:`)
+			console.error(error)
 		}
 	}
 }
 
-(async () => {
+;(async () => {
 	const client = new ApplicationClient({
 		region: 'eu',
 		clientId: env.BATTLENET_CLIENT_ID,
 		clientSecret: env.BATTLENET_CLIENT_SECRET,
 		suppressZodErrors: true,
-	});
+	})
 
 	await processChain({
 		inputs: [null],
@@ -104,7 +104,7 @@ async function processChain<T, R>({
 				// 		// },
 				// 	});
 				// },
-			});
+			})
 		},
-	});
-})();
+	})
+})()

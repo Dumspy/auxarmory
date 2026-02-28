@@ -1,6 +1,6 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
@@ -8,9 +8,9 @@ import {
 	LinkSelfResponse,
 	LocaleResponse,
 	MediaKeyResponse,
-} from '../../types';
-import { ColorObject, Faction, Realm } from '../types';
-import { CharacterResponse } from '../types/character';
+} from '../../types'
+import { ColorObject, Faction, Realm } from '../types'
+import { CharacterResponse } from '../types/character'
 
 const SimpleGuild = z.strictObject({
 	key: KeyResponse,
@@ -18,7 +18,7 @@ const SimpleGuild = z.strictObject({
 	id: z.number(),
 	realm: Realm,
 	faction: Faction,
-});
+})
 
 export const GuildResponse = LinkSelfResponse.extend({
 	id: z.number(),
@@ -58,7 +58,7 @@ export const GuildResponse = LinkSelfResponse.extend({
 	created_timestamp: z.number(),
 	activity: KeyResponse,
 	name_search: z.string(),
-});
+})
 
 export function Guild(
 	this: WoWGameDataClient,
@@ -69,7 +69,7 @@ export function Guild(
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}`,
 		namespace: 'profile',
 		zod: GuildResponse,
-	});
+	})
 }
 
 const GuildActivityType = z.union([
@@ -96,12 +96,12 @@ const GuildActivityType = z.union([
 		}),
 		timestamp: z.number(),
 	}),
-]);
+])
 
 export const GuildActivityResponse = LinkSelfResponse.extend({
 	guild: SimpleGuild,
 	activities: z.array(GuildActivityType),
-});
+})
 export function GuildActivity(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -111,7 +111,7 @@ export function GuildActivity(
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}/activity`,
 		namespace: 'profile',
 		zod: GuildActivityResponse,
-	});
+	})
 }
 
 export const GuildAchievementsResponse = LinkSelfResponse.extend({
@@ -152,7 +152,7 @@ export const GuildAchievementsResponse = LinkSelfResponse.extend({
 			timestamp: z.number(),
 		}),
 	),
-});
+})
 export function GuildAchievements(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -162,7 +162,7 @@ export function GuildAchievements(
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}/achievements`,
 		namespace: 'profile',
 		zod: GuildAchievementsResponse,
-	});
+	})
 }
 
 export const GuildRosterResponse = LinkSelfResponse.extend({
@@ -179,7 +179,7 @@ export const GuildRosterResponse = LinkSelfResponse.extend({
 			rank: z.number(),
 		}),
 	),
-});
+})
 
 export function GuildRoster(
 	this: WoWGameDataClient,
@@ -190,5 +190,5 @@ export function GuildRoster(
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}/roster`,
 		namespace: 'profile',
 		zod: GuildRosterResponse,
-	});
+	})
 }

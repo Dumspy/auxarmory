@@ -1,10 +1,10 @@
-import '@testing-library/jest-dom/vitest';
-import { afterEach } from 'vitest';
-import { cleanup } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest'
+import { afterEach } from 'vitest'
+import { cleanup } from '@testing-library/react'
 
 afterEach(() => {
-	cleanup();
-});
+	cleanup()
+})
 
 if (!window.matchMedia) {
 	window.matchMedia = (query: string) => ({
@@ -16,5 +16,5 @@ if (!window.matchMedia) {
 		addEventListener: () => undefined,
 		removeEventListener: () => undefined,
 		dispatchEvent: () => false,
-	});
+	})
 }

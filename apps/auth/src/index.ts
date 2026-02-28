@@ -1,9 +1,9 @@
-import { serve } from '@hono/node-server';
+import { serve } from '@hono/node-server'
 
-import { createAuthApp } from './app.js';
-import { env } from './env.js';
+import { createAuthApp } from './app.js'
+import { env } from './env.js'
 
-const app = createAuthApp();
+const app = createAuthApp()
 
 serve(
 	{
@@ -13,6 +13,6 @@ serve(
 	(info) => {
 		console.log(
 			`Auth service listening on ${env.AUTH_SERVICE_ORIGIN} (port ${info.port})`,
-		);
+		)
 	},
-);
+)

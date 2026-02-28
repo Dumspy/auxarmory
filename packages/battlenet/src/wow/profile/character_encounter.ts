@@ -1,19 +1,19 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from '../../types';
-import { CharacterResponse } from '../types/character';
+} from '../../types'
+import { CharacterResponse } from '../types/character'
 
 export const CharacterEncounterSummaryResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
 	dungeons: KeyResponse,
 	raids: KeyResponse,
-});
+})
 export function CharacterEncounterSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -23,7 +23,7 @@ export function CharacterEncounterSummary(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/encounters`,
 		namespace: 'profile',
 		zod: CharacterEncounterSummaryResponse,
-	});
+	})
 }
 
 export const CharacterDungeonsResponse = LinkSelfResponse.extend({
@@ -67,7 +67,7 @@ export const CharacterDungeonsResponse = LinkSelfResponse.extend({
 			),
 		}),
 	),
-});
+})
 export function CharacterDungeons(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -77,7 +77,7 @@ export function CharacterDungeons(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/encounters/dungeons`,
 		namespace: 'profile',
 		zod: CharacterDungeonsResponse,
-	});
+	})
 }
 
 export const CharacterRaidResponse = LinkSelfResponse.extend({
@@ -123,7 +123,7 @@ export const CharacterRaidResponse = LinkSelfResponse.extend({
 			),
 		}),
 	),
-});
+})
 
 export function CharacterRaid(
 	this: WoWGameDataClient,
@@ -134,5 +134,5 @@ export function CharacterRaid(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/encounters/raids`,
 		namespace: 'profile',
 		zod: CharacterRaidResponse,
-	});
+	})
 }

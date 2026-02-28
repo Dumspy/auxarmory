@@ -1,12 +1,12 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyNameIdResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from '../../types';
-import { CharacterResponse } from '../types/character';
+} from '../../types'
+import { CharacterResponse } from '../types/character'
 
 const TraitUnion = z.union([
 	z.strictObject({
@@ -30,7 +30,7 @@ const TraitUnion = z.union([
 		tier: z.number(),
 		display_order: z.number(),
 	}),
-]);
+])
 
 export const CharacterSoulbindsResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
@@ -43,7 +43,7 @@ export const CharacterSoulbindsResponse = LinkSelfResponse.extend({
 			is_active: z.boolean().optional(),
 		}),
 	),
-});
+})
 export function CharacterSoulbinds(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -53,5 +53,5 @@ export function CharacterSoulbinds(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/soulbinds`,
 		namespace: 'profile',
 		zod: CharacterSoulbindsResponse,
-	});
+	})
 }

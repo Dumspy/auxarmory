@@ -1,6 +1,6 @@
-import type { ElementType } from 'react';
-import { useState } from 'react';
-import { ChevronsUpDown, RefreshCw } from 'lucide-react';
+import type { ElementType } from 'react'
+import { useState } from 'react'
+import { ChevronsUpDown, RefreshCw } from 'lucide-react'
 
 import {
 	DropdownMenu,
@@ -10,28 +10,28 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuShortcut,
 	DropdownMenuTrigger,
-} from '@auxarmory/ui/components/ui/dropdown-menu';
+} from '@auxarmory/ui/components/ui/dropdown-menu'
 import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	useSidebar,
-} from '@auxarmory/ui/components/ui/sidebar';
+} from '@auxarmory/ui/components/ui/sidebar'
 
 export function CharacterSwitcher({
 	characters,
 }: {
 	characters: {
-		name: string;
-		logo: ElementType;
-		className: string;
-	}[];
+		name: string
+		logo: ElementType
+		className: string
+	}[]
 }) {
-	const { isMobile } = useSidebar();
-	const [activeCharacter, setActiveCharacter] = useState(characters[0]);
+	const { isMobile } = useSidebar()
+	const [activeCharacter, setActiveCharacter] = useState(characters[0])
 
 	if (!activeCharacter) {
-		return null;
+		return null
 	}
 
 	return (
@@ -94,5 +94,5 @@ export function CharacterSwitcher({
 				</DropdownMenu>
 			</SidebarMenuItem>
 		</SidebarMenu>
-	);
+	)
 }

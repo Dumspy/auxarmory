@@ -1,9 +1,9 @@
-import { serve } from '@hono/node-server';
+import { serve } from '@hono/node-server'
 
-import { createApiApp } from './app.js';
-import { env } from './env.js';
+import { createApiApp } from './app.js'
+import { env } from './env.js'
 
-const app = createApiApp();
+const app = createApiApp()
 
 serve(
 	{
@@ -13,6 +13,6 @@ serve(
 	(info) => {
 		console.log(
 			`API service listening on ${env.API_SERVICE_ORIGIN} (port ${info.port})`,
-		);
+		)
 	},
-);
+)

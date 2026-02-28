@@ -1,13 +1,13 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import { ColorObject, Faction } from '.';
+import { ColorObject, Faction } from '.'
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LocaleResponse,
 	MediaKeyResponse,
 	NameIdResponse,
-} from '../../types';
+} from '../../types'
 
 export const ItemIventoryType = z.strictObject({
 	type: z.enum([
@@ -47,7 +47,7 @@ export const ItemIventoryType = z.strictObject({
 		'BODY',
 	]),
 	name: LocaleResponse,
-});
+})
 
 export const ItemQuality = z.strictObject({
 	type: z.enum([
@@ -61,7 +61,7 @@ export const ItemQuality = z.strictObject({
 		'LEGENDARY',
 	]),
 	name: LocaleResponse,
-});
+})
 
 const StatEnum = z.enum([
 	'INTELLECT',
@@ -79,13 +79,13 @@ const StatEnum = z.enum([
 	'COMBAT_RATING_LIFESTEAL',
 	'COMBAT_RATING_SPEED',
 	'CORRUPTION_RESISTANCE',
-]);
+])
 
 const Upgrade = z.strictObject({
 	value: z.number(),
 	max_value: z.number(),
 	display_string: LocaleResponse,
-});
+})
 
 const BaseItem = z.strictObject({
 	item: z.strictObject({
@@ -259,7 +259,7 @@ const BaseItem = z.strictObject({
 		value: z.number(),
 		display_string: LocaleResponse,
 	}),
-});
+})
 
 export const HeirloomItem = BaseItem.omit({
 	sell_price: true,
@@ -278,7 +278,7 @@ export const HeirloomItem = BaseItem.omit({
 	.extend({
 		// New fields
 		upgrades: Upgrade,
-	});
+	})
 
 const PreviewItemBase = BaseItem.extend({
 	// BaseItem optional shapes
@@ -344,7 +344,7 @@ const PreviewItemBase = BaseItem.extend({
 				display_string: LocaleResponse,
 			})
 			.optional(),
-	});
+	})
 
 export const PreviewItem = PreviewItemBase.extend({
 	recipe: z
@@ -359,7 +359,7 @@ export const PreviewItem = PreviewItemBase.extend({
 			reagents_display_string: LocaleResponse.optional(),
 		})
 		.optional(),
-});
+})
 
 export const CharacterEquipmentItem = BaseItem.extend({
 	// BaseItem optional shapes
@@ -431,4 +431,4 @@ export const CharacterEquipmentItem = BaseItem.extend({
 			.optional(),
 		timewalker_level: z.number().optional(),
 		upgrades: Upgrade.optional(),
-	});
+	})

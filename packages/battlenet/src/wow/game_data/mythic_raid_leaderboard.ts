@@ -1,8 +1,8 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
-import { KeyNameIdResponse, LinkSelfResponse, RegionsEnum } from '../../types';
-import { FactionEnum, Realm } from '../types';
+import type { WoWGameDataClient } from '..'
+import { KeyNameIdResponse, LinkSelfResponse, RegionsEnum } from '../../types'
+import { FactionEnum, Realm } from '../types'
 
 export const MythicRaidLeaderboardResponse = LinkSelfResponse.extend({
 	slug: z.string(),
@@ -23,7 +23,7 @@ export const MythicRaidLeaderboardResponse = LinkSelfResponse.extend({
 		}),
 	),
 	journal_instance: KeyNameIdResponse,
-});
+})
 export function MythicRaidLeaderboard(
 	this: WoWGameDataClient,
 	raid: string,
@@ -33,5 +33,5 @@ export function MythicRaidLeaderboard(
 		endpoint: `data/wow/leaderboard/hall-of-fame/${raid}/${faction}`,
 		namespace: 'dynamic',
 		zod: MythicRaidLeaderboardResponse,
-	});
+	})
 }

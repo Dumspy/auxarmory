@@ -1,6 +1,6 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
@@ -9,19 +9,19 @@ import {
 	LocaleResponse,
 	MediaAssetArray,
 	MediaKeyResponse,
-} from '../../types';
-import { SpellTooltips } from '../types';
+} from '../../types'
+import { SpellTooltips } from '../types'
 
 export const PlayableSpecializationIndexResponse = LinkSelfResponse.extend({
 	character_specializations: z.array(KeyNameIdResponse),
 	pet_specializations: z.array(KeyNameIdResponse),
-});
+})
 export function PlayableSpecializationIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof PlayableSpecializationIndexResponse>>({
 		endpoint: `data/wow/playable-specialization/index`,
 		namespace: 'static',
 		zod: PlayableSpecializationIndexResponse,
-	});
+	})
 }
 
 const BasePlayableSpec = LinkSelfResponse.extend({
@@ -42,7 +42,7 @@ const BasePlayableSpec = LinkSelfResponse.extend({
 		type: z.enum(['STRENGTH', 'AGILITY', 'INTELLECT']),
 		name: LocaleResponse,
 	}),
-});
+})
 
 export const PlayableSpecializationResponse = z.union([
 	BasePlayableSpec,
@@ -56,19 +56,19 @@ export const PlayableSpecializationResponse = z.union([
 		hero_talent_trees: z.array(KeyNameIdResponse),
 		spec_talent_tree: KeyNameResponse,
 	}),
-]);
+])
 export function PlayableSpecialization(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof PlayableSpecializationResponse>>({
 		endpoint: `data/wow/playable-specialization/${id}`,
 		namespace: 'static',
 		zod: PlayableSpecializationResponse,
-	});
+	})
 }
 
 export const PlayableSpecializationMediaResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	assets: MediaAssetArray,
-});
+})
 export function PlayableSpecializationMedia(
 	this: WoWGameDataClient,
 	id: number,
@@ -77,5 +77,5 @@ export function PlayableSpecializationMedia(
 		endpoint: `data/wow/media/playable-specialization/${id}`,
 		namespace: 'static',
 		zod: PlayableSpecializationMediaResponse,
-	});
+	})
 }

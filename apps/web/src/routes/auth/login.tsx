@@ -1,58 +1,58 @@
-import type { FormEvent } from 'react';
-import { useState } from 'react';
+import type { FormEvent } from 'react'
+import { useState } from 'react'
 import {
 	createFileRoute,
 	useNavigate,
 	useRouterState,
-} from '@tanstack/react-router';
+} from '@tanstack/react-router'
 
-import { AuthFormCard } from '../../components/auth/auth-form-card';
-import { authClient } from '../../lib/auth-client';
+import { AuthFormCard } from '../../components/auth/auth-form-card'
+import { authClient } from '../../lib/auth-client'
 import {
 	getRedirectFromSearchStr,
 	normalizeRedirectPath,
 	redirectAuthenticatedUser,
-} from '../../lib/require-auth';
+} from '../../lib/require-auth'
 
 export const Route = createFileRoute('/auth/login')({
 	beforeLoad: async ({ location }) => {
-		await redirectAuthenticatedUser({ location });
+		await redirectAuthenticatedUser({ location })
 	},
 	component: LoginPage,
-});
+})
 
 export function LoginPage() {
-	const navigate = useNavigate();
-	const { location } = useRouterState();
-	const redirectTo = getRedirectFromSearchStr(location.searchStr);
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [error, setError] = useState<string | null>(null);
-	const [isSubmitting, setIsSubmitting] = useState(false);
+	const navigate = useNavigate()
+	const { location } = useRouterState()
+	const redirectTo = getRedirectFromSearchStr(location.searchStr)
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
+	const [error, setError] = useState<string | null>(null)
+	const [isSubmitting, setIsSubmitting] = useState(false)
 
 	async function onSubmit(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault();
-		setError(null);
-		setIsSubmitting(true);
+		event.preventDefault()
+		setError(null)
+		setIsSubmitting(true)
 
 		const result = await authClient.signIn.email({
 			email,
 			password,
-		});
+		})
 
-		setIsSubmitting(false);
+		setIsSubmitting(false)
 
 		if (result.error) {
-			setError(result.error.message ?? 'Unable to sign in');
-			return;
+			setError(result.error.message ?? 'Unable to sign in')
+			return
 		}
 
-		await navigate({ to: normalizeRedirectPath(redirectTo, '/dashboard') });
+		await navigate({ to: normalizeRedirectPath(redirectTo, '/dashboard') })
 	}
 
 	const safeRedirect = encodeURIComponent(
 		normalizeRedirectPath(redirectTo, '/dashboard'),
-	);
+	)
 
 	return (
 		<AuthFormCard
@@ -69,5 +69,5 @@ export function LoginPage() {
 			switchHref={`/auth/signup?redirect=${safeRedirect}`}
 			switchLabel='Need an account? Sign up'
 		/>
-	);
+	)
 }

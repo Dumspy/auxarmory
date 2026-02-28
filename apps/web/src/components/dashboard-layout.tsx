@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
-import { Fragment } from 'react';
-import { Link, useRouterState } from '@tanstack/react-router';
+import type { ReactNode } from 'react'
+import { Fragment } from 'react'
+import { Link, useRouterState } from '@tanstack/react-router'
 
 import {
 	Breadcrumb,
@@ -9,21 +9,21 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
-} from '@auxarmory/ui/components/ui/breadcrumb';
-import { Separator } from '@auxarmory/ui/components/ui/separator';
+} from '@auxarmory/ui/components/ui/breadcrumb'
+import { Separator } from '@auxarmory/ui/components/ui/separator'
 import {
 	SidebarInset,
 	SidebarProvider,
 	SidebarTrigger,
-} from '@auxarmory/ui/components/ui/sidebar';
+} from '@auxarmory/ui/components/ui/sidebar'
 
-import { AppSidebar } from './app-sidebar';
+import { AppSidebar } from './app-sidebar'
 
 function BreadcrumbNav() {
-	const state = useRouterState();
-	const path = state.location.pathname;
+	const state = useRouterState()
+	const path = state.location.pathname
 	const segments: string[] =
-		path === '/' ? [] : path.split('/').filter(Boolean);
+		path === '/' ? [] : path.split('/').filter(Boolean)
 
 	return (
 		<Breadcrumb>
@@ -34,10 +34,10 @@ function BreadcrumbNav() {
 					</BreadcrumbLink>
 				</BreadcrumbItem>
 				{segments.map((segment, index) => {
-					const segmentPath = `/${segments.slice(0, index + 1).join('/')}`;
-					const isLast = index === segments.length - 1;
+					const segmentPath = `/${segments.slice(0, index + 1).join('/')}`
+					const isLast = index === segments.length - 1
 					const title =
-						segment.charAt(0).toUpperCase() + segment.slice(1);
+						segment.charAt(0).toUpperCase() + segment.slice(1)
 
 					return (
 						<Fragment key={segmentPath}>
@@ -52,11 +52,11 @@ function BreadcrumbNav() {
 								)}
 							</BreadcrumbItem>
 						</Fragment>
-					);
+					)
 				})}
 			</BreadcrumbList>
 		</Breadcrumb>
-	);
+	)
 }
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
@@ -78,5 +78,5 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
 				<main className='p-4'>{children}</main>
 			</SidebarInset>
 		</SidebarProvider>
-	);
+	)
 }

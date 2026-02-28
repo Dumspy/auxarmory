@@ -1,6 +1,6 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyNameIdResponse,
 	KeyResponse,
@@ -8,17 +8,17 @@ import {
 	LocaleResponse,
 	MediaAssetArray,
 	MediaKeyResponse,
-} from '../../types';
+} from '../../types'
 
 export const PlayableClassIndexResponse = LinkSelfResponse.extend({
 	classes: z.array(KeyNameIdResponse),
-});
+})
 export function PlayableClassIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof PlayableClassIndexResponse>>({
 		endpoint: `data/wow/playable-class/index`,
 		namespace: 'static',
 		zod: PlayableClassIndexResponse,
-	});
+	})
 }
 
 export const PlayableClassResponse = LinkSelfResponse.extend({
@@ -34,25 +34,25 @@ export const PlayableClassResponse = LinkSelfResponse.extend({
 	media: MediaKeyResponse,
 	pvp_talent_slots: KeyResponse,
 	playable_races: z.array(KeyNameIdResponse),
-});
+})
 export function PlayableClass(this: WoWGameDataClient, classId: number) {
 	return this.request<z.infer<typeof PlayableClassResponse>>({
 		endpoint: `data/wow/playable-class/${classId}`,
 		namespace: 'static',
 		zod: PlayableClassResponse,
-	});
+	})
 }
 
 export const PlayableClassMediaResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	assets: MediaAssetArray,
-});
+})
 export function PlayableClassMedia(this: WoWGameDataClient, classId: number) {
 	return this.request<z.infer<typeof PlayableClassMediaResponse>>({
 		endpoint: `data/wow/media/playable-class/${classId}`,
 		namespace: 'static',
 		zod: PlayableClassMediaResponse,
-	});
+	})
 }
 
 export const PlayablePvPTalentSlotResponse = LinkSelfResponse.extend({
@@ -62,7 +62,7 @@ export const PlayablePvPTalentSlotResponse = LinkSelfResponse.extend({
 			unlock_player_level: z.number(),
 		}),
 	),
-});
+})
 export function PlayablePvPTalentSlot(
 	this: WoWGameDataClient,
 	classId: number,
@@ -71,5 +71,5 @@ export function PlayablePvPTalentSlot(
 		endpoint: `data/wow/playable-class/${classId}/pvp-talent-slots`,
 		namespace: 'static',
 		zod: PlayablePvPTalentSlotResponse,
-	});
+	})
 }

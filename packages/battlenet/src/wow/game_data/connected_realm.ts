@@ -1,23 +1,23 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
 	LocaleString,
-} from '../../types';
+} from '../../types'
 
 export const ConnectedRealmIndexResponse = LinkSelfResponse.extend({
 	connected_realms: z.array(KeyResponse),
-});
+})
 export function ConnectedRealmIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof ConnectedRealmIndexResponse>>({
 		endpoint: `data/wow/connected-realm/index`,
 		namespace: 'dynamic',
 		zod: ConnectedRealmIndexResponse,
-	});
+	})
 }
 
 export const ConnectedRealmResponse = LinkSelfResponse.extend({
@@ -59,13 +59,13 @@ export const ConnectedRealmResponse = LinkSelfResponse.extend({
 	),
 	mythic_leaderboards: KeyResponse,
 	auctions: KeyResponse,
-});
+})
 export function ConnectedRealm(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof ConnectedRealmResponse>>({
 		endpoint: `data/wow/connected-realm/${id}`,
 		namespace: 'dynamic',
 		zod: ConnectedRealmResponse,
-	});
+	})
 }
 
 export function ConnectedRealmSearch(
@@ -77,5 +77,5 @@ export function ConnectedRealmSearch(
 		namespace: 'dynamic',
 		zod: z.unknown(),
 		params,
-	});
+	})
 }

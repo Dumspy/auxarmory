@@ -1,10 +1,10 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
-import { KeyIdResponse, LinkSelfResponse, NameIdResponse } from '../../types';
-import { PvPBracketType } from '../game_data/pvp_tier';
-import { Faction } from '../types';
-import { CharacterResponse } from '../types/character';
+import type { WoWGameDataClient } from '..'
+import { KeyIdResponse, LinkSelfResponse, NameIdResponse } from '../../types'
+import { PvPBracketType } from '../game_data/pvp_tier'
+import { Faction } from '../types'
+import { CharacterResponse } from '../types/character'
 
 export const CharacterPvPBracketStatisticsResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
@@ -26,7 +26,7 @@ export const CharacterPvPBracketStatisticsResponse = LinkSelfResponse.extend({
 		won: z.number(),
 		lost: z.number(),
 	}),
-});
+})
 export function CharacterPvPBracketStatistics(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -37,7 +37,7 @@ export function CharacterPvPBracketStatistics(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/pvp-bracket/${pvpBracket}`,
 		namespace: 'profile',
 		zod: CharacterPvPBracketStatisticsResponse,
-	});
+	})
 }
 
 export const CharacterPvPSummaryResponse = LinkSelfResponse.extend({
@@ -56,7 +56,7 @@ export const CharacterPvPSummaryResponse = LinkSelfResponse.extend({
 		.optional(),
 	honorable_kills: z.number(),
 	character: CharacterResponse,
-});
+})
 export function CharacterPvPSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -66,5 +66,5 @@ export function CharacterPvPSummary(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/pvp-summary`,
 		namespace: 'profile',
 		zod: CharacterPvPSummaryResponse,
-	});
+	})
 }

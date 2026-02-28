@@ -1,13 +1,13 @@
-import { useMemo } from 'react';
-import type { LucideIcon } from 'lucide-react';
-import { ChevronRight, HomeIcon, InfoIcon } from 'lucide-react';
-import { Link, useRouterState } from '@tanstack/react-router';
+import { useMemo } from 'react'
+import type { LucideIcon } from 'lucide-react'
+import { ChevronRight, HomeIcon, InfoIcon } from 'lucide-react'
+import { Link, useRouterState } from '@tanstack/react-router'
 
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-} from '@auxarmory/ui/components/ui/collapsible';
+} from '@auxarmory/ui/components/ui/collapsible'
 import {
 	SidebarGroup,
 	SidebarGroupLabel,
@@ -17,52 +17,52 @@ import {
 	SidebarMenuSub,
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
-} from '@auxarmory/ui/components/ui/sidebar';
+} from '@auxarmory/ui/components/ui/sidebar'
 
 const routeIcons: Record<string, LucideIcon> = {
 	'/dashboard': HomeIcon,
 	'/about': InfoIcon,
-};
+}
 
 interface NavItem {
-	title: string;
-	path: string;
-	icon?: LucideIcon;
-	items?: NavItem[];
+	title: string
+	path: string
+	icon?: LucideIcon
+	items?: NavItem[]
 }
 
 export function NavMain() {
-	const state = useRouterState();
-	const currentPath = state.location.pathname;
+	const state = useRouterState()
+	const currentPath = state.location.pathname
 
 	const navItems = useMemo(() => {
-		const items: NavItem[] = [];
-		const allRoutes = ['/dashboard', '/about'];
+		const items: NavItem[] = []
+		const allRoutes = ['/dashboard', '/about']
 
 		allRoutes.forEach((route) => {
-			const segments = route.split('/').filter(Boolean);
-			const first = segments[0] ?? '';
-			const second = segments[1] ?? '';
+			const segments = route.split('/').filter(Boolean)
+			const first = segments[0] ?? ''
+			const second = segments[1] ?? ''
 
 			if (segments.length === 1) {
 				items.push({
 					title: first.charAt(0).toUpperCase() + first.slice(1),
 					path: `/${first}`,
 					icon: routeIcons[`/${first}`],
-				});
-				return;
+				})
+				return
 			}
 
-			const parentPath = `/${first}`;
-			const parent = items.find((item) => item.path === parentPath);
+			const parentPath = `/${first}`
+			const parent = items.find((item) => item.path === parentPath)
 
 			if (parent) {
-				parent.items ??= [];
+				parent.items ??= []
 				parent.items.push({
 					title: second.charAt(0).toUpperCase() + second.slice(1),
 					path: route,
-				});
-				return;
+				})
+				return
 			}
 
 			items.push({
@@ -75,11 +75,11 @@ export function NavMain() {
 						path: route,
 					},
 				],
-			});
-		});
+			})
+		})
 
-		return items;
-	}, []);
+		return items
+	}, [])
 
 	return (
 		<SidebarGroup>
@@ -91,9 +91,9 @@ export function NavMain() {
 						(item.items?.some(
 							(subItem) => currentPath === subItem.path,
 						) ??
-							false);
+							false)
 
-					const hasChildren = !!item.items?.length;
+					const hasChildren = !!item.items?.length
 
 					return (
 						<Collapsible
@@ -152,9 +152,9 @@ export function NavMain() {
 								)}
 							</SidebarMenuItem>
 						</Collapsible>
-					);
+					)
 				})}
 			</SidebarMenu>
 		</SidebarGroup>
-	);
+	)
 }

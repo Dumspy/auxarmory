@@ -1,16 +1,16 @@
-import { Shield } from 'lucide-react';
-import type { FormEvent } from 'react';
+import { Shield } from 'lucide-react'
+import type { FormEvent } from 'react'
 
-import { Button } from '@auxarmory/ui/components/ui/button';
+import { Button } from '@auxarmory/ui/components/ui/button'
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
-} from '@auxarmory/ui/components/ui/card';
-import { Input } from '@auxarmory/ui/components/ui/input';
-import { Label } from '@auxarmory/ui/components/ui/label';
+} from '@auxarmory/ui/components/ui/card'
+import { Input } from '@auxarmory/ui/components/ui/input'
+import { Label } from '@auxarmory/ui/components/ui/label'
 
 export function AuthFormCard({
 	mode,
@@ -26,20 +26,20 @@ export function AuthFormCard({
 	switchHref,
 	switchLabel,
 }: {
-	mode: 'login' | 'signup';
-	error: string | null;
-	isSubmitting: boolean;
-	onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-	name: string;
-	email: string;
-	password: string;
-	onNameChange: (value: string) => void;
-	onEmailChange: (value: string) => void;
-	onPasswordChange: (value: string) => void;
-	switchHref: string;
-	switchLabel: string;
+	mode: 'login' | 'signup'
+	error: string | null
+	isSubmitting: boolean
+	onSubmit: (event: FormEvent<HTMLFormElement>) => void
+	name: string
+	email: string
+	password: string
+	onNameChange: (value: string) => void
+	onEmailChange: (value: string) => void
+	onPasswordChange: (value: string) => void
+	switchHref: string
+	switchLabel: string
 }) {
-	const isSignup = mode === 'signup';
+	const isSignup = mode === 'signup'
 
 	return (
 		<main className='from-background via-muted/40 to-background flex min-h-screen items-center justify-center bg-gradient-to-br px-4 py-10'>
@@ -144,5 +144,5 @@ export function AuthFormCard({
 				</Card>
 			</div>
 		</main>
-	);
+	)
 }

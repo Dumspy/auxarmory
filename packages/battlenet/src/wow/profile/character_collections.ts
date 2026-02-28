@@ -1,15 +1,15 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from '../../types';
-import { CharacterResponse } from '../types/character';
-import { ItemIventoryType } from '../types/item';
+} from '../../types'
+import { CharacterResponse } from '../types/character'
+import { ItemIventoryType } from '../types/item'
 
 export const CharacterCollectionIndexResponse = LinkSelfResponse.extend({
 	pets: KeyResponse,
@@ -18,7 +18,7 @@ export const CharacterCollectionIndexResponse = LinkSelfResponse.extend({
 	toys: KeyResponse,
 	character: CharacterResponse,
 	transmogs: KeyResponse,
-});
+})
 export function CharacterCollectionIndex(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -28,7 +28,7 @@ export function CharacterCollectionIndex(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections`,
 		namespace: 'profile',
 		zod: CharacterCollectionIndexResponse,
-	});
+	})
 }
 
 export const CharacterHeirloomsCollectionSummaryResponse =
@@ -41,7 +41,7 @@ export const CharacterHeirloomsCollectionSummaryResponse =
 				}),
 			}),
 		),
-	});
+	})
 export function CharacterHeirloomsCollectionSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -53,7 +53,7 @@ export function CharacterHeirloomsCollectionSummary(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/heirlooms`,
 		namespace: 'profile',
 		zod: CharacterHeirloomsCollectionSummaryResponse,
-	});
+	})
 }
 
 export const CharacterMountsCollectionSummaryResponse = LinkSelfResponse.extend(
@@ -67,7 +67,7 @@ export const CharacterMountsCollectionSummaryResponse = LinkSelfResponse.extend(
 			}),
 		),
 	},
-);
+)
 export function CharacterMountsCollectionSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -79,7 +79,7 @@ export function CharacterMountsCollectionSummary(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/mounts`,
 		namespace: 'profile',
 		zod: CharacterMountsCollectionSummaryResponse,
-	});
+	})
 }
 
 export const CharacterPetsCollectionSummaryResponse = LinkSelfResponse.extend({
@@ -106,7 +106,7 @@ export const CharacterPetsCollectionSummaryResponse = LinkSelfResponse.extend({
 		}),
 	),
 	unlocked_battle_pet_slots: z.number(),
-});
+})
 export function CharacterPetsCollectionSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -118,7 +118,7 @@ export function CharacterPetsCollectionSummary(
 			namespace: 'profile',
 			zod: CharacterPetsCollectionSummaryResponse,
 		},
-	);
+	)
 }
 
 export const CharacterToysCollectionSummaryResponse = LinkSelfResponse.extend({
@@ -128,7 +128,7 @@ export const CharacterToysCollectionSummaryResponse = LinkSelfResponse.extend({
 			is_favorite: z.boolean().optional(),
 		}),
 	),
-});
+})
 export function CharacterToysCollectionSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -140,7 +140,7 @@ export function CharacterToysCollectionSummary(
 			namespace: 'profile',
 			zod: CharacterToysCollectionSummaryResponse,
 		},
-	);
+	)
 }
 
 export const CharacterTransmogCollectionSummaryResponse =
@@ -152,7 +152,7 @@ export const CharacterTransmogCollectionSummaryResponse =
 				appearances: z.array(KeyIdResponse),
 			}),
 		),
-	});
+	})
 export function CharacterTransmogCollectionSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -164,5 +164,5 @@ export function CharacterTransmogCollectionSummary(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/transmogs`,
 		namespace: 'profile',
 		zod: CharacterTransmogCollectionSummaryResponse,
-	});
+	})
 }

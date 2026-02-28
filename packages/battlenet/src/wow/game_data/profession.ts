@@ -1,6 +1,6 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
@@ -8,17 +8,17 @@ import {
 	LocaleResponse,
 	MediaAssetArray,
 	MediaKeyResponse,
-} from '../../types';
+} from '../../types'
 
 export const ProfessionIndexResponse = LinkSelfResponse.extend({
 	professions: z.array(KeyNameIdResponse),
-});
+})
 export function ProfessionIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof ProfessionIndexResponse>>({
 		endpoint: `data/wow/profession/index`,
 		namespace: 'static',
 		zod: ProfessionIndexResponse,
-	});
+	})
 }
 
 export const ProfessionResponse = LinkSelfResponse.extend({
@@ -33,25 +33,25 @@ export const ProfessionResponse = LinkSelfResponse.extend({
 	skill_tiers: z.array(KeyNameIdResponse).optional(),
 	minimum_skill_level: z.number().optional(),
 	maximum_skill_level: z.number().optional(),
-});
+})
 export function Profession(this: WoWGameDataClient, professionId: number) {
 	return this.request<z.infer<typeof ProfessionResponse>>({
 		endpoint: `data/wow/profession/${professionId}`,
 		namespace: 'static',
 		zod: ProfessionResponse,
-	});
+	})
 }
 
 export const ProfessionMediaResponse = LinkSelfResponse.extend({
 	assets: MediaAssetArray,
 	id: z.number(),
-});
+})
 export function ProfessionMedia(this: WoWGameDataClient, professionId: number) {
 	return this.request<z.infer<typeof ProfessionMediaResponse>>({
 		endpoint: `data/wow/media/profession/${professionId}`,
 		namespace: 'static',
 		zod: ProfessionMediaResponse,
-	});
+	})
 }
 
 export const ProfessionSkillTierResponse = LinkSelfResponse.extend({
@@ -67,7 +67,7 @@ export const ProfessionSkillTierResponse = LinkSelfResponse.extend({
 			}),
 		)
 		.optional(),
-});
+})
 export function ProfessionSkillTier(
 	this: WoWGameDataClient,
 	professionId: number,
@@ -77,7 +77,7 @@ export function ProfessionSkillTier(
 		endpoint: `data/wow/profession/${professionId}/skill-tier/${skillTierId}`,
 		namespace: 'static',
 		zod: ProfessionSkillTierResponse,
-	});
+	})
 }
 
 export const ProfessionRecipeResponse = LinkSelfResponse.extend({
@@ -116,19 +116,19 @@ export const ProfessionRecipeResponse = LinkSelfResponse.extend({
 			}),
 		])
 		.optional(),
-});
+})
 export function ProfessionRecipe(this: WoWGameDataClient, recipeId: number) {
 	return this.request<z.infer<typeof ProfessionRecipeResponse>>({
 		endpoint: `data/wow/recipe/${recipeId}`,
 		namespace: 'static',
 		zod: ProfessionRecipeResponse,
-	});
+	})
 }
 
 export const ProfessionRecipeMediaResponse = LinkSelfResponse.extend({
 	assets: MediaAssetArray,
 	id: z.number(),
-});
+})
 export function ProfessionRecipeMedia(
 	this: WoWGameDataClient,
 	recipeId: number,
@@ -137,5 +137,5 @@ export function ProfessionRecipeMedia(
 		endpoint: `data/wow/media/recipe/${recipeId}`,
 		namespace: 'static',
 		zod: ProfessionRecipeMediaResponse,
-	});
+	})
 }

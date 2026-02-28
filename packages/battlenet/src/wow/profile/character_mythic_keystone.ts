@@ -1,14 +1,14 @@
-import z from 'zod/v4';
+import z from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
-import { KeyNameIdResponse, KeyResponse, LinkSelfResponse } from '../../types';
-import { ColorObject } from '../types';
-import { CharacterResponse } from '../types/character';
+import type { WoWGameDataClient } from '..'
+import { KeyNameIdResponse, KeyResponse, LinkSelfResponse } from '../../types'
+import { ColorObject } from '../types'
+import { CharacterResponse } from '../types/character'
 
 const MythicRating = z.strictObject({
 	color: ColorObject,
 	rating: z.number(),
-});
+})
 
 const BestRun = z.strictObject({
 	completed_timestamp: z.number(),
@@ -35,7 +35,7 @@ const BestRun = z.strictObject({
 	is_completed_within_time: z.boolean(),
 	mythic_rating: MythicRating,
 	map_rating: MythicRating,
-});
+})
 
 export const CharacterMythicKeystoneProfileIndexResponse =
 	LinkSelfResponse.extend({
@@ -56,7 +56,7 @@ export const CharacterMythicKeystoneProfileIndexResponse =
 			.optional(),
 		character: CharacterResponse,
 		current_mythic_rating: MythicRating.optional(),
-	});
+	})
 
 export function CharacterMythicKeystoneProfileIndex(
 	this: WoWGameDataClient,
@@ -69,7 +69,7 @@ export function CharacterMythicKeystoneProfileIndex(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/mythic-keystone-profile`,
 		namespace: 'profile',
 		zod: CharacterMythicKeystoneProfileIndexResponse,
-	});
+	})
 }
 
 export const CharacterMythicKeystoneSeasonResponse = LinkSelfResponse.extend({
@@ -80,7 +80,7 @@ export const CharacterMythicKeystoneSeasonResponse = LinkSelfResponse.extend({
 	best_runs: z.array(BestRun),
 	character: CharacterResponse,
 	mythic_rating: MythicRating,
-});
+})
 
 export function CharacterMythicKeystoneSeason(
 	this: WoWGameDataClient,
@@ -92,5 +92,5 @@ export function CharacterMythicKeystoneSeason(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/mythic-keystone-profile/season/${seasonId}`,
 		namespace: 'profile',
 		zod: CharacterMythicKeystoneSeasonResponse,
-	});
+	})
 }

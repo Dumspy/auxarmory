@@ -1,22 +1,22 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
-import { KeyNameIdResponse, LinkSelfResponse } from '../../types';
-import { CharacterResponse } from '../types/character';
+import type { WoWGameDataClient } from '..'
+import { KeyNameIdResponse, LinkSelfResponse } from '../../types'
+import { CharacterResponse } from '../types/character'
 
 const RatingResponse = z.strictObject({
 	rating_bonus: z.number(),
 	rating_normalized: z.number(),
-});
+})
 
 const RatingValueResponse = RatingResponse.extend({
 	value: z.number(),
-});
+})
 
 const BaseEffectiveResponse = z.strictObject({
 	base: z.number(),
 	effective: z.number(),
-});
+})
 
 export const CharacterStatisticsSummaryResponse = LinkSelfResponse.extend({
 	health: z.number(),
@@ -59,7 +59,7 @@ export const CharacterStatisticsSummaryResponse = LinkSelfResponse.extend({
 	ranged_haste: RatingValueResponse,
 	spell_haste: RatingValueResponse,
 	character: CharacterResponse,
-});
+})
 
 export function CharacterStatisticsSummary(
 	this: WoWGameDataClient,
@@ -70,5 +70,5 @@ export function CharacterStatisticsSummary(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/statistics`,
 		namespace: 'profile',
 		zod: CharacterStatisticsSummaryResponse,
-	});
+	})
 }

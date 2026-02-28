@@ -1,13 +1,13 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
 	LocaleString,
-} from '../../types';
+} from '../../types'
 
 export const RealmIndexResponse = LinkSelfResponse.extend({
 	realms: z.array(
@@ -15,13 +15,13 @@ export const RealmIndexResponse = LinkSelfResponse.extend({
 			slug: z.string(),
 		}),
 	),
-});
+})
 export function RealmIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof RealmIndexResponse>>({
 		endpoint: `data/wow/realm/index`,
 		namespace: 'dynamic',
 		zod: RealmIndexResponse,
-	});
+	})
 }
 
 export const RealmResponse = LinkSelfResponse.extend({
@@ -47,13 +47,13 @@ export const RealmResponse = LinkSelfResponse.extend({
 	}),
 	is_tournament: z.boolean(),
 	slug: z.string(),
-});
+})
 export function Realm(this: WoWGameDataClient, slug: string) {
 	return this.request<z.infer<typeof RealmResponse>>({
 		endpoint: `data/wow/realm/${slug}`,
 		namespace: 'dynamic',
 		zod: RealmResponse,
-	});
+	})
 }
 
 export function RealmSearch(this: WoWGameDataClient, params: URLSearchParams) {
@@ -62,5 +62,5 @@ export function RealmSearch(this: WoWGameDataClient, params: URLSearchParams) {
 		namespace: 'dynamic',
 		zod: z.unknown(),
 		params,
-	});
+	})
 }

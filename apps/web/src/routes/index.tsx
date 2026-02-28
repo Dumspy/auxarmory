@@ -1,16 +1,16 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router'
 
-import { Button } from '@auxarmory/ui/components/ui/button';
+import { Button } from '@auxarmory/ui/components/ui/button'
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
-} from '@auxarmory/ui/components/ui/card';
+} from '@auxarmory/ui/components/ui/card'
 
 export const Route = createFileRoute('/')({
 	component: HomePage,
-});
+})
 
 function HomePage() {
 	return (
@@ -37,5 +37,5 @@ function HomePage() {
 				</CardContent>
 			</Card>
 		</main>
-	);
+	)
 }

@@ -5,14 +5,14 @@ import {
 	CreditCard,
 	LogOut,
 	Sparkles,
-} from 'lucide-react';
-import { useNavigate } from '@tanstack/react-router';
+} from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
-} from '@auxarmory/ui/components/ui/avatar';
+} from '@auxarmory/ui/components/ui/avatar'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -21,36 +21,36 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@auxarmory/ui/components/ui/dropdown-menu';
+} from '@auxarmory/ui/components/ui/dropdown-menu'
 import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	useSidebar,
-} from '@auxarmory/ui/components/ui/sidebar';
+} from '@auxarmory/ui/components/ui/sidebar'
 
-import { authClient } from '../lib/auth-client';
+import { authClient } from '../lib/auth-client'
 
 export function NavUser() {
-	const { isMobile } = useSidebar();
-	const navigate = useNavigate();
-	const { data: session } = authClient.useSession();
-	const loggedIn = !!session?.session;
+	const { isMobile } = useSidebar()
+	const navigate = useNavigate()
+	const { data: session } = authClient.useSession()
+	const loggedIn = !!session?.session
 
 	const user = {
 		name: session?.user?.name ?? 'Guest',
 		email: session?.user?.email ?? 'Not signed in',
 		avatar: session?.user?.image ?? '',
-	};
+	}
 
 	async function handleAuthClick() {
 		if (loggedIn) {
-			await authClient.signOut();
-			await navigate({ to: '/auth/login' });
-			return;
+			await authClient.signOut()
+			await navigate({ to: '/auth/login' })
+			return
 		}
 
-		await navigate({ to: '/auth/login' });
+		await navigate({ to: '/auth/login' })
 	}
 
 	return (
@@ -141,5 +141,5 @@ export function NavUser() {
 				</DropdownMenu>
 			</SidebarMenuItem>
 		</SidebarMenu>
-	);
+	)
 }

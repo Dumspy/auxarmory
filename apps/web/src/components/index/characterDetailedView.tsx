@@ -9,29 +9,29 @@ import {
 	TrendingUp,
 	Trophy,
 	Zap,
-} from 'lucide-react';
+} from 'lucide-react'
 
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
-} from '@auxarmory/ui/components/ui/avatar';
-import { Badge } from '@auxarmory/ui/components/ui/badge';
+} from '@auxarmory/ui/components/ui/avatar'
+import { Badge } from '@auxarmory/ui/components/ui/badge'
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
-} from '@auxarmory/ui/components/ui/card';
-import { Progress } from '@auxarmory/ui/components/ui/progress';
+} from '@auxarmory/ui/components/ui/card'
+import { Progress } from '@auxarmory/ui/components/ui/progress'
 import {
 	Tabs,
 	TabsContent,
 	TabsList,
 	TabsTrigger,
-} from '@auxarmory/ui/components/ui/tabs';
+} from '@auxarmory/ui/components/ui/tabs'
 
-import type { CharacterDetail } from './types';
+import type { CharacterDetail } from './types'
 
 const recentActivity = [
 	{
@@ -58,15 +58,15 @@ const recentActivity = [
 		timestamp: '2 days ago',
 		icon: Target,
 	},
-];
+]
 
 export function CharacterDetailedView({
 	character,
 }: {
-	character: CharacterDetail | undefined;
+	character: CharacterDetail | undefined
 }) {
 	if (!character) {
-		return null;
+		return null
 	}
 
 	return (
@@ -334,5 +334,5 @@ export function CharacterDetailedView({
 				</CardContent>
 			</Card>
 		</div>
-	);
+	)
 }

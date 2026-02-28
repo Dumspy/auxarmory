@@ -1,16 +1,16 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWProfileClient } from '..';
+import type { WoWProfileClient } from '..'
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
 	KeyResponse,
 	LocaleResponse,
 	NameIdResponse,
-} from '../../types';
-import { Faction, Gender, Realm } from '../types';
-import { CharacterResponse } from '../types/character';
-import { ItemIventoryType } from '../types/item';
+} from '../../types'
+import { Faction, Gender, Realm } from '../types'
+import { CharacterResponse } from '../types/character'
+import { ItemIventoryType } from '../types/item'
 
 const ProfileLinkSelf = z.strictObject({
 	_links: z.strictObject({
@@ -18,7 +18,7 @@ const ProfileLinkSelf = z.strictObject({
 		user: KeyResponse,
 		profile: KeyResponse,
 	}),
-});
+})
 
 export const AccountProfileSummaryResponse = ProfileLinkSelf.extend({
 	id: z.number(),
@@ -42,12 +42,12 @@ export const AccountProfileSummaryResponse = ProfileLinkSelf.extend({
 		}),
 	),
 	collections: KeyResponse,
-});
+})
 export function AccountProfileSummary(this: WoWProfileClient) {
 	return this.request<z.infer<typeof AccountProfileSummaryResponse>>({
 		endpoint: `profile/user/wow`,
 		zod: AccountProfileSummaryResponse,
-	});
+	})
 }
 
 export const ProtectedCharacterProfileSummaryResponse = ProfileLinkSelf.extend({
@@ -82,7 +82,7 @@ export const ProtectedCharacterProfileSummaryResponse = ProfileLinkSelf.extend({
 		facing: z.number(),
 	}),
 	wow_account: z.number(),
-});
+})
 export function ProtectedCharacterProfileSummary(
 	this: WoWProfileClient,
 	realmId: number,
@@ -93,7 +93,7 @@ export function ProtectedCharacterProfileSummary(
 	>({
 		endpoint: `profile/user/wow/protected-character/${realmId}-${characterId}`,
 		zod: ProtectedCharacterProfileSummaryResponse,
-	});
+	})
 }
 
 export const AccountCollectionIndexResponse = ProfileLinkSelf.extend({
@@ -102,12 +102,12 @@ export const AccountCollectionIndexResponse = ProfileLinkSelf.extend({
 	heirlooms: KeyResponse,
 	toys: KeyResponse,
 	transmogs: KeyResponse,
-});
+})
 export function AccountCollectionIndex(this: WoWProfileClient) {
 	return this.request<z.infer<typeof AccountCollectionIndexResponse>>({
 		endpoint: `profile/user/wow/collections`,
 		zod: AccountCollectionIndexResponse,
-	});
+	})
 }
 
 export const AccountHeirloomsCollectionSummaryResponse = ProfileLinkSelf.extend(
@@ -121,14 +121,14 @@ export const AccountHeirloomsCollectionSummaryResponse = ProfileLinkSelf.extend(
 			}),
 		),
 	},
-);
+)
 export function AccountHeirloomsCollectionSummary(this: WoWProfileClient) {
 	return this.request<
 		z.infer<typeof AccountHeirloomsCollectionSummaryResponse>
 	>({
 		endpoint: `profile/user/wow/collections/heirlooms`,
 		zod: AccountHeirloomsCollectionSummaryResponse,
-	});
+	})
 }
 
 export const AccountMountsCollectionSummaryResponse = ProfileLinkSelf.extend({
@@ -138,14 +138,14 @@ export const AccountMountsCollectionSummaryResponse = ProfileLinkSelf.extend({
 			is_favorite: z.boolean().optional(),
 		}),
 	),
-});
+})
 export function AccountMountsCollectionSummary(this: WoWProfileClient) {
 	return this.request<z.infer<typeof AccountMountsCollectionSummaryResponse>>(
 		{
 			endpoint: `profile/user/wow/collections/mounts`,
 			zod: AccountMountsCollectionSummaryResponse,
 		},
-	);
+	)
 }
 
 export const AccountPetsCollectionSummaryResponse = ProfileLinkSelf.extend({
@@ -172,12 +172,12 @@ export const AccountPetsCollectionSummaryResponse = ProfileLinkSelf.extend({
 		}),
 	),
 	unlocked_battle_pet_slots: z.number(),
-});
+})
 export function AccountPetsCollectionSummary(this: WoWProfileClient) {
 	return this.request<z.infer<typeof AccountPetsCollectionSummaryResponse>>({
 		endpoint: `profile/user/wow/collections/pets`,
 		zod: AccountPetsCollectionSummaryResponse,
-	});
+	})
 }
 
 export const AccountToysCollectionSummaryResponse = ProfileLinkSelf.extend({
@@ -187,12 +187,12 @@ export const AccountToysCollectionSummaryResponse = ProfileLinkSelf.extend({
 			is_favorite: z.boolean().optional(),
 		}),
 	),
-});
+})
 export function AccountToysCollectionSummary(this: WoWProfileClient) {
 	return this.request<z.infer<typeof AccountToysCollectionSummaryResponse>>({
 		endpoint: `profile/user/wow/collections/toys`,
 		zod: AccountToysCollectionSummaryResponse,
-	});
+	})
 }
 
 export const AccountTransmogCollectionSummaryResponse = ProfileLinkSelf.extend({
@@ -203,12 +203,12 @@ export const AccountTransmogCollectionSummaryResponse = ProfileLinkSelf.extend({
 			appearances: z.array(KeyIdResponse),
 		}),
 	),
-});
+})
 export function AccountTransmogCollectionSummary(this: WoWProfileClient) {
 	return this.request<
 		z.infer<typeof AccountTransmogCollectionSummaryResponse>
 	>({
 		endpoint: `profile/user/wow/collections/transmogs`,
 		zod: AccountTransmogCollectionSummaryResponse,
-	});
+	})
 }

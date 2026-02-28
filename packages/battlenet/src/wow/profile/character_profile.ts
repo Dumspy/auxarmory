@@ -1,13 +1,13 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from '../../types';
-import { Faction, Gender, Realm } from '../types';
+} from '../../types'
+import { Faction, Gender, Realm } from '../types'
 
 export const CharacterProfileSummaryResponse = LinkSelfResponse.extend({
 	id: z.number(),
@@ -61,7 +61,7 @@ export const CharacterProfileSummaryResponse = LinkSelfResponse.extend({
 	name_search: z.string(),
 	is_remix: z.boolean().optional(),
 	hunter_pets: KeyResponse.optional(),
-});
+})
 
 export function CharacterProfileSummary(
 	this: WoWGameDataClient,
@@ -72,13 +72,13 @@ export function CharacterProfileSummary(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}`,
 		namespace: 'profile',
 		zod: CharacterProfileSummaryResponse,
-	});
+	})
 }
 
 export const CharacterProfileStatusResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	is_valid: z.boolean(),
-});
+})
 
 export function CharacterProfileStatus(
 	this: WoWGameDataClient,
@@ -89,5 +89,5 @@ export function CharacterProfileStatus(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/status`,
 		namespace: 'profile',
 		zod: CharacterProfileStatusResponse,
-	});
+	})
 }

@@ -1,17 +1,17 @@
-import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import { Hono } from 'hono';
-import { cors } from 'hono/cors';
-import { logger } from 'hono/logger';
+import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
+import { Hono } from 'hono'
+import { cors } from 'hono/cors'
+import { logger } from 'hono/logger'
 
-import { createContext } from '@auxarmory/api/context';
-import { appRouter } from '@auxarmory/api/routers';
+import { createContext } from '@auxarmory/api/context'
+import { appRouter } from '@auxarmory/api/routers'
 
-import { env } from './env.js';
+import { env } from './env.js'
 
 export function createApiApp() {
-	const app = new Hono();
+	const app = new Hono()
 
-	app.use(logger());
+	app.use(logger())
 	app.use(
 		'/*',
 		cors({
@@ -20,7 +20,7 @@ export function createApiApp() {
 			allowHeaders: ['Content-Type', 'Authorization'],
 			credentials: true,
 		}),
-	);
+	)
 
 	app.all('/trpc/*', (c) => {
 		return fetchRequestHandler({
@@ -28,12 +28,12 @@ export function createApiApp() {
 			req: c.req.raw,
 			router: appRouter,
 			createContext: () => createContext({ headers: c.req.raw.headers }),
-		});
-	});
+		})
+	})
 
 	app.get('/health', (c) => {
-		return c.json({ status: 'ok', service: 'api' });
-	});
+		return c.json({ status: 'ok', service: 'api' })
+	})
 
-	return app;
+	return app
 }

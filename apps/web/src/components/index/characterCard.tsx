@@ -1,26 +1,26 @@
-import { Star } from 'lucide-react';
+import { Star } from 'lucide-react'
 
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
-} from '@auxarmory/ui/components/ui/avatar';
-import { Card, CardContent } from '@auxarmory/ui/components/ui/card';
-import { Separator } from '@auxarmory/ui/components/ui/separator';
-import { Skeleton } from '@auxarmory/ui/components/ui/skeleton';
+} from '@auxarmory/ui/components/ui/avatar'
+import { Card, CardContent } from '@auxarmory/ui/components/ui/card'
+import { Separator } from '@auxarmory/ui/components/ui/separator'
+import { Skeleton } from '@auxarmory/ui/components/ui/skeleton'
 
-import type { CharacterSummary } from './types';
+import type { CharacterSummary } from './types'
 
 function relativeTime(value: string) {
-	const diffMs = Date.now() - new Date(value).getTime();
-	const hours = Math.max(1, Math.floor(diffMs / (1000 * 60 * 60)));
+	const diffMs = Date.now() - new Date(value).getTime()
+	const hours = Math.max(1, Math.floor(diffMs / (1000 * 60 * 60)))
 
 	if (hours < 24) {
-		return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+		return `${hours} hour${hours === 1 ? '' : 's'} ago`
 	}
 
-	const days = Math.floor(hours / 24);
-	return `${days} day${days === 1 ? '' : 's'} ago`;
+	const days = Math.floor(hours / 24)
+	return `${days} day${days === 1 ? '' : 's'} ago`
 }
 
 export function CharacterCardSkeleton() {
@@ -59,7 +59,7 @@ export function CharacterCardSkeleton() {
 				<Skeleton className='h-2 w-full rounded-full' />
 			</CardContent>
 		</Card>
-	);
+	)
 }
 
 export function CharacterCard({
@@ -67,9 +67,9 @@ export function CharacterCard({
 	isSelected,
 	onClickCallback,
 }: {
-	character: CharacterSummary;
-	isSelected: boolean;
-	onClickCallback: () => void;
+	character: CharacterSummary
+	isSelected: boolean
+	onClickCallback: () => void
 }) {
 	return (
 		<Card
@@ -145,5 +145,5 @@ export function CharacterCard({
 				<Separator className='my-3' />
 			</CardContent>
 		</Card>
-	);
+	)
 }

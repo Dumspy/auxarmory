@@ -1,19 +1,19 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
+import type { WoWGameDataClient } from '..'
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from '../../types';
-import { CharacterResponse } from '../types/character';
+} from '../../types'
+import { CharacterResponse } from '../types/character'
 
 export interface ChildCriteriaType {
-	id: number;
-	amount?: number;
-	is_completed: boolean;
-	child_criteria?: ChildCriteriaType[];
+	id: number
+	amount?: number
+	is_completed: boolean
+	child_criteria?: ChildCriteriaType[]
 }
 
 const ChildCriteria: z.ZodType<ChildCriteriaType> = z.lazy(() =>
@@ -23,7 +23,7 @@ const ChildCriteria: z.ZodType<ChildCriteriaType> = z.lazy(() =>
 		is_completed: z.boolean(),
 		child_criteria: z.array(ChildCriteria).optional(),
 	}),
-);
+)
 
 export const CharacterAchievementsSummaryResponse = LinkSelfResponse.extend({
 	total_quantity: z.number(),
@@ -58,7 +58,7 @@ export const CharacterAchievementsSummaryResponse = LinkSelfResponse.extend({
 	),
 	character: CharacterResponse,
 	statistics: KeyResponse,
-});
+})
 export function CharacterAchievementsSummary(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -68,7 +68,7 @@ export function CharacterAchievementsSummary(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/achievements`,
 		namespace: 'profile',
 		zod: CharacterAchievementsSummaryResponse,
-	});
+	})
 }
 
 export const CharacterAchievementsStatisticsResponse = LinkSelfResponse.extend({
@@ -107,7 +107,7 @@ export const CharacterAchievementsStatisticsResponse = LinkSelfResponse.extend({
 				.optional(),
 		}),
 	),
-});
+})
 export function CharacterAchievementsStatistics(
 	this: WoWGameDataClient,
 	realmSlug: string,
@@ -119,5 +119,5 @@ export function CharacterAchievementsStatistics(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/achievements/statistics`,
 		namespace: 'profile',
 		zod: CharacterAchievementsStatisticsResponse,
-	});
+	})
 }

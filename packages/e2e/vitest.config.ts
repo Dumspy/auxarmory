@@ -1,6 +1,6 @@
-import { defineConfig, mergeConfig } from 'vitest/config';
+import { defineConfig, mergeConfig } from 'vitest/config'
 
-import shared from '@auxarmory/vitest-config/shared';
+import shared from '@auxarmory/vitest-config/shared'
 
 export default mergeConfig(
 	shared,
@@ -12,4 +12,4 @@ export default mergeConfig(
 			},
 		},
 	}),
-);
+)

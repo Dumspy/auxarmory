@@ -1,12 +1,8 @@
-import { z } from 'zod/v4';
+import { z } from 'zod/v4'
 
-import type { WoWGameDataClient } from '..';
-import {
-	KeyIdResponse,
-	KeyNameIdResponse,
-	LinkSelfResponse,
-} from '../../types';
-import { CharacterResponse } from '../types/character';
+import type { WoWGameDataClient } from '..'
+import { KeyIdResponse, KeyNameIdResponse, LinkSelfResponse } from '../../types'
+import { CharacterResponse } from '../types/character'
 
 export const CharacterHunterPetsSummaryResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
@@ -20,7 +16,7 @@ export const CharacterHunterPetsSummaryResponse = LinkSelfResponse.extend({
 			creature_display: KeyIdResponse,
 		}),
 	),
-});
+})
 
 export function CharacterHunterPetsSummary(
 	this: WoWGameDataClient,
@@ -31,5 +27,5 @@ export function CharacterHunterPetsSummary(
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/hunter-pets`,
 		namespace: 'profile',
 		zod: CharacterHunterPetsSummaryResponse,
-	});
+	})
 }

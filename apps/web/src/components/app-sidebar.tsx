@@ -1,5 +1,5 @@
-import type { ComponentProps } from 'react';
-import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react';
+import type { ComponentProps } from 'react'
+import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 
 import {
 	Sidebar,
@@ -7,11 +7,11 @@ import {
 	SidebarFooter,
 	SidebarHeader,
 	SidebarRail,
-} from '@auxarmory/ui/components/ui/sidebar';
+} from '@auxarmory/ui/components/ui/sidebar'
 
-import { CharacterSwitcher } from './character-switcher';
-import { NavMain } from './nav-main';
-import { NavUser } from './nav-user';
+import { CharacterSwitcher } from './character-switcher'
+import { NavMain } from './nav-main'
+import { NavUser } from './nav-user'
 
 const characters = [
 	{
@@ -29,7 +29,7 @@ const characters = [
 		logo: Command,
 		className: 'Druid',
 	},
-];
+]
 
 export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
 	return (
@@ -45,5 +45,5 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
 			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>
-	);
+	)
 }

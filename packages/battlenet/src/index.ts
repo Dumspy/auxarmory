@@ -1,10 +1,10 @@
-import type { z, ZodError } from "zod/v4";
+import type { z, ZodError } from 'zod/v4';
 
-import type { RegionsEnum } from "./types";
-import { ApplicationAuthResponse, BattlenetError } from "./types";
-import { WoWGameDataClient, WoWProfileClient } from "./wow";
+import type { RegionsEnum } from './types';
+import { ApplicationAuthResponse, BattlenetError } from './types';
+import { WoWGameDataClient, WoWProfileClient } from './wow';
 
-export * from "./util";
+export * from './util';
 
 type Regions = z.infer<typeof RegionsEnum>;
 
@@ -17,8 +17,8 @@ interface BaseClientOptions {
 interface BaseRequestOptions<T> {
 	endpoint: string;
 	params?: URLSearchParams;
-	method?: "POST" | "GET";
-	namespace?: "static" | "dynamic" | "profile";
+	method?: 'POST' | 'GET';
+	namespace?: 'static' | 'dynamic' | 'profile';
 	authorization: string;
 	zod: z.Schema<T>;
 }
@@ -28,28 +28,28 @@ type ClientReturn<T> =
 	| {
 			success: false;
 			error: ZodError<T>;
-			error_type: "zod";
+			error_type: 'zod';
 			raw_data: T;
 			data?: never;
 	  }
 	| {
 			success: false;
 			error: Response;
-			error_type: "auth";
+			error_type: 'auth';
 			raw_data: T;
 			data?: never;
 	  }
 	| {
 			success: false;
 			error: z.infer<typeof BattlenetError>;
-			error_type: "battlenet";
+			error_type: 'battlenet';
 			raw_data: T;
 			data?: never;
 	  }
 	| {
 			success: false;
 			error: Error;
-			error_type: "unknown";
+			error_type: 'unknown';
 			raw_data: T;
 			data?: never;
 	  };
@@ -66,15 +66,15 @@ class BaseClient {
 		this.suppressZodErrors = options.suppressZodErrors ?? false;
 
 		this.baseUrl =
-			this.region === "cn"
-				? "https://gateway.battlenet.com.cn"
+			this.region === 'cn'
+				? 'https://gateway.battlenet.com.cn'
 				: `https://${this.region}.api.blizzard.com`;
 	}
 
 	public async request<T>({
 		endpoint,
 		params = new URLSearchParams(),
-		method = "GET",
+		method = 'GET',
 		namespace,
 		zod,
 		authorization,
@@ -82,7 +82,7 @@ class BaseClient {
 		const url = new URL(`${this.baseUrl}/${endpoint}`);
 
 		if (this.locale) {
-			params.set("locale", this.locale);
+			params.set('locale', this.locale);
 		}
 
 		if (params.size > 0) {
@@ -91,11 +91,11 @@ class BaseClient {
 
 		const headers: Record<string, string> = {
 			Authorization: `Bearer ${authorization}`,
-			"Content-Type": "application/json",
+			'Content-Type': 'application/json',
 		};
 
 		if (namespace) {
-			headers["Battlenet-Namespace"] = `${namespace}-${this.region}`;
+			headers['Battlenet-Namespace'] = `${namespace}-${this.region}`;
 		}
 
 		const res = await fetch(url, {
@@ -116,14 +116,14 @@ class BaseClient {
 				}
 
 				console.error(
-					"Failed to parse api response with zod validator." +
-						"This usually means the API response has changed or the zod schema is incorrect." +
-						(error.message || "Unknown zod error"),
+					'Failed to parse api response with zod validator.' +
+						'This usually means the API response has changed or the zod schema is incorrect.' +
+						(error.message || 'Unknown zod error'),
 				);
 				return {
 					success: false,
 					error: error,
-					error_type: "zod",
+					error_type: 'zod',
 					raw_data: json as T,
 				};
 			}
@@ -137,7 +137,7 @@ class BaseClient {
 		if (res.status === 401) {
 			return {
 				success: false,
-				error_type: "auth",
+				error_type: 'auth',
 				error: res,
 				raw_data: {} as T,
 			};
@@ -149,14 +149,14 @@ class BaseClient {
 			if (success) {
 				return {
 					success: false,
-					error_type: "battlenet",
+					error_type: 'battlenet',
 					error: data,
 					raw_data: json as T,
 				};
 			} else {
 				return {
 					success: false,
-					error_type: "unknown",
+					error_type: 'unknown',
 					error: new Error(
 						`Unknown error: ${res.status} ${res.statusText}`,
 					),
@@ -167,7 +167,7 @@ class BaseClient {
 			const errorMessage = e instanceof Error ? e.message : String(e);
 			return {
 				success: false,
-				error_type: "unknown",
+				error_type: 'unknown',
 				error: new Error(errorMessage),
 				raw_data: {} as T,
 			};
@@ -182,7 +182,7 @@ interface ApplicationOptions extends BaseClientOptions {
 
 type ApplicationRequestOptions<T> = Omit<
 	BaseRequestOptions<T>,
-	"authorization"
+	'authorization'
 >;
 
 export class ApplicationClient extends BaseClient {
@@ -198,8 +198,8 @@ export class ApplicationClient extends BaseClient {
 		this.clientId = options.clientId;
 		this.clientSecret = options.clientSecret;
 		this.authUrl =
-			this.region === "cn"
-				? "https://www.battlenet.com.cn/oauth/token"
+			this.region === 'cn'
+				? 'https://www.battlenet.com.cn/oauth/token'
 				: `https://${this.region}.battle.net/oauth/token`;
 		this.wow = new WoWGameDataClient(this);
 	}
@@ -215,14 +215,14 @@ export class ApplicationClient extends BaseClient {
 
 		const url = this.authUrl;
 		const params = new URLSearchParams({
-			grant_type: "client_credentials",
+			grant_type: 'client_credentials',
 		});
 
 		const res = await fetch(url, {
-			method: "POST",
+			method: 'POST',
 			headers: {
 				Authorization: `Basic ${btoa(`${this.clientId}:${this.clientSecret}`)}`,
-				"Content-Type": "application/x-www-form-urlencoded",
+				'Content-Type': 'application/x-www-form-urlencoded',
 			},
 			body: params,
 		});
@@ -238,7 +238,7 @@ export class ApplicationClient extends BaseClient {
 
 		if (!success) {
 			throw new Error(
-				`Failed to parse authentication response: ${error.message || "Unknown error"}`,
+				`Failed to parse authentication response: ${error.message || 'Unknown error'}`,
 			);
 		}
 
@@ -246,9 +246,9 @@ export class ApplicationClient extends BaseClient {
 		this.accessTokenExpiresAt = Date.now() + data.expires_in * 1000;
 	}
 
-	public async request<T>(opt: ApplicationRequestOptions<T>) {
+	public override async request<T>(opt: ApplicationRequestOptions<T>) {
 		await this.authenticate();
-		const authorization = this.accessToken ?? "";
+		const authorization = this.accessToken ?? '';
 		return super.request({
 			...opt,
 			authorization,
@@ -262,7 +262,7 @@ interface AccountOptions extends BaseClientOptions {
 
 type AccountRequestOptions<T> = Omit<
 	BaseRequestOptions<T>,
-	"authorization" | "namespace"
+	'authorization' | 'namespace'
 >;
 
 export class AccountClient extends BaseClient {
@@ -275,11 +275,11 @@ export class AccountClient extends BaseClient {
 		this.wow = new WoWProfileClient(this);
 	}
 
-	public async request<T>(opt: AccountRequestOptions<T>) {
+	public override async request<T>(opt: AccountRequestOptions<T>) {
 		return super.request({
 			...opt,
 			authorization: this.accessToken,
-			namespace: "profile",
+			namespace: 'profile',
 		});
 	}
 }

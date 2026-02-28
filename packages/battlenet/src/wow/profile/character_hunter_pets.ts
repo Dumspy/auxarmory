@@ -1,12 +1,12 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
 	LinkSelfResponse,
-} from "../../types";
-import { CharacterResponse } from "../types/character";
+} from '../../types';
+import { CharacterResponse } from '../types/character';
 
 export const CharacterHunterPetsSummaryResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
@@ -29,7 +29,7 @@ export function CharacterHunterPetsSummary(
 ) {
 	return this.request<z.infer<typeof CharacterHunterPetsSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/hunter-pets`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterHunterPetsSummaryResponse,
 	});
 }

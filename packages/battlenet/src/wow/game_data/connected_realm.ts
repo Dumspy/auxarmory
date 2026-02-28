@@ -1,13 +1,13 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
 	LocaleString,
-} from "../../types";
+} from '../../types';
 
 export const ConnectedRealmIndexResponse = LinkSelfResponse.extend({
 	connected_realms: z.array(KeyResponse),
@@ -15,7 +15,7 @@ export const ConnectedRealmIndexResponse = LinkSelfResponse.extend({
 export function ConnectedRealmIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof ConnectedRealmIndexResponse>>({
 		endpoint: `data/wow/connected-realm/index`,
-		namespace: "dynamic",
+		namespace: 'dynamic',
 		zod: ConnectedRealmIndexResponse,
 	});
 }
@@ -24,11 +24,11 @@ export const ConnectedRealmResponse = LinkSelfResponse.extend({
 	id: z.number(),
 	has_queue: z.boolean(),
 	status: z.strictObject({
-		type: z.enum(["UP", "DOWN"]),
+		type: z.enum(['UP', 'DOWN']),
 		name: LocaleResponse,
 	}),
 	population: z.strictObject({
-		type: z.enum(["FULL", "HIGH", "RECOMMENDED", "MEDIUM", "LOW"]),
+		type: z.enum(['FULL', 'HIGH', 'RECOMMENDED', 'MEDIUM', 'LOW']),
 		name: LocaleResponse,
 	}),
 	realms: z.array(
@@ -40,17 +40,17 @@ export const ConnectedRealmResponse = LinkSelfResponse.extend({
 			category: LocaleResponse,
 			locale: LocaleString,
 			timezone: z.enum([
-				"America/Los_Angeles",
-				"America/New_York",
-				"America/Denver",
-				"America/Chicago",
-				"America/Sao_Paulo",
-				"Australia/Melbourne",
-				"Europe/Paris",
-				"Asia/Seoul",
+				'America/Los_Angeles',
+				'America/New_York',
+				'America/Denver',
+				'America/Chicago',
+				'America/Sao_Paulo',
+				'Australia/Melbourne',
+				'Europe/Paris',
+				'Asia/Seoul',
 			]),
 			type: z.strictObject({
-				type: z.enum(["NORMAL", "RP"]),
+				type: z.enum(['NORMAL', 'RP']),
 				name: LocaleResponse,
 			}),
 			is_tournament: z.boolean(),
@@ -63,7 +63,7 @@ export const ConnectedRealmResponse = LinkSelfResponse.extend({
 export function ConnectedRealm(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof ConnectedRealmResponse>>({
 		endpoint: `data/wow/connected-realm/${id}`,
-		namespace: "dynamic",
+		namespace: 'dynamic',
 		zod: ConnectedRealmResponse,
 	});
 }
@@ -73,8 +73,8 @@ export function ConnectedRealmSearch(
 	params: URLSearchParams,
 ) {
 	return this.request<unknown>({
-		endpoint: "data/wow/search/connected-realm",
-		namespace: "dynamic",
+		endpoint: 'data/wow/search/connected-realm',
+		namespace: 'dynamic',
 		zod: z.unknown(),
 		params,
 	});

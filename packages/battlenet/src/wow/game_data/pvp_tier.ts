@@ -1,20 +1,20 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	LinkSelfResponse,
 	LocaleResponse,
 	MediaAssetArray,
 	MediaKeyResponse,
-} from "../../types";
+} from '../../types';
 
 export const PvPBracketType = z.enum([
-	"ARENA_2v2",
-	"ARENA_3v3",
-	"BATTLEGROUNDS",
-	"SHUFFLE",
-	"BLITZ",
+	'ARENA_2v2',
+	'ARENA_3v3',
+	'BATTLEGROUNDS',
+	'SHUFFLE',
+	'BLITZ',
 ]);
 
 export const PvPTierIndexResponse = LinkSelfResponse.extend({
@@ -23,7 +23,7 @@ export const PvPTierIndexResponse = LinkSelfResponse.extend({
 export function PvPTierIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof PvPTierIndexResponse>>({
 		endpoint: `data/wow/pvp-tier/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PvPTierIndexResponse,
 	});
 }
@@ -43,7 +43,7 @@ export const PvPTierResponse = LinkSelfResponse.extend({
 export function PvPTier(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof PvPTierResponse>>({
 		endpoint: `data/wow/pvp-tier/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PvPTierResponse,
 	});
 }
@@ -55,7 +55,7 @@ export const PvPTierMediaResponse = LinkSelfResponse.extend({
 export function PvPTierMedia(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof PvPTierMediaResponse>>({
 		endpoint: `data/wow/media/pvp-tier/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PvPTierMediaResponse,
 	});
 }

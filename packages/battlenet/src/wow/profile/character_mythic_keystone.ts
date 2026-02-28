@@ -1,9 +1,9 @@
-import z from "zod/v4";
+import z from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
-import { KeyNameIdResponse, KeyResponse, LinkSelfResponse } from "../../types";
-import { ColorObject } from "../types";
-import { CharacterResponse } from "../types/character";
+import type { WoWGameDataClient } from '..';
+import { KeyNameIdResponse, KeyResponse, LinkSelfResponse } from '../../types';
+import { ColorObject } from '../types';
+import { CharacterResponse } from '../types/character';
 
 const MythicRating = z.strictObject({
 	color: ColorObject,
@@ -67,7 +67,7 @@ export function CharacterMythicKeystoneProfileIndex(
 		z.infer<typeof CharacterMythicKeystoneProfileIndexResponse>
 	>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/mythic-keystone-profile`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterMythicKeystoneProfileIndexResponse,
 	});
 }
@@ -90,7 +90,7 @@ export function CharacterMythicKeystoneSeason(
 ) {
 	return this.request<z.infer<typeof CharacterMythicKeystoneSeasonResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/mythic-keystone-profile/season/${seasonId}`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterMythicKeystoneSeasonResponse,
 	});
 }

@@ -1,13 +1,13 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
 	MediaAssetArray,
-} from "../../types";
+} from '../../types';
 
 export const AzeriteIndexResponse = LinkSelfResponse.extend({
 	azerite_essences: z.array(KeyNameIdResponse),
@@ -15,7 +15,7 @@ export const AzeriteIndexResponse = LinkSelfResponse.extend({
 export function AzeriteIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof AzeriteIndexResponse>>({
 		endpoint: `data/wow/azerite-essence/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: AzeriteIndexResponse,
 	});
 }
@@ -42,20 +42,20 @@ export const AzeriteResponse = LinkSelfResponse.extend({
 export function Azerite(this: WoWGameDataClient, essenceId: string) {
 	return this.request<z.infer<typeof AzeriteResponse>>({
 		endpoint: `data/wow/azerite-essence/${essenceId}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: AzeriteResponse,
 	});
 }
 
 export function AzeriteSearch(
 	this: WoWGameDataClient,
-	specilizationId?: number,
+	_specilizationId?: number,
 	_page = 1,
 ) {
 	// TODO: do order by properly
 	return this.request<unknown>({
 		endpoint: `data/wow/search/azerite-essence`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 	});
 }
@@ -67,7 +67,7 @@ export const AzeriteMediaResponse = LinkSelfResponse.extend({
 export function AzeriteMedia(this: WoWGameDataClient, essenceId: number) {
 	return this.request<z.infer<typeof AzeriteMediaResponse>>({
 		endpoint: `data/wow/media/azerite-essence/${essenceId}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: AzeriteMediaResponse,
 	});
 }

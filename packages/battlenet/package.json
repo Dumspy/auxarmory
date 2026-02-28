@@ -3,25 +3,24 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "license": "MIT",
+  "license": "Elastic-2.0",
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "api:dev": "tsx src/dev.ts",
     "build": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
-    "lint": "eslint ."
+    "test": "vitest run --config vitest.config.ts --passWithNoTests",
+    "test:watch": "vitest --config vitest.config.ts"
   },
   "devDependencies": {
-    "@auxarmory/eslint-config": "workspace:*",
-    "@auxarmory/prettier-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
+    "@auxarmory/vitest-config": "workspace:*",
     "@types/node": "catalog:",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
-    "tsx": "^4.19.4",
-    "typescript": "catalog:"
+    "tsx": "^4.21.0",
+    "typescript": "catalog:",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
+    "@t3-oss/env-core": "catalog:",
     "zod": "catalog:"
   },
   "exports": {
@@ -31,6 +30,5 @@
     "./types": {
       "default": "./src/types.ts"
     }
-  },
-  "prettier": "@auxarmory/prettier-config"
+  }
 }

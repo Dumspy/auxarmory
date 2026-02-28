@@ -1,6 +1,6 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
@@ -8,9 +8,9 @@ import {
 	LinkSelfResponse,
 	LocaleResponse,
 	NameIdResponse,
-} from "../../types";
-import { ColorObject, FactionEnum } from "../types";
-import { CharacterResponse } from "../types/character";
+} from '../../types';
+import { ColorObject, FactionEnum } from '../types';
+import { CharacterResponse } from '../types/character';
 
 export const MythicKeystoneLeaderboardIndexResponse = LinkSelfResponse.extend({
 	current_leaderboards: z.array(KeyNameIdResponse),
@@ -22,7 +22,7 @@ export function MythicKeystoneLeaderboardIndex(
 	return this.request<z.infer<typeof MythicKeystoneLeaderboardIndexResponse>>(
 		{
 			endpoint: `data/wow/connected-realm/${connectedRealmId}/mythic-leaderboard/index`,
-			namespace: "dynamic",
+			namespace: 'dynamic',
 			zod: MythicKeystoneLeaderboardIndexResponse,
 		},
 	);
@@ -73,7 +73,7 @@ export function MythicKeystoneLeaderboard(
 ) {
 	return this.request<z.infer<typeof MythicKeystoneLeaderboardResponse>>({
 		endpoint: `data/wow/connected-realm/${connectedRealmId}/mythic-leaderboard/${dungeonId}/period/${seasonId}`,
-		namespace: "dynamic",
+		namespace: 'dynamic',
 		zod: MythicKeystoneLeaderboardResponse,
 	});
 }

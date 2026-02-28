@@ -1,40 +1,47 @@
 {
   "name": "@auxarmory/db",
+  "version": "0.0.0",
   "private": true,
-  "version": "1.0.0",
   "type": "module",
+  "license": "Elastic-2.0",
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "generate": "node prisma/generate-schema.cjs && prisma generate --schema=./prisma/schema.generated",
-    "db:push": "prisma db push --schema=./prisma/schema.generated",
-    "db:studio": "prisma studio --schema=./prisma/schema.generated",
     "build": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
-    "lint": "eslint ."
+    "db:generate": "pnpm --dir ../.. exec drizzle-kit generate --config drizzle.config.ts",
+    "db:migrate": "pnpm --dir ../.. exec drizzle-kit migrate --config drizzle.config.ts",
+    "db:migrate:test": "DATABASE_URL=${DATABASE_URL_TEST:-$DATABASE_URL} pnpm --dir ../.. exec drizzle-kit migrate --config drizzle.config.ts",
+    "db:sync": "pnpm --dir ../.. exec drizzle-kit push --config drizzle.config.ts",
+    "db:sync:test": "DATABASE_URL=${DATABASE_URL_TEST:-$DATABASE_URL} pnpm --dir ../.. exec drizzle-kit push --config drizzle.config.ts",
+    "db:push": "pnpm --dir ../.. exec drizzle-kit push --config drizzle.config.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^6.8.2",
     "@t3-oss/env-core": "catalog:",
+    "drizzle-orm": "^0.44.4",
+    "pg": "^8.16.3",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auxarmory/eslint-config": "workspace:*",
-    "@auxarmory/prettier-config": "workspace:*",
     "@auxarmory/typescript-config": "workspace:*",
     "@types/node": "catalog:",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
-    "prisma": "^6.8.2",
-    "tsx": "^4.19.4",
+    "@types/pg": "^8.11.6",
+    "drizzle-kit": "^0.31.4",
     "typescript": "catalog:"
   },
   "exports": {
     ".": {
-      "default": "./src/index.ts"
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./src/client.ts",
+      "development": "./src/client.ts",
+      "default": "./dist/client.js"
+    },
+    "./schema": {
+      "types": "./src/schema.ts",
+      "development": "./src/schema.ts",
+      "default": "./dist/schema.js"
     }
-  },
-  "prettier": "@auxarmory/prettier-config"
+  }
 }

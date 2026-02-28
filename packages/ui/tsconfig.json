@@ -1,11 +1,10 @@
 {
-  "extends": "@auxarmory/typescript-config/react-library.json",
+  "extends": "@auxarmory/typescript-config/internal-package.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": {
-      "@auxarmory/ui/*": ["./src/*"]
-    }
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["."],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

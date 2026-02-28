@@ -1,22 +1,22 @@
-import type { AccountClient, ApplicationClient } from "..";
+import type { AccountClient, ApplicationClient } from '..';
 import {
 	Achievement,
 	AchievementCategory,
 	AchievementCategoryIndex,
 	AchievementMedia,
 	AchievementsIndex,
-} from "./game_data/achievements";
-import { AuctionCommodities, Auctions } from "./game_data/auction";
+} from './game_data/achievements';
+import { AuctionCommodities, Auctions } from './game_data/auction';
 import {
 	Azerite,
 	AzeriteIndex,
 	AzeriteMedia,
 	AzeriteSearch,
-} from "./game_data/azerite";
+} from './game_data/azerite';
 import {
 	ConnectedRealm,
 	ConnectedRealmIndex,
-} from "./game_data/connected_realm";
+} from './game_data/connected_realm';
 import {
 	Covenant,
 	CovenantConduit,
@@ -25,7 +25,7 @@ import {
 	CovenantMedia,
 	CovenantSoulbind,
 	CovenantSoulbindIndex,
-} from "./game_data/covenant";
+} from './game_data/covenant';
 import {
 	Creature,
 	CreatureFamily,
@@ -35,13 +35,13 @@ import {
 	CreatureSearch,
 	CreatureType,
 	CreatureTypeIndex,
-} from "./game_data/creature";
+} from './game_data/creature';
 import {
 	GuildCrestBorderMedia,
 	GuildCrestIndex,
 	GuildCrestsEmblemMedia,
-} from "./game_data/guild_crest";
-import { Heirloom, HeirloomIndex } from "./game_data/heirloom";
+} from './game_data/guild_crest';
+import { Heirloom, HeirloomIndex } from './game_data/heirloom';
 import {
 	Item,
 	ItemClass,
@@ -51,7 +51,7 @@ import {
 	ItemSet,
 	ItemSetIndex,
 	ItemSubClass,
-} from "./game_data/item";
+} from './game_data/item';
 import {
 	ItemAppearance,
 	ItemAppearanceSearch,
@@ -59,7 +59,7 @@ import {
 	ItemAppearanceSetIndex,
 	ItemAppearanceSlot,
 	ItemAppearanceSlotIndex,
-} from "./game_data/item_appearance";
+} from './game_data/item_appearance';
 import {
 	JournalEncounter,
 	JournalEncounterIndex,
@@ -69,21 +69,21 @@ import {
 	JournalInstance,
 	JournalInstanceIndex,
 	JournalInstanceMedia,
-} from "./game_data/journal";
-import { MediaSearch } from "./game_data/media";
+} from './game_data/journal';
+import { MediaSearch } from './game_data/media';
 import {
 	ModifiedCraftingCategory,
 	ModifiedCraftingCategoryIndex,
 	ModifiedCraftingIndex,
 	ModifiedCraftingReagentSlotType,
 	ModifiedCraftingReagentSlotTypeIndex,
-} from "./game_data/modified_crafting";
-import { Mount, MountIndex, MountSearch } from "./game_data/mount";
+} from './game_data/modified_crafting';
+import { Mount, MountIndex, MountSearch } from './game_data/mount';
 import {
 	MythicKeystoneAffix,
 	MythicKeystoneAffixesIndex,
 	MythicKeystoneAffixMedia,
-} from "./game_data/mythic_keystone_affix";
+} from './game_data/mythic_keystone_affix';
 import {
 	MythicKeystoneDungeon,
 	MythicKeystoneDungeonIndex,
@@ -92,12 +92,12 @@ import {
 	MythicKeystonePeriodIndex,
 	MythicKeystoneSeason,
 	MythicKeystoneSeasonIndex,
-} from "./game_data/mythic_keystone_dungeon";
+} from './game_data/mythic_keystone_dungeon';
 import {
 	MythicKeystoneLeaderboard,
 	MythicKeystoneLeaderboardIndex,
-} from "./game_data/mythic_keystone_leaderboard";
-import { MythicRaidLeaderboard } from "./game_data/mythic_raid_leaderboard";
+} from './game_data/mythic_keystone_leaderboard';
+import { MythicRaidLeaderboard } from './game_data/mythic_raid_leaderboard';
 import {
 	Pet,
 	PetAbilitiesIndex,
@@ -105,20 +105,20 @@ import {
 	PetAbilityMedia,
 	PetIndex,
 	PetMedia,
-} from "./game_data/pets";
+} from './game_data/pets';
 import {
 	PlayableClass,
 	PlayableClassIndex,
 	PlayableClassMedia,
 	PlayablePvPTalentSlot,
-} from "./game_data/playable_class";
-import { PlayableRace, PlayableRaceIndex } from "./game_data/playable_race";
+} from './game_data/playable_class';
+import { PlayableRace, PlayableRaceIndex } from './game_data/playable_race';
 import {
 	PlayableSpecialization,
 	PlayableSpecializationIndex,
 	PlayableSpecializationMedia,
-} from "./game_data/playable_specialization";
-import { PowerType, PowerTypeIndex } from "./game_data/power_type";
+} from './game_data/playable_specialization';
+import { PowerType, PowerTypeIndex } from './game_data/power_type';
 import {
 	Profession,
 	ProfessionIndex,
@@ -126,15 +126,15 @@ import {
 	ProfessionRecipe,
 	ProfessionRecipeMedia,
 	ProfessionSkillTier,
-} from "./game_data/profession";
+} from './game_data/profession';
 import {
 	PvPLeaderboard,
 	PvPLeaderboardIndex,
 	PvPRewardIndex,
 	PvPSeason,
 	PvPSeasonIndex,
-} from "./game_data/pvp_season";
-import { PvPTier, PvPTierIndex, PvPTierMedia } from "./game_data/pvp_tier";
+} from './game_data/pvp_season';
+import { PvPTier, PvPTierIndex, PvPTierMedia } from './game_data/pvp_tier';
 import {
 	Quest,
 	QuestArea,
@@ -144,16 +144,16 @@ import {
 	QuestIndex,
 	QuestType,
 	QuestTypeIndex,
-} from "./game_data/quest";
-import { Realm, RealmIndex, RealmSearch } from "./game_data/realm";
-import { Region, RegionIndex } from "./game_data/region";
+} from './game_data/quest';
+import { Realm, RealmIndex, RealmSearch } from './game_data/realm';
+import { Region, RegionIndex } from './game_data/region';
 import {
 	ReputationFaction,
 	ReputationFactionIndex,
 	ReputationTiers,
 	ReputationTiersIndex,
-} from "./game_data/reputation";
-import { Spell, SpellMedia, SpellSearch } from "./game_data/spell";
+} from './game_data/reputation';
+import { Spell, SpellMedia, SpellSearch } from './game_data/spell';
 import {
 	PvPTalent,
 	PvPTalentIndex,
@@ -162,17 +162,17 @@ import {
 	TalentTree,
 	TalentTreeIndex,
 	TalentTreeNodes,
-} from "./game_data/talent";
+} from './game_data/talent';
 import {
 	TechTalent,
 	TechTalentIndex,
 	TechTalentMedia,
 	TechTalentTree,
 	TechTalentTreeIndex,
-} from "./game_data/tech_talent";
-import { Title, TitleIndex } from "./game_data/title";
-import { Toy, ToyIndex } from "./game_data/toy";
-import { WoWTokenIndex } from "./game_data/wow_token";
+} from './game_data/tech_talent';
+import { Title, TitleIndex } from './game_data/title';
+import { Toy, ToyIndex } from './game_data/toy';
+import { WoWTokenIndex } from './game_data/wow_token';
 import {
 	AccountCollectionIndex,
 	AccountHeirloomsCollectionSummary,
@@ -182,12 +182,12 @@ import {
 	AccountToysCollectionSummary,
 	AccountTransmogCollectionSummary,
 	ProtectedCharacterProfileSummary,
-} from "./profile/account_profile";
+} from './profile/account_profile';
 import {
 	CharacterAchievementsStatistics,
 	CharacterAchievementsSummary,
-} from "./profile/character_achievements";
-import { CharacterAppearanceSummary } from "./profile/character_appearance";
+} from './profile/character_achievements';
+import { CharacterAppearanceSummary } from './profile/character_appearance';
 import {
 	CharacterCollectionIndex,
 	CharacterHeirloomsCollectionSummary,
@@ -195,47 +195,47 @@ import {
 	CharacterPetsCollectionSummary,
 	CharacterToysCollectionSummary,
 	CharacterTransmogCollectionSummary,
-} from "./profile/character_collections";
+} from './profile/character_collections';
 import {
 	CharacterDungeons,
 	CharacterEncounterSummary,
 	CharacterRaid,
-} from "./profile/character_encounter";
-import { CharacterEquipmentSummary } from "./profile/character_equipment";
-import { CharacterHunterPetsSummary } from "./profile/character_hunter_pets";
-import { CharacterMediaSummary } from "./profile/character_media";
+} from './profile/character_encounter';
+import { CharacterEquipmentSummary } from './profile/character_equipment';
+import { CharacterHunterPetsSummary } from './profile/character_hunter_pets';
+import { CharacterMediaSummary } from './profile/character_media';
 import {
 	CharacterMythicKeystoneProfileIndex,
 	CharacterMythicKeystoneSeason,
-} from "./profile/character_mythic_keystone";
-import { CharacterProfessionSummary } from "./profile/character_profession";
+} from './profile/character_mythic_keystone';
+import { CharacterProfessionSummary } from './profile/character_profession';
 import {
 	CharacterProfileStatus,
 	CharacterProfileSummary,
-} from "./profile/character_profile";
+} from './profile/character_profile';
 import {
 	CharacterPvPBracketStatistics,
 	CharacterPvPSummary,
-} from "./profile/character_pvp";
+} from './profile/character_pvp';
 import {
 	CharacterCompletedQuests,
 	CharacterQuests,
-} from "./profile/character_quest";
-import { CharacterReputationSummary } from "./profile/character_reputation";
-import { CharacterSoulbinds } from "./profile/character_soulbinds";
-import { CharacterSpecializationsSummary } from "./profile/character_specialization";
-import { CharacterStatisticsSummary } from "./profile/character_statistics";
-import { CharacterTitlesSummary } from "./profile/character_titles";
+} from './profile/character_quest';
+import { CharacterReputationSummary } from './profile/character_reputation';
+import { CharacterSoulbinds } from './profile/character_soulbinds';
+import { CharacterSpecializationsSummary } from './profile/character_specialization';
+import { CharacterStatisticsSummary } from './profile/character_statistics';
+import { CharacterTitlesSummary } from './profile/character_titles';
 import {
 	Guild,
 	GuildAchievements,
 	GuildActivity,
 	GuildRoster,
-} from "./profile/guild";
+} from './profile/guild';
 
 class WoWGameDataClient {
 	protected client: ApplicationClient;
-	protected request: ApplicationClient["request"];
+	protected request: ApplicationClient['request'];
 
 	constructor(client: ApplicationClient) {
 		this.client = client;
@@ -485,7 +485,7 @@ class WoWGameDataClient {
 
 class WoWProfileClient {
 	protected client: AccountClient;
-	protected request: AccountClient["request"];
+	protected request: AccountClient['request'];
 
 	constructor(client: AccountClient) {
 		this.client = client;

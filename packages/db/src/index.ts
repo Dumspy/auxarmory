@@ -1,5 +1,2 @@
-import "./env";
-
-import { PrismaClient } from "../generated/prisma";
-
-export const dbClient = new PrismaClient();
+export * from './client.js';
+export * as schema from './schema.js';

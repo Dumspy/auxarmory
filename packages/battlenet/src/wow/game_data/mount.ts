@@ -1,11 +1,11 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 
 export function MountIndex(this: WoWGameDataClient) {
 	return this.request<unknown>({
 		endpoint: `data/wow/mount/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 	});
 }
@@ -13,7 +13,7 @@ export function MountIndex(this: WoWGameDataClient) {
 export function Mount(this: WoWGameDataClient, id: number) {
 	return this.request<unknown>({
 		endpoint: `data/wow/mount/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 	});
 }
@@ -21,7 +21,7 @@ export function Mount(this: WoWGameDataClient, id: number) {
 export function MountSearch(this: WoWGameDataClient, params: URLSearchParams) {
 	return this.request<unknown>({
 		endpoint: `data/wow/mount/search`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 		params,
 	});

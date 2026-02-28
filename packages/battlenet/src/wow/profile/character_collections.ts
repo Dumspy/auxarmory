@@ -1,15 +1,15 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
-import { CharacterResponse } from "../types/character";
-import { ItemIventoryType } from "../types/item";
+} from '../../types';
+import { CharacterResponse } from '../types/character';
+import { ItemIventoryType } from '../types/item';
 
 export const CharacterCollectionIndexResponse = LinkSelfResponse.extend({
 	pets: KeyResponse,
@@ -26,7 +26,7 @@ export function CharacterCollectionIndex(
 ) {
 	return this.request<z.infer<typeof CharacterCollectionIndexResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterCollectionIndexResponse,
 	});
 }
@@ -51,7 +51,7 @@ export function CharacterHeirloomsCollectionSummary(
 		z.infer<typeof CharacterHeirloomsCollectionSummaryResponse>
 	>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/heirlooms`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterHeirloomsCollectionSummaryResponse,
 	});
 }
@@ -77,7 +77,7 @@ export function CharacterMountsCollectionSummary(
 		z.infer<typeof CharacterMountsCollectionSummaryResponse>
 	>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/mounts`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterMountsCollectionSummaryResponse,
 	});
 }
@@ -88,7 +88,7 @@ export const CharacterPetsCollectionSummaryResponse = LinkSelfResponse.extend({
 			species: KeyNameIdResponse,
 			level: z.number(),
 			quality: z.strictObject({
-				type: z.enum(["POOR", "COMMON", "UNCOMMON", "RARE"]),
+				type: z.enum(['POOR', 'COMMON', 'UNCOMMON', 'RARE']),
 				name: LocaleResponse,
 			}),
 			stats: z.strictObject({
@@ -115,7 +115,7 @@ export function CharacterPetsCollectionSummary(
 	return this.request<z.infer<typeof CharacterPetsCollectionSummaryResponse>>(
 		{
 			endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/pets`,
-			namespace: "profile",
+			namespace: 'profile',
 			zod: CharacterPetsCollectionSummaryResponse,
 		},
 	);
@@ -137,7 +137,7 @@ export function CharacterToysCollectionSummary(
 	return this.request<z.infer<typeof CharacterToysCollectionSummaryResponse>>(
 		{
 			endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/toys`,
-			namespace: "profile",
+			namespace: 'profile',
 			zod: CharacterToysCollectionSummaryResponse,
 		},
 	);
@@ -162,7 +162,7 @@ export function CharacterTransmogCollectionSummary(
 		z.infer<typeof CharacterTransmogCollectionSummaryResponse>
 	>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/transmogs`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterTransmogCollectionSummaryResponse,
 	});
 }

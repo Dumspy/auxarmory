@@ -1,8 +1,8 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import { KeyIdResponse, KeyNameIdResponse, LocaleResponse } from "../../types";
+import { KeyIdResponse, KeyNameIdResponse, LocaleResponse } from '../../types';
 
-export const FactionEnum = z.enum(["HORDE", "ALLIANCE", "NEUTRAL"]);
+export const FactionEnum = z.enum(['HORDE', 'ALLIANCE', 'NEUTRAL']);
 
 export const Faction = z.strictObject({
 	type: FactionEnum,
@@ -22,7 +22,7 @@ export const Realm = KeyNameIdResponse.extend({
 });
 
 export const Gender = z.strictObject({
-	type: z.enum(["MALE", "FEMALE"]),
+	type: z.enum(['MALE', 'FEMALE']),
 	name: LocaleResponse,
 });
 

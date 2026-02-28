@@ -1,7 +1,7 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import { Realm } from ".";
-import { KeyResponse } from "../../types";
+import { Realm } from '.';
+import { KeyResponse } from '../../types';
 
 export const CharacterResponse = z.strictObject({
 	key: KeyResponse,

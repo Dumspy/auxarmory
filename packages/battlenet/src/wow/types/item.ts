@@ -1,84 +1,84 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import { ColorObject, Faction } from ".";
+import { ColorObject, Faction } from '.';
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LocaleResponse,
 	MediaKeyResponse,
 	NameIdResponse,
-} from "../../types";
+} from '../../types';
 
 export const ItemIventoryType = z.strictObject({
 	type: z.enum([
-		"WEAPON",
-		"TWOHWEAPON",
-		"RANGED",
-		"SHOULDER",
-		"TRINKET",
-		"CHEST",
-		"RANGEDRIGHT",
-		"ROBE",
-		"FINGER",
-		"CLOAK",
-		"LEGS",
-		"HEAD",
-		"SHIELD",
-		"HOLDABLE",
-		"NECK",
-		"HAND",
-		"FEET",
-		"NON_EQUIP",
-		"WAIST",
-		"WRIST",
-		"THROWN",
-		"BAG",
-		"WEAPONMAINHAND",
-		"FINGER_1",
-		"FINGER_2",
-		"TRINKET_1",
-		"TRINKET_2",
-		"BACK",
-		"MAIN_HAND",
-		"OFF_HAND",
-		"TABARD",
-		"HANDS",
-		"SHIRT",
-		"BODY",
+		'WEAPON',
+		'TWOHWEAPON',
+		'RANGED',
+		'SHOULDER',
+		'TRINKET',
+		'CHEST',
+		'RANGEDRIGHT',
+		'ROBE',
+		'FINGER',
+		'CLOAK',
+		'LEGS',
+		'HEAD',
+		'SHIELD',
+		'HOLDABLE',
+		'NECK',
+		'HAND',
+		'FEET',
+		'NON_EQUIP',
+		'WAIST',
+		'WRIST',
+		'THROWN',
+		'BAG',
+		'WEAPONMAINHAND',
+		'FINGER_1',
+		'FINGER_2',
+		'TRINKET_1',
+		'TRINKET_2',
+		'BACK',
+		'MAIN_HAND',
+		'OFF_HAND',
+		'TABARD',
+		'HANDS',
+		'SHIRT',
+		'BODY',
 	]),
 	name: LocaleResponse,
 });
 
 export const ItemQuality = z.strictObject({
 	type: z.enum([
-		"HEIRLOOM",
-		"POOR",
-		"UNCOMMON",
-		"COMMON",
-		"RARE",
-		"EPIC",
-		"ARTIFACT",
-		"LEGENDARY",
+		'HEIRLOOM',
+		'POOR',
+		'UNCOMMON',
+		'COMMON',
+		'RARE',
+		'EPIC',
+		'ARTIFACT',
+		'LEGENDARY',
 	]),
 	name: LocaleResponse,
 });
 
 const StatEnum = z.enum([
-	"INTELLECT",
-	"AGILITY",
-	"STRENGTH",
-	"STAMINA",
-	"HASTE_RATING",
-	"CRIT_RATING",
-	"VERSATILITY",
-	"MASTERY_RATING",
-	"DODGE_RATING",
-	"PARRY_RATING",
-	"FROST_RESISTANCE",
-	"COMBAT_RATING_AVOIDANCE",
-	"COMBAT_RATING_LIFESTEAL",
-	"COMBAT_RATING_SPEED",
-	"CORRUPTION_RESISTANCE",
+	'INTELLECT',
+	'AGILITY',
+	'STRENGTH',
+	'STAMINA',
+	'HASTE_RATING',
+	'CRIT_RATING',
+	'VERSATILITY',
+	'MASTERY_RATING',
+	'DODGE_RATING',
+	'PARRY_RATING',
+	'FROST_RESISTANCE',
+	'COMBAT_RATING_AVOIDANCE',
+	'COMBAT_RATING_LIFESTEAL',
+	'COMBAT_RATING_SPEED',
+	'CORRUPTION_RESISTANCE',
 ]);
 
 const Upgrade = z.strictObject({
@@ -101,7 +101,7 @@ const BaseItem = z.strictObject({
 	inventory_type: ItemIventoryType,
 	bonus_list: z.array(z.number()).optional(),
 	binding: z.strictObject({
-		type: z.enum(["TO_ACCOUNT", "ON_EQUIP", "ON_ACQUIRE", "QUEST"]),
+		type: z.enum(['TO_ACCOUNT', 'ON_EQUIP', 'ON_ACQUIRE', 'QUEST']),
 		name: LocaleResponse,
 	}),
 	spells: z
@@ -133,7 +133,7 @@ const BaseItem = z.strictObject({
 				max_value: z.number(),
 				display_string: LocaleResponse,
 				damage_class: z.strictObject({
-					type: z.enum(["PHYSICAL", "NATURE"]),
+					type: z.enum(['PHYSICAL', 'NATURE']),
 					name: LocaleResponse,
 				}),
 			}),
@@ -224,13 +224,13 @@ const BaseItem = z.strictObject({
 			z.strictObject({
 				socket_type: z.strictObject({
 					type: z.enum([
-						"PRISMATIC",
-						"META",
-						"SINGING_THUNDER",
-						"SINGING_SEA",
-						"SINGING_WIND",
-						"TINKER",
-						"COGWHEEL",
+						'PRISMATIC',
+						'META',
+						'SINGING_THUNDER',
+						'SINGING_SEA',
+						'SINGING_WIND',
+						'TINKER',
+						'COGWHEEL',
 					]),
 					name: LocaleResponse,
 				}),
@@ -272,7 +272,7 @@ export const HeirloomItem = BaseItem.omit({
 	.extend({
 		// Modified BaseItem shapes
 		quality: ItemQuality.extend({
-			type: z.literal("HEIRLOOM"),
+			type: z.literal('HEIRLOOM'),
 		}),
 	})
 	.extend({
@@ -291,7 +291,7 @@ const PreviewItemBase = BaseItem.extend({
 	.extend({
 		// Modified BaseItem shapes
 		quality: ItemQuality.extend({
-			type: ItemQuality.shape.type.exclude(["HEIRLOOM"]),
+			type: ItemQuality.shape.type.exclude(['HEIRLOOM']),
 		}),
 		requirements: BaseItem.shape.requirements
 			.unwrap()
@@ -417,7 +417,7 @@ export const CharacterEquipmentItem = BaseItem.extend({
 					enchantment_id: z.number(),
 					enchantment_slot: z.strictObject({
 						id: z.number(),
-						type: z.enum(["PERMANENT", "TEMPORARY"]),
+						type: z.enum(['PERMANENT', 'TEMPORARY']),
 					}),
 				}),
 			)

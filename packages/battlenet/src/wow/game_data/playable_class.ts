@@ -1,6 +1,6 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	KeyResponse,
@@ -8,7 +8,7 @@ import {
 	LocaleResponse,
 	MediaAssetArray,
 	MediaKeyResponse,
-} from "../../types";
+} from '../../types';
 
 export const PlayableClassIndexResponse = LinkSelfResponse.extend({
 	classes: z.array(KeyNameIdResponse),
@@ -16,7 +16,7 @@ export const PlayableClassIndexResponse = LinkSelfResponse.extend({
 export function PlayableClassIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof PlayableClassIndexResponse>>({
 		endpoint: `data/wow/playable-class/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PlayableClassIndexResponse,
 	});
 }
@@ -38,7 +38,7 @@ export const PlayableClassResponse = LinkSelfResponse.extend({
 export function PlayableClass(this: WoWGameDataClient, classId: number) {
 	return this.request<z.infer<typeof PlayableClassResponse>>({
 		endpoint: `data/wow/playable-class/${classId}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PlayableClassResponse,
 	});
 }
@@ -50,7 +50,7 @@ export const PlayableClassMediaResponse = LinkSelfResponse.extend({
 export function PlayableClassMedia(this: WoWGameDataClient, classId: number) {
 	return this.request<z.infer<typeof PlayableClassMediaResponse>>({
 		endpoint: `data/wow/media/playable-class/${classId}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PlayableClassMediaResponse,
 	});
 }
@@ -69,7 +69,7 @@ export function PlayablePvPTalentSlot(
 ) {
 	return this.request<z.infer<typeof PlayablePvPTalentSlotResponse>>({
 		endpoint: `data/wow/playable-class/${classId}/pvp-talent-slots`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PlayablePvPTalentSlotResponse,
 	});
 }

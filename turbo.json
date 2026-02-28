@@ -1,44 +1,81 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
+  "globalDependencies": [".env.example", ".env.local", ".env"],
   "tasks": {
-    "build": {
-      "dependsOn": ["generate", "^build"],
-    "outputs": ["dist/**"]
-    },
-    "clean": {
-      "cache": false
-    },
-    "format": {
-      "outputs": [".cache/.prettiercache"],
-      "outputLogs": "new-only"
-    },
-    "lint": {
-      "outputs": [".cache/.eslintcache"]
-    },
-    "generate": {
-      "dependsOn": ["^generate"],
-      "cache": false,
-      "env": [
-        "PRISMA_SCHEMA_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_LIBRARY",
-        "PRISMA_FMT_BINARY"
-      ]
-    },
     "dev": {
       "cache": false,
       "persistent": true,
       "env": [
         "DATABASE_URL",
-        "REDIS_URL",
         "BATTLENET_CLIENT_ID",
         "BATTLENET_CLIENT_SECRET",
-        "PRISMA_SCHEMA_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_BINARY",
-        "PRISMA_QUERY_ENGINE_LIBRARY",
-        "PRISMA_FMT_BINARY"
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "AUTH_COOKIE_DOMAIN",
+        "AUTH_TRUSTED_ORIGINS",
+        "AUTH_SERVICE_PORT",
+        "AUTH_SERVICE_ORIGIN",
+        "API_SERVICE_PORT",
+        "API_SERVICE_ORIGIN",
+        "WEB_ORIGIN",
+        "NODE_ENV",
+        "VITE_*",
+        "REDIS_URL"
       ]
+    },
+    "test": {
+      "dependsOn": ["^test"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "env": [
+        "DATABASE_URL",
+        "DATABASE_URL_TEST",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "AUTH_COOKIE_DOMAIN",
+        "AUTH_TRUSTED_ORIGINS",
+        "AUTH_SERVICE_PORT",
+        "AUTH_SERVICE_ORIGIN",
+        "API_SERVICE_PORT",
+        "API_SERVICE_ORIGIN",
+        "WEB_ORIGIN",
+        "NODE_ENV",
+        "REDIS_URL"
+      ]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".output/**"],
+      "env": [
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "AUTH_COOKIE_DOMAIN",
+        "AUTH_TRUSTED_ORIGINS",
+        "AUTH_SERVICE_PORT",
+        "AUTH_SERVICE_ORIGIN",
+        "API_SERVICE_PORT",
+        "API_SERVICE_ORIGIN",
+        "WEB_ORIGIN",
+        "VITE_*"
+      ]
+    },
+    "clean": {
+      "cache": false
+    },
+    "//#lint": {},
+    "//#lint:fix": {
+      "cache": false
+    },
+    "//#format": {},
+    "//#format:fix": {
+      "cache": false
     }
   }
 }

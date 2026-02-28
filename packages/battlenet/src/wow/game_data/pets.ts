@@ -1,13 +1,13 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	LinkSelfResponse,
 	LocaleResponse,
 	MediaAssetArray,
 	MediaKeyResponse,
-} from "../../types";
+} from '../../types';
 
 export const PetIndexResponse = LinkSelfResponse.extend({
 	pets: z.array(KeyNameIdResponse),
@@ -15,7 +15,7 @@ export const PetIndexResponse = LinkSelfResponse.extend({
 export function PetIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof PetIndexResponse>>({
 		endpoint: `data/wow/pet/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PetIndexResponse,
 	});
 }
@@ -23,16 +23,16 @@ export function PetIndex(this: WoWGameDataClient) {
 const BattlePetType = z.strictObject({
 	id: z.number(),
 	type: z.enum([
-		"HUMANOID",
-		"BEAST",
-		"MAGIC",
-		"ELEMENTAL",
-		"MECHANICAL",
-		"DRAGONKIN",
-		"CRITTER",
-		"FLYING",
-		"AQUATIC",
-		"UNDEAD",
+		'HUMANOID',
+		'BEAST',
+		'MAGIC',
+		'ELEMENTAL',
+		'MECHANICAL',
+		'DRAGONKIN',
+		'CRITTER',
+		'FLYING',
+		'AQUATIC',
+		'UNDEAD',
 	]),
 	name: LocaleResponse,
 });
@@ -59,18 +59,18 @@ export const PetResponse = LinkSelfResponse.extend({
 	source: z
 		.strictObject({
 			type: z.enum([
-				"VENDOR",
-				"WILDPET",
-				"WORLDEVENT",
-				"PROFESSION",
-				"PROMOTION",
-				"QUEST",
-				"DROP",
-				"TCG",
-				"ACHIEVEMENT",
-				"PETSTORE",
-				"TRADINGPOST",
-				"DISCOVERY",
+				'VENDOR',
+				'WILDPET',
+				'WORLDEVENT',
+				'PROFESSION',
+				'PROMOTION',
+				'QUEST',
+				'DROP',
+				'TCG',
+				'ACHIEVEMENT',
+				'PETSTORE',
+				'TRADINGPOST',
+				'DISCOVERY',
 			]),
 			name: LocaleResponse,
 		})
@@ -84,7 +84,7 @@ export const PetResponse = LinkSelfResponse.extend({
 export function Pet(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof PetResponse>>({
 		endpoint: `data/wow/pet/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PetResponse,
 	});
 }
@@ -96,7 +96,7 @@ export const PetMediaResponse = LinkSelfResponse.extend({
 export function PetMedia(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof PetMediaResponse>>({
 		endpoint: `data/wow/media/pet/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PetMediaResponse,
 	});
 }
@@ -107,7 +107,7 @@ export const PetAbilitiesIndexResponse = LinkSelfResponse.extend({
 export function PetAbilitiesIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof PetAbilitiesIndexResponse>>({
 		endpoint: `data/wow/pet-ability/index`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PetAbilitiesIndexResponse,
 	});
 }
@@ -123,7 +123,7 @@ export const PetAbilityResponse = LinkSelfResponse.extend({
 export function PetAbility(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof PetAbilityResponse>>({
 		endpoint: `data/wow/pet-ability/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: PetAbilityResponse,
 	});
 }
@@ -135,7 +135,7 @@ export const PetAbilityMediaResponse = LinkSelfResponse.extend({
 export function PetAbilityMedia(this: WoWGameDataClient, id: number) {
 	return this.request<unknown>({
 		endpoint: `data/wow/media/pet-ability/${id}`,
-		namespace: "static",
+		namespace: 'static',
 		zod: z.unknown(),
 	});
 }

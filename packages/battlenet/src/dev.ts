@@ -1,13 +1,18 @@
-import fs from "fs";
+import fs from 'fs';
 
-import { ApplicationClient } from ".";
-import { AuctionsResponse } from "./wow/game_data/auction";
-import { ConnectedRealmIndexResponse } from "./wow/game_data/connected_realm";
+import { ApplicationClient } from '.';
+import { env } from './env';
+import { AuctionsResponse } from './wow/game_data/auction';
+import { ConnectedRealmIndexResponse } from './wow/game_data/connected_realm';
 
 type EndpointFn<T, R> = (input: T) => Promise<R>;
-type Validator<R> = {
-	safeParse: (data: unknown) => { success: boolean; error?: any; data?: R };
-};
+interface Validator<R> {
+	safeParse: (data: unknown) => {
+		success: boolean;
+		error?: unknown;
+		data?: R;
+	};
+}
 
 interface ProcessChainParams<T, R> {
 	inputs: T[];
@@ -30,12 +35,12 @@ async function processChain<T, R>({
 			const data = await endpoint(input);
 			const res = validator.safeParse(data);
 			if (res.success) {
-				console.log("ok", id);
+				console.log('ok', id);
 				if (next) await next(res.data as R, input);
 			} else {
 				const errorFile = `./out/error-${id}.txt`;
 				const dataFile = `./out/data-${id}.json`;
-				fs.writeFileSync(errorFile, res.error.message);
+				fs.writeFileSync(errorFile, String(res.error));
 				fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
 				console.error(
 					`Parse error for ${id}, saved to ${errorFile} and ${dataFile}`,
@@ -50,17 +55,17 @@ async function processChain<T, R>({
 
 (async () => {
 	const client = new ApplicationClient({
-		region: "eu",
-		clientId: process.env.BATTLENET_CLIENT_ID || "",
-		clientSecret: process.env.BATTLENET_CLIENT_SECRET || "",
+		region: 'eu',
+		clientId: env.BATTLENET_CLIENT_ID,
+		clientSecret: env.BATTLENET_CLIENT_SECRET,
 		suppressZodErrors: true,
 	});
 
 	await processChain({
 		inputs: [null],
-		endpoint: async () => client.wow.Azerite("2000000"),
+		endpoint: async () => client.wow.Azerite('2000000'),
 		validator: ConnectedRealmIndexResponse,
-		saveId: () => "root",
+		saveId: () => 'root',
 		next: async (idx) => {
 			await processChain({
 				inputs: idx.connected_realms,

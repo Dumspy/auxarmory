@@ -1,27 +1,13 @@
 packages:
-  - apps/*
-  - packages/*
-  - tooling/*
+    - apps/*
+    - packages/*
+    - tooling/*
 catalog:
-  '@openauthjs/openauth': ^0.4.3
-  ioredis: ^5.4.2
-  eslint: ^9.26.0
-  prettier: ^3.5.3
-  tailwindcss: ^3.4.15
-  typescript: ^5.8.3
-  '@types/node': ^22.14.8
-  zod: ^3.25.28
-  '@t3-oss/env-core': ^0.13.4
-  '@tanstack/react-query': ^5.76.1
-  '@trpc/client': ^11.1.2
-  '@trpc/tanstack-react-query': ^11.1.2
-  '@trpc/server': ^11.1.2
-onlyBuiltDependencies:
-  - '@prisma/client'
-  - '@prisma/engines'
-  - '@swc/core'
-  - '@tailwindcss/oxide'
-  - core-js-pure
-  - esbuild
-  - msgpackr-extract
-  - prisma
+    '@t3-oss/env-core': ^0.13.8
+    typescript: ^5.9.3
+    '@types/node': ^22.14.8
+    '@types/react': ^19.2.1
+    '@types/react-dom': ^19.2.1
+    react: ^19.2.0
+    react-dom: ^19.2.0
+    zod: ^4.3.6

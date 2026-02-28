@@ -1,12 +1,12 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
-import { CharacterResponse } from "../types/character";
+} from '../../types';
+import { CharacterResponse } from '../types/character';
 
 export const CharacterReputationSummaryResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
@@ -38,7 +38,7 @@ export function CharacterReputationSummary(
 ) {
 	return this.request<z.infer<typeof CharacterReputationSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/reputations`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterReputationSummaryResponse,
 	});
 }

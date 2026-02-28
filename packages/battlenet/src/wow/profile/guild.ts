@@ -1,6 +1,6 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
@@ -8,9 +8,9 @@ import {
 	LinkSelfResponse,
 	LocaleResponse,
 	MediaKeyResponse,
-} from "../../types";
-import { ColorObject, Faction, Realm } from "../types";
-import { CharacterResponse } from "../types/character";
+} from '../../types';
+import { ColorObject, Faction, Realm } from '../types';
+import { CharacterResponse } from '../types/character';
 
 const SimpleGuild = z.strictObject({
 	key: KeyResponse,
@@ -67,7 +67,7 @@ export function Guild(
 ) {
 	return this.request<z.infer<typeof GuildResponse>>({
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: GuildResponse,
 	});
 }
@@ -78,11 +78,11 @@ const GuildActivityType = z.union([
 			encounter: KeyNameIdResponse,
 			mode: z.strictObject({
 				name: LocaleResponse,
-				type: z.enum(["NORMAL", "HEROIC", "MYTHIC", "MYTHIC_KEYSTONE"]),
+				type: z.enum(['NORMAL', 'HEROIC', 'MYTHIC', 'MYTHIC_KEYSTONE']),
 			}),
 		}),
 		activity: z.strictObject({
-			type: z.literal("ENCOUNTER"),
+			type: z.literal('ENCOUNTER'),
 		}),
 		timestamp: z.number(),
 	}),
@@ -92,7 +92,7 @@ const GuildActivityType = z.union([
 			achievement: KeyNameIdResponse,
 		}),
 		activity: z.strictObject({
-			type: z.literal("CHARACTER_ACHIEVEMENT"),
+			type: z.literal('CHARACTER_ACHIEVEMENT'),
 		}),
 		timestamp: z.number(),
 	}),
@@ -109,7 +109,7 @@ export function GuildActivity(
 ) {
 	return this.request<z.infer<typeof GuildActivityResponse>>({
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}/activity`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: GuildActivityResponse,
 	});
 }
@@ -160,7 +160,7 @@ export function GuildAchievements(
 ) {
 	return this.request<z.infer<typeof GuildAchievementsResponse>>({
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}/achievements`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: GuildAchievementsResponse,
 	});
 }
@@ -188,7 +188,7 @@ export function GuildRoster(
 ) {
 	return this.request<z.infer<typeof GuildRosterResponse>>({
 		endpoint: `data/wow/guild/${realmSlug}/${nameSlug}/roster`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: GuildRosterResponse,
 	});
 }

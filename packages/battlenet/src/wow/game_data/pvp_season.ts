@@ -1,16 +1,16 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyIdResponse,
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
-import { Faction, FactionEnum } from "../types";
-import { CharacterResponse } from "../types/character";
-import { PvPBracketType } from "./pvp_tier";
+} from '../../types';
+import { Faction, FactionEnum } from '../types';
+import { CharacterResponse } from '../types/character';
+import { PvPBracketType } from './pvp_tier';
 
 export const PvPSeasonIndexResponse = LinkSelfResponse.extend({
 	seasons: z.array(KeyIdResponse),
@@ -19,7 +19,7 @@ export const PvPSeasonIndexResponse = LinkSelfResponse.extend({
 export function PvPSeasonIndex(this: WoWGameDataClient) {
 	return this.request<z.infer<typeof PvPSeasonIndexResponse>>({
 		endpoint: `data/wow/pvp-season/index`,
-		namespace: "dynamic",
+		namespace: 'dynamic',
 		zod: PvPSeasonIndexResponse,
 	});
 }
@@ -36,13 +36,13 @@ type PvPSeasonReturn = z.infer<typeof PvPSeasonResponse> | null;
 export async function PvPSeason(this: WoWGameDataClient, pvpSeasonId: number) {
 	const ret = await this.request<PvPSeasonReturn>({
 		endpoint: `data/wow/pvp-season/${pvpSeasonId}`,
-		namespace: "dynamic",
+		namespace: 'dynamic',
 		zod: PvPSeasonResponse,
 	});
 
 	if (ret.success) return ret;
 
-	if (ret.error_type === "battlenet" && ret.error.code === 403) {
+	if (ret.error_type === 'battlenet' && ret.error.code === 403) {
 		// This is likely an old season which is not available in the api.
 		return {
 			success: true,
@@ -70,7 +70,7 @@ export function PvPLeaderboardIndex(
 ) {
 	return this.request<z.infer<typeof PvPLeaderboardIndexResponse>>({
 		endpoint: `data/wow/pvp-season/${pvpSeasonId}/pvp-leaderboard/index`,
-		namespace: "dynamic",
+		namespace: 'dynamic',
 		zod: PvPLeaderboardIndexResponse,
 	});
 }
@@ -108,7 +108,7 @@ export function PvPLeaderboard(
 ) {
 	return this.request<z.infer<typeof PvPLeaderboardResponse>>({
 		endpoint: `data/wow/pvp-season/${pvpSeasonId}/pvp-leaderboard/${pvpBracket}`,
-		namespace: "dynamic",
+		namespace: 'dynamic',
 		zod: PvPLeaderboardResponse,
 	});
 }
@@ -131,7 +131,7 @@ export const PvPRewardIndexResponse = LinkSelfResponse.extend({
 export function PvPRewardIndex(this: WoWGameDataClient, pvpSeasonId: number) {
 	return this.request<z.infer<typeof PvPRewardIndexResponse>>({
 		endpoint: `data/wow/pvp-season/${pvpSeasonId}/pvp-reward/index`,
-		namespace: "dynamic",
+		namespace: 'dynamic',
 		zod: PvPRewardIndexResponse,
 	});
 }

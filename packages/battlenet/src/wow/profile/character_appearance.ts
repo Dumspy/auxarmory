@@ -1,15 +1,15 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
-import type { WoWGameDataClient } from "..";
+import type { WoWGameDataClient } from '..';
 import {
 	KeyNameIdResponse,
 	KeyResponse,
 	LinkSelfResponse,
 	LocaleResponse,
-} from "../../types";
-import { ColorObject, Faction, Gender } from "../types";
-import { CharacterResponse } from "../types/character";
-import { ItemIventoryType } from "../types/item";
+} from '../../types';
+import { ColorObject, Faction, Gender } from '../types';
+import { CharacterResponse } from '../types/character';
+import { ItemIventoryType } from '../types/item';
 
 export const CharacterAppearanceSummaryResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
@@ -82,7 +82,7 @@ export function CharacterAppearanceSummary(
 ) {
 	return this.request<z.infer<typeof CharacterAppearanceSummaryResponse>>({
 		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/appearance`,
-		namespace: "profile",
+		namespace: 'profile',
 		zod: CharacterAppearanceSummaryResponse,
 	});
 }

@@ -15,13 +15,19 @@ import {
 	fetchGuildWithOwnerToken,
 	getApplicationClient,
 	getUserAccessToken,
-	GuildRosterData,
-	GuildSyncData,
 	OWNERSHIP_GRACE_MS,
 	OWNER_TOKEN_COOLDOWN_MS,
 	recordGuildControlEvent,
-	Region,
 } from './shared'
+import type { GuildRosterData, GuildSyncData, Region } from './shared'
+
+function getErrorMessage(error: unknown): string {
+	if (error instanceof Error) {
+		return error.message
+	}
+
+	return 'owner token fetch failed'
+}
 
 export const syncGuild = defineJob({
 	name: JOB_NAMES.SYNC_GUILD,
@@ -100,10 +106,7 @@ export const syncGuild = defineJob({
 					rosterData = result.rosterData
 					authSource = 'owner-token'
 				} catch (error) {
-					fallbackReason =
-						error instanceof Error
-							? error.message
-							: 'owner token fetch failed'
+					fallbackReason = getErrorMessage(error)
 					await db
 						.update(wowGuild)
 						.set({

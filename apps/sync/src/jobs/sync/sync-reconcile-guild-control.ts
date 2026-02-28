@@ -3,11 +3,10 @@ import { wowGuild, wowGuildControl } from '@auxarmory/db/schema'
 import { eq, or } from 'drizzle-orm'
 
 import { defineJob } from '../../registry'
-import { addJob, buildJobId } from '../../queue'
 import { JOB_PRIORITIES } from '../../types'
 import { JOB_NAMES } from '../contracts'
 import type { SyncReconcileGuildControlPayload } from '../contracts'
-import { CLAIM_FRESHNESS_MS, guildQueue, Region } from './shared'
+import { CLAIM_FRESHNESS_MS, enqueueGuildSyncJob, Region } from './shared'
 
 export const syncReconcileGuildControl = defineJob({
 	name: JOB_NAMES.SYNC_RECONCILE_GUILD_CONTROL,
@@ -53,24 +52,13 @@ export const syncReconcileGuildControl = defineJob({
 					.limit(200)
 
 		for (const target of targets) {
-			await addJob(
-				guildQueue,
-				JOB_NAMES.SYNC_GUILD,
-				{
-					guildId: target.guildId,
-					region: target.region as Region,
-					realmSlug: target.realmSlug,
-					nameSlug: target.nameSlug,
-				},
-				JOB_PRIORITIES.RUSH,
-				{
-					jobId: buildJobId(JOB_NAMES.SYNC_GUILD, [
-						target.region,
-						target.realmSlug,
-						target.nameSlug,
-					]),
-				},
-			)
+			await enqueueGuildSyncJob({
+				guildId: target.guildId,
+				region: target.region as Region,
+				realmSlug: target.realmSlug,
+				nameSlug: target.nameSlug,
+				priority: JOB_PRIORITIES.RUSH,
+			})
 		}
 
 		return {

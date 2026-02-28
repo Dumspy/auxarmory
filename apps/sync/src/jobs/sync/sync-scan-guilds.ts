@@ -3,11 +3,10 @@ import { wowGuild } from '@auxarmory/db/schema'
 import { asc, isNull, lt, or } from 'drizzle-orm'
 
 import { defineJob } from '../../registry'
-import { addJob, buildJobId } from '../../queue'
 import { JOB_PRIORITIES } from '../../types'
 import { JOB_NAMES } from '../contracts'
 import type { SyncScanGuildsPayload } from '../contracts'
-import { GUILD_SYNC_STALE_MS, guildQueue, Region } from './shared'
+import { enqueueGuildSyncJob, GUILD_SYNC_STALE_MS, Region } from './shared'
 
 export const syncScanGuilds = defineJob({
 	name: JOB_NAMES.SYNC_SCAN_GUILDS,
@@ -34,24 +33,13 @@ export const syncScanGuilds = defineJob({
 			.limit(200)
 
 		for (const guildRow of guildRows) {
-			await addJob(
-				guildQueue,
-				JOB_NAMES.SYNC_GUILD,
-				{
-					guildId: guildRow.id,
-					region: guildRow.region as Region,
-					realmSlug: guildRow.realmSlug,
-					nameSlug: guildRow.nameSlug,
-				},
-				JOB_PRIORITIES.STANDARD,
-				{
-					jobId: buildJobId(JOB_NAMES.SYNC_GUILD, [
-						guildRow.region,
-						guildRow.realmSlug,
-						guildRow.nameSlug,
-					]),
-				},
-			)
+			await enqueueGuildSyncJob({
+				guildId: guildRow.id,
+				region: guildRow.region as Region,
+				realmSlug: guildRow.realmSlug,
+				nameSlug: guildRow.nameSlug,
+				priority: JOB_PRIORITIES.STANDARD,
+			})
 		}
 
 		return {

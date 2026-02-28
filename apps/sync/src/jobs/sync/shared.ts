@@ -6,7 +6,9 @@ import { db } from '@auxarmory/db/client'
 import { wowGuildControlEvent } from '@auxarmory/db/schema'
 
 import { env } from '../../env'
-import { createQueue } from '../../queue'
+import { addJob, buildJobId, createQueue } from '../../queue'
+import type { JobPriority } from '../../types'
+import { JOB_NAMES } from '../contracts'
 import type { SyncGuildPayload } from '../contracts'
 
 export type Region = SyncGuildPayload['region']
@@ -67,26 +69,22 @@ const battlenetRegionCredentials: Record<
 
 const appClientCache = new Map<Region, ApplicationClient>()
 
-export const parseRegionFromProviderId = (
-	providerId: string,
-): Region | null => {
-	if (providerId === 'battlenet-us') {
-		return 'us'
+export function parseRegionFromProviderId(providerId: string): Region | null {
+	switch (providerId) {
+		case 'battlenet-us':
+			return 'us'
+		case 'battlenet-eu':
+			return 'eu'
+		case 'battlenet-kr':
+			return 'kr'
+		case 'battlenet-tw':
+			return 'tw'
+		default:
+			return null
 	}
-	if (providerId === 'battlenet-eu') {
-		return 'eu'
-	}
-	if (providerId === 'battlenet-kr') {
-		return 'kr'
-	}
-	if (providerId === 'battlenet-tw') {
-		return 'tw'
-	}
-
-	return null
 }
 
-export const slugify = (value: string) => {
+export function slugify(value: string): string {
 	return value
 		.toLowerCase()
 		.normalize('NFKD')
@@ -94,7 +92,7 @@ export const slugify = (value: string) => {
 		.replace(/(^-|-$)/g, '')
 }
 
-export const getApplicationClient = (region: Region) => {
+export function getApplicationClient(region: Region): ApplicationClient | null {
 	const cached = appClientCache.get(region)
 	if (cached) {
 		return cached
@@ -114,11 +112,11 @@ export const getApplicationClient = (region: Region) => {
 	return client
 }
 
-export const getUserAccessToken = async (params: {
+export async function getUserAccessToken(params: {
 	userId: string
 	providerId: string
 	accountId?: string
-}) => {
+}): Promise<string | null> {
 	const response = (await auth.api.getAccessToken({
 		body: {
 			providerId: params.providerId,
@@ -134,12 +132,12 @@ export const getUserAccessToken = async (params: {
 	return response.accessToken
 }
 
-export const fetchGuildWithOwnerToken = async (params: {
+export async function fetchGuildWithOwnerToken(params: {
 	accessToken: string
 	region: Region
 	realmSlug: string
 	nameSlug: string
-}) => {
+}): Promise<{ guildData: GuildSyncData; rosterData: GuildRosterData }> {
 	const baseUrl = `https://${params.region}.api.blizzard.com`
 	const headers = {
 		Authorization: `Bearer ${params.accessToken}`,
@@ -178,14 +176,14 @@ export const fetchGuildWithOwnerToken = async (params: {
 	}
 }
 
-export const recordGuildControlEvent = async (params: {
+export async function recordGuildControlEvent(params: {
 	guildId: string
 	actorUserId?: string | null
 	eventType: string
 	fromState?: string | null
 	toState?: string | null
 	details?: string
-}) => {
+}): Promise<void> {
 	await db.insert(wowGuildControlEvent).values({
 		id: randomUUID(),
 		guildId: params.guildId,
@@ -195,4 +193,33 @@ export const recordGuildControlEvent = async (params: {
 		toState: params.toState ?? null,
 		details: params.details,
 	})
+}
+
+export async function enqueueGuildSyncJob(params: {
+	region: Region
+	realmSlug: string
+	nameSlug: string
+	guildId?: string
+	sourceUserId?: string
+	priority: JobPriority
+}): Promise<void> {
+	await addJob(
+		guildQueue,
+		JOB_NAMES.SYNC_GUILD,
+		{
+			guildId: params.guildId,
+			region: params.region,
+			realmSlug: params.realmSlug,
+			nameSlug: params.nameSlug,
+			sourceUserId: params.sourceUserId,
+		},
+		params.priority,
+		{
+			jobId: buildJobId(JOB_NAMES.SYNC_GUILD, [
+				params.region,
+				params.realmSlug,
+				params.nameSlug,
+			]),
+		},
+	)
 }

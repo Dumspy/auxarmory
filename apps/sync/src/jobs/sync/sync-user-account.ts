@@ -4,14 +4,13 @@ import { account, wowCharacterOwnership, wowGuild } from '@auxarmory/db/schema'
 import { and, eq, like, notInArray, or } from 'drizzle-orm'
 
 import { defineJob } from '../../registry'
-import { addJob, buildJobId } from '../../queue'
 import { JOB_PRIORITIES } from '../../types'
 import { JOB_NAMES } from '../contracts'
 import type { SyncUserAccountPayload } from '../contracts'
 import {
+	enqueueGuildSyncJob,
 	getApplicationClient,
 	getUserAccessToken,
-	guildQueue,
 	parseRegionFromProviderId,
 	slugify,
 } from './shared'
@@ -214,24 +213,13 @@ export const syncUserAccount = defineJob({
 								},
 							})
 
-						await addJob(
-							guildQueue,
-							JOB_NAMES.SYNC_GUILD,
-							{
-								region,
-								realmSlug: discoveredGuild.realmSlug,
-								nameSlug: discoveredGuild.nameSlug,
-								sourceUserId: linkedAccount.userId,
-							},
-							JOB_PRIORITIES.RUSH,
-							{
-								jobId: buildJobId(JOB_NAMES.SYNC_GUILD, [
-									region,
-									discoveredGuild.realmSlug,
-									discoveredGuild.nameSlug,
-								]),
-							},
-						)
+						await enqueueGuildSyncJob({
+							region,
+							realmSlug: discoveredGuild.realmSlug,
+							nameSlug: discoveredGuild.nameSlug,
+							sourceUserId: linkedAccount.userId,
+							priority: JOB_PRIORITIES.RUSH,
+						})
 					}
 				}
 			}

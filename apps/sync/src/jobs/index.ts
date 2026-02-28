@@ -41,16 +41,14 @@ type JobHandler = (
 	job: Job<JobPayloads[JobName], unknown, JobName>,
 ) => Promise<unknown>
 
-const resolveHandler = (name: JobName): JobHandler | undefined => {
-	const entry = jobRegistry[name as keyof typeof jobRegistry] as unknown as {
-		handler?: JobHandler
-	}
-	return entry?.handler
+function resolveHandler(name: JobName): JobHandler | undefined {
+	const entry = jobRegistry[name as keyof typeof jobRegistry]
+	return entry?.handler as JobHandler | undefined
 }
 
 export const handleJob = async (
 	job: Job<JobPayloads[JobName], unknown, JobName>,
-) => {
+): Promise<unknown> => {
 	const handler = resolveHandler(job.name)
 
 	if (!handler) {

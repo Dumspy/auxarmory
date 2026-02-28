@@ -1,10 +1,12 @@
 import { randomUUID } from 'node:crypto'
 
+import { Queue } from 'bullmq'
 import { and, eq, like, or } from 'drizzle-orm'
 import { z } from 'zod'
 
 import { db } from '@auxarmory/db/client'
 import {
+	account,
 	member,
 	organization,
 	wowGuild,
@@ -16,6 +18,27 @@ import {
 import { protectedProcedure, router } from '../index.js'
 
 const CLAIM_FRESHNESS_MS = 15 * 60 * 1000
+const SYNC_QUEUE_NAME = 'battlenet-sync'
+const SYNC_USER_ACCOUNT_JOB = 'sync:user-account'
+
+let syncQueue: Queue | null = null
+
+const getSyncQueue = () => {
+	const redisUrl = process.env.REDIS_URL
+	if (!redisUrl) {
+		return null
+	}
+
+	if (!syncQueue) {
+		syncQueue = new Queue(SYNC_QUEUE_NAME, {
+			connection: {
+				url: redisUrl,
+			},
+		})
+	}
+
+	return syncQueue
+}
 
 const claimInput = z.object({
 	region: z.enum(['us', 'eu', 'kr', 'tw']),
@@ -252,6 +275,68 @@ const claimGuildProcedure = protectedProcedure
 export const guildRouter = router({
 	claim: claimGuildProcedure,
 	transferLeadership: claimGuildProcedure,
+	triggerOnDemandSync: protectedProcedure.mutation(async ({ ctx }) => {
+		const requestedAt = Date.now()
+		const battlenetAccounts = await db
+			.select({
+				id: account.id,
+				providerId: account.providerId,
+				accountId: account.accountId,
+			})
+			.from(account)
+			.where(
+				and(
+					eq(account.userId, ctx.session.user.id),
+					like(account.providerId, 'battlenet-%'),
+				),
+			)
+
+		if (battlenetAccounts.length === 0) {
+			throw new Error('No linked Battle.net account found for this user.')
+		}
+
+		const queue = getSyncQueue()
+		if (!queue) {
+			throw new Error('Sync queue is not configured on API service.')
+		}
+
+		for (const [index, battlenetAccount] of battlenetAccounts.entries()) {
+			await queue.add(
+				SYNC_USER_ACCOUNT_JOB,
+				{
+					userId: ctx.session.user.id,
+					providerId: battlenetAccount.providerId,
+					accountId: battlenetAccount.id,
+				},
+				{
+					jobId: [
+						SYNC_USER_ACCOUNT_JOB,
+						ctx.session.user.id,
+						battlenetAccount.providerId,
+						battlenetAccount.accountId,
+						String(requestedAt),
+						String(index),
+					]
+						.join('__')
+						.toLowerCase()
+						.replaceAll(':', '__'),
+					priority: 1,
+					attempts: 5,
+					backoff: {
+						type: 'exponential',
+						delay: 2_000,
+					},
+					removeOnComplete: 100,
+					removeOnFail: 500,
+				},
+			)
+		}
+
+		return {
+			ok: true,
+			enqueued: battlenetAccounts.length,
+		}
+	}),
 	myClaims: protectedProcedure.query(async ({ ctx }) => {
 		return db
 			.select({

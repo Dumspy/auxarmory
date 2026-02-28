@@ -230,9 +230,15 @@ export const syncUserAccount = defineJob({
 	},
 	handler: async (job) => {
 		const payload = job.data as SyncUserAccountPayload
+		console.log('[sync] sync:user-account started', {
+			userId: payload.userId,
+			providerId: payload.providerId,
+			accountId: payload.accountId,
+		})
 
 		const accounts = await db
 			.select({
+				id: account.id,
 				userId: account.userId,
 				providerId: account.providerId,
 				accountId: account.accountId,
@@ -245,10 +251,22 @@ export const syncUserAccount = defineJob({
 						? eq(account.providerId, payload.providerId)
 						: like(account.providerId, 'battlenet-%'),
 					payload.accountId
-						? eq(account.accountId, payload.accountId)
+						? or(
+								eq(account.id, payload.accountId),
+								eq(account.accountId, payload.accountId),
+							)
 						: undefined,
 				),
 			)
+
+		if (accounts.length === 0) {
+			throw new Error(
+				`No linked Battle.net accounts matched for user ${payload.userId}`,
+			)
+		}
+
+		let syncedAccounts = 0
+		let syncedCharacters = 0
 
 		for (const linkedAccount of accounts) {
 			const region = parseRegionFromProviderId(linkedAccount.providerId)
@@ -259,10 +277,18 @@ export const syncUserAccount = defineJob({
 			const userAccessToken = await getUserAccessToken({
 				userId: linkedAccount.userId,
 				providerId: linkedAccount.providerId,
-				accountId: linkedAccount.accountId,
+				accountId: linkedAccount.id,
 			})
 
 			if (!userAccessToken) {
+				console.warn(
+					'[sync] missing user access token for linked account',
+					{
+						userId: linkedAccount.userId,
+						providerId: linkedAccount.providerId,
+						accountId: linkedAccount.accountId,
+					},
+				)
 				continue
 			}
 
@@ -274,14 +300,23 @@ export const syncUserAccount = defineJob({
 			const summaryResult =
 				await accountClient.wow.AccountProfileSummary()
 			if (!summaryResult.success) {
+				console.error('[sync] failed account profile summary', {
+					userId: linkedAccount.userId,
+					providerId: linkedAccount.providerId,
+					accountId: linkedAccount.accountId,
+					errorType: summaryResult.error_type,
+				})
 				continue
 			}
+
+			syncedAccounts += 1
 
 			const appClient = getApplicationClient(region)
 			const seenOwnershipIds: string[] = []
 
 			for (const wowAccount of summaryResult.data.wow_accounts) {
 				for (const character of wowAccount.characters) {
+					syncedCharacters += 1
 					let discoveredGuild:
 						| {
 								id: number
@@ -431,6 +466,18 @@ export const syncUserAccount = defineJob({
 					)
 			}
 		}
+
+		if (syncedAccounts === 0) {
+			throw new Error(
+				`Unable to sync any linked account for user ${payload.userId}. Check token refresh and provider setup.`,
+			)
+		}
+
+		console.log('[sync] sync:user-account completed', {
+			userId: payload.userId,
+			syncedAccounts,
+			syncedCharacters,
+		})
 
 		return { ok: true }
 	},

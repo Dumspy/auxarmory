@@ -14,7 +14,7 @@ export const registerRepeatables = async (_scheduler: JobScheduler) => {
 		JOB_NAMES.SYNC_SCAN_LINKED_ACCOUNTS,
 		{ reason: 'repeatable' },
 		{
-			jobId: JOB_NAMES.SYNC_SCAN_LINKED_ACCOUNTS,
+			jobId: 'sync_scan_linked_accounts',
 			repeat: {
 				every: env.SYNC_SCAN_LINKED_ACCOUNTS_EVERY_MS,
 			},
@@ -27,7 +27,7 @@ export const registerRepeatables = async (_scheduler: JobScheduler) => {
 		JOB_NAMES.SYNC_SCAN_GUILDS,
 		{ reason: 'repeatable' },
 		{
-			jobId: JOB_NAMES.SYNC_SCAN_GUILDS,
+			jobId: 'sync_scan_guilds',
 			repeat: {
 				every: env.SYNC_SCAN_GUILDS_EVERY_MS,
 			},
@@ -40,7 +40,7 @@ export const registerRepeatables = async (_scheduler: JobScheduler) => {
 		JOB_NAMES.SYNC_RECONCILE_GUILD_CONTROL,
 		{ reason: 'repeatable' },
 		{
-			jobId: JOB_NAMES.SYNC_RECONCILE_GUILD_CONTROL,
+			jobId: 'sync_reconcile_guild_control',
 			repeat: {
 				every: env.SYNC_RECONCILE_GUILD_CONTROL_EVERY_MS,
 			},

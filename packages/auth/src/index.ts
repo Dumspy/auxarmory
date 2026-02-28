@@ -49,8 +49,9 @@ const enqueueBattlenetUserSync = async (params: {
 		params.providerId,
 		params.accountId ?? 'unknown',
 	]
-		.join(':')
+		.join('__')
 		.toLowerCase()
+		.replaceAll(':', '__')
 
 	await queue.add(
 		SYNC_USER_ACCOUNT_JOB,
@@ -195,7 +196,7 @@ export const auth = betterAuth({
 						await enqueueBattlenetUserSync({
 							userId: createdAccount.userId,
 							providerId: createdAccount.providerId,
-							accountId: createdAccount.accountId,
+							accountId: createdAccount.id,
 						})
 					} catch (error) {
 						console.error(
@@ -211,7 +212,7 @@ export const auth = betterAuth({
 						await enqueueBattlenetUserSync({
 							userId: updatedAccount.userId,
 							providerId: updatedAccount.providerId,
-							accountId: updatedAccount.accountId,
+							accountId: updatedAccount.id,
 						})
 					} catch (error) {
 						console.error(

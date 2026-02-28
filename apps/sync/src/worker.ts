@@ -51,6 +51,17 @@ export const startWorker = () =>
 export const registerWorkerShutdown = (
 	worker: BullWorker<JobPayloads[JobName], unknown, JobName>,
 ) => {
+	worker.on('completed', (job) => {
+		console.log(`[sync] job completed: ${job.name} (${job.id ?? 'no-id'})`)
+	})
+
+	worker.on('failed', (job, error) => {
+		console.error(
+			`[sync] job failed: ${job?.name ?? 'unknown'} (${job?.id ?? 'no-id'})`,
+			error,
+		)
+	})
+
 	const shutdown = async (signal: string) => {
 		console.log(`[sync] ${signal} received, shutting down worker`)
 		await worker.close()

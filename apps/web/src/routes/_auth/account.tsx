@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Building2, Link2, UserRound } from 'lucide-react'
 import { createFileRoute } from '@tanstack/react-router'
+import { useMutation } from '@tanstack/react-query'
 
 import {
 	Avatar,
@@ -20,6 +21,7 @@ import {
 import { Separator } from '@auxarmory/ui/components/ui/separator'
 
 import { authClient } from '../../lib/auth-client'
+import { useTRPC } from '../../lib/trpc'
 import { getUserInitial } from '../../lib/user'
 import { useOrganizationSwitcher } from '../../lib/use-organization-switcher'
 
@@ -87,6 +89,11 @@ function AccountPage() {
 	const [linkedAccountError, setLinkedAccountError] = useState<string | null>(
 		null,
 	)
+	const [syncMessage, setSyncMessage] = useState<string | null>(null)
+	const trpc = useTRPC()
+	const triggerOnDemandSync = useMutation(
+		trpc.guild.triggerOnDemandSync.mutationOptions(),
+	)
 
 	const loadLinkedBattlenetAccounts = useCallback(async () => {
 		if (!user?.id) {
@@ -137,6 +144,7 @@ function AccountPage() {
 		}
 
 		setLinkedAccountError(null)
+		setSyncMessage(null)
 		setLinkingProviderId(selectedBattlenetProvider)
 
 		const callbackURL = `${window.location.origin}/account`
@@ -173,6 +181,7 @@ function AccountPage() {
 
 	async function handleUnlinkBattlenetAccount(account: LinkedAccount) {
 		setLinkedAccountError(null)
+		setSyncMessage(null)
 		setUnlinkingAccountId(account.id)
 
 		try {
@@ -192,6 +201,28 @@ function AccountPage() {
 			await loadLinkedBattlenetAccounts()
 		} finally {
 			setUnlinkingAccountId(null)
+		}
+	}
+
+	async function handleOnDemandSync() {
+		setLinkedAccountError(null)
+		setSyncMessage(null)
+
+		try {
+			const result = await triggerOnDemandSync.mutateAsync()
+			setSyncMessage(
+				result.enqueued > 0
+					? `Sync started for ${result.enqueued} linked account${
+							result.enqueued === 1 ? '' : 's'
+						}.`
+					: 'Sync request accepted.',
+			)
+		} catch (error) {
+			const message =
+				error instanceof Error
+					? error.message
+					: 'Unable to trigger Battle.net sync right now.'
+			setLinkedAccountError(message)
 		}
 	}
 
@@ -365,11 +396,30 @@ function AccountPage() {
 										? 'Redirecting...'
 										: 'Link Battle.net account'}
 								</Button>
+								<Button
+									variant='outline'
+									onClick={handleOnDemandSync}
+									disabled={
+										!user?.id ||
+										isLoadingLinkedAccounts ||
+										triggerOnDemandSync.isPending
+									}
+								>
+									{triggerOnDemandSync.isPending
+										? 'Syncing...'
+										: 'Sync now'}
+								</Button>
 							</div>
 
 							{linkedAccountError ? (
 								<p className='text-destructive text-sm'>
 									{linkedAccountError}
+								</p>
+							) : null}
+
+							{syncMessage ? (
+								<p className='text-sm text-emerald-600'>
+									{syncMessage}
 								</p>
 							) : null}
 

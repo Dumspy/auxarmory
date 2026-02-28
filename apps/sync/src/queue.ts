@@ -50,5 +50,6 @@ export const addJob = async (
 }
 
 export const buildJobId = (name: keyof JobPayloads, parts: string[]) => {
-	return [name, ...parts].join(':').toLowerCase()
+	const normalize = (value: string) => value.replaceAll(':', '__')
+	return [normalize(name), ...parts.map(normalize)].join('__').toLowerCase()
 }

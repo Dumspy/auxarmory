@@ -1,19 +1,41 @@
 import type { Job } from 'bullmq'
 
-import syncExample, { SYNC_EXAMPLE_NAME } from './example'
+import { JOB_NAMES } from './contracts'
+import type {
+	JobName,
+	JobPayloads,
+	SyncGuildPayload,
+	SyncReconcileGuildControlPayload,
+	SyncScanGuildsPayload,
+	SyncScanLinkedAccountsPayload,
+	SyncUserAccountPayload,
+} from './contracts'
+import {
+	syncGuild,
+	syncReconcileGuildControl,
+	syncScanGuilds,
+	syncScanLinkedAccounts,
+	syncUserAccount,
+} from './sync'
 
-export const JOB_NAMES = {
-	SYNC_EXAMPLE: SYNC_EXAMPLE_NAME,
-} as const
+export { JOB_NAMES }
+export type {
+	JobName,
+	JobPayloads,
+	SyncGuildPayload,
+	SyncReconcileGuildControlPayload,
+	SyncScanGuildsPayload,
+	SyncScanLinkedAccountsPayload,
+	SyncUserAccountPayload,
+}
 
 export const jobRegistry = {
-	[JOB_NAMES.SYNC_EXAMPLE]: syncExample,
+	[JOB_NAMES.SYNC_USER_ACCOUNT]: syncUserAccount,
+	[JOB_NAMES.SYNC_GUILD]: syncGuild,
+	[JOB_NAMES.SYNC_SCAN_LINKED_ACCOUNTS]: syncScanLinkedAccounts,
+	[JOB_NAMES.SYNC_SCAN_GUILDS]: syncScanGuilds,
+	[JOB_NAMES.SYNC_RECONCILE_GUILD_CONTROL]: syncReconcileGuildControl,
 } as const
-
-export type JobName = (typeof JOB_NAMES)[keyof typeof JOB_NAMES]
-export interface JobPayloads {
-	[JOB_NAMES.SYNC_EXAMPLE]: typeof syncExample.data
-}
 
 type JobHandler = (
 	job: Job<JobPayloads[JobName], unknown, JobName>,

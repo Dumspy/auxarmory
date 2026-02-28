@@ -10,6 +10,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@auxarmory/auth": "workspace:*",
     "@auxarmory/battlenet": "workspace:*",
     "@auxarmory/db": "workspace:*",
     "@t3-oss/env-core": "catalog:",

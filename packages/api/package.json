@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@auxarmory/auth": "workspace:*",
+    "@auxarmory/db": "workspace:*",
     "@trpc/server": "^11.7.2",
+    "drizzle-orm": "^0.44.4",
     "zod": "catalog:"
   },
   "devDependencies": {

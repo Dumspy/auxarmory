@@ -1,11 +1,77 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { genericOAuth, organization } from 'better-auth/plugins'
+import { Queue } from 'bullmq'
 
 import { db } from '@auxarmory/db/client'
 import * as schema from '@auxarmory/db/schema'
 
 import { env } from './env.js'
+
+const SYNC_QUEUE_NAME = 'battlenet-sync'
+const SYNC_USER_ACCOUNT_JOB = 'sync:user-account'
+
+let syncQueue: Queue | null = null
+
+const getSyncQueue = () => {
+	if (!env.REDIS_URL) {
+		return null
+	}
+
+	if (!syncQueue) {
+		syncQueue = new Queue(SYNC_QUEUE_NAME, {
+			connection: {
+				url: env.REDIS_URL,
+			},
+		})
+	}
+
+	return syncQueue
+}
+
+const enqueueBattlenetUserSync = async (params: {
+	userId: string
+	providerId: string
+	accountId?: string
+}) => {
+	if (!params.providerId.startsWith('battlenet-')) {
+		return
+	}
+
+	const queue = getSyncQueue()
+	if (!queue) {
+		return
+	}
+
+	const jobId = [
+		SYNC_USER_ACCOUNT_JOB,
+		params.userId,
+		params.providerId,
+		params.accountId ?? 'unknown',
+	]
+		.join(':')
+		.toLowerCase()
+
+	await queue.add(
+		SYNC_USER_ACCOUNT_JOB,
+		{
+			userId: params.userId,
+			providerId: params.providerId,
+			accountId: params.accountId,
+		},
+		{
+			jobId,
+			priority: 3,
+			attempts: 5,
+			backoff: {
+				type: 'exponential',
+				delay: 2_000,
+			},
+			removeOnComplete: 100,
+			removeOnFail: 500,
+		},
+	)
+}
 
 const trustedOrigins = env.AUTH_TRUSTED_ORIGINS.split(',').map(
 	(origin: string) => origin.trim(),
@@ -119,6 +185,42 @@ export const auth = betterAuth({
 	account: {
 		accountLinking: {
 			allowDifferentEmails: true,
+		},
+	},
+	databaseHooks: {
+		account: {
+			create: {
+				after: async (createdAccount) => {
+					try {
+						await enqueueBattlenetUserSync({
+							userId: createdAccount.userId,
+							providerId: createdAccount.providerId,
+							accountId: createdAccount.accountId,
+						})
+					} catch (error) {
+						console.error(
+							'[auth] failed to enqueue battlenet sync job',
+							error,
+						)
+					}
+				},
+			},
+			update: {
+				after: async (updatedAccount) => {
+					try {
+						await enqueueBattlenetUserSync({
+							userId: updatedAccount.userId,
+							providerId: updatedAccount.providerId,
+							accountId: updatedAccount.accountId,
+						})
+					} catch (error) {
+						console.error(
+							'[auth] failed to enqueue battlenet sync job',
+							error,
+						)
+					}
+				},
+			},
 		},
 	},
 	plugins: [

@@ -15,6 +15,7 @@ export const env = createEnv({
 		BATTLENET_KR_CLIENT_SECRET: z.string().min(1).optional(),
 		BATTLENET_TW_CLIENT_ID: z.string().min(1).optional(),
 		BATTLENET_TW_CLIENT_SECRET: z.string().min(1).optional(),
+		REDIS_URL: z.string().optional(),
 		NODE_ENV: z
 			.enum(['development', 'test', 'production'])
 			.default('development'),

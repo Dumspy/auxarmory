@@ -16,7 +16,7 @@ import {
 	syncScanGuilds,
 	syncScanLinkedAccounts,
 	syncUserAccount,
-} from './sync'
+} from './sync/index'
 
 export { JOB_NAMES }
 export type {

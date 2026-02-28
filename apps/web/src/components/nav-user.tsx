@@ -46,11 +46,11 @@ export function NavUser() {
 	async function handleAuthClick() {
 		if (loggedIn) {
 			await authClient.signOut();
-			await navigate({ to: '/login' });
+			await navigate({ to: '/auth/login' });
 			return;
 		}
 
-		await navigate({ to: '/login' });
+		await navigate({ to: '/auth/login' });
 	}
 
 	return (

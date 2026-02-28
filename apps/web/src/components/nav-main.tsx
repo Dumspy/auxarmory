@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { BookmarkIcon, ChevronRight, HomeIcon, InfoIcon } from 'lucide-react';
+import { ChevronRight, HomeIcon, InfoIcon } from 'lucide-react';
 import { Link, useRouterState } from '@tanstack/react-router';
 
 import {
@@ -20,9 +20,8 @@ import {
 } from '@auxarmory/ui/components/ui/sidebar';
 
 const routeIcons: Record<string, LucideIcon> = {
-	'/': HomeIcon,
+	'/dashboard': HomeIcon,
 	'/about': InfoIcon,
-	'/wishlist': BookmarkIcon,
 };
 
 interface NavItem {
@@ -38,26 +37,12 @@ export function NavMain() {
 
 	const navItems = useMemo(() => {
 		const items: NavItem[] = [];
-		const allRoutes = [
-			'/',
-			'/about',
-			'/wishlist/overview',
-			'/wishlist/personal',
-		];
+		const allRoutes = ['/dashboard', '/about'];
 
 		allRoutes.forEach((route) => {
 			const segments = route.split('/').filter(Boolean);
 			const first = segments[0] ?? '';
 			const second = segments[1] ?? '';
-
-			if (segments.length === 0) {
-				items.push({
-					title: 'Home',
-					path: '/',
-					icon: routeIcons['/'],
-				});
-				return;
-			}
 
 			if (segments.length === 1) {
 				items.push({

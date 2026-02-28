@@ -30,7 +30,7 @@ function BreadcrumbNav() {
 			<BreadcrumbList>
 				<BreadcrumbItem>
 					<BreadcrumbLink asChild>
-						<Link to='/'>Home</Link>
+						<Link to='/dashboard'>Home</Link>
 					</BreadcrumbLink>
 				</BreadcrumbItem>
 				{segments.map((segment, index) => {

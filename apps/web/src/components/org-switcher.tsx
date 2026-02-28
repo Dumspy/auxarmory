@@ -30,10 +30,10 @@ export function OrgSwitcher() {
 	const hasMultipleOrganizations = (organizations?.length ?? 0) > 1
 	const buttonTitle = isPending
 		? 'Loading guilds...'
-		: (activeOrganization?.name ?? 'No guilds yet')
+		: (activeOrganization?.name ?? 'Select a guild')
 	const buttonSubtitle = isPending
 		? 'Checking organizations'
-		: (activeOrganization?.slug ?? 'Join a guild to get started')
+		: (activeOrganization?.slug ?? 'No active guild')
 
 	if (!hasMultipleOrganizations) {
 		return null

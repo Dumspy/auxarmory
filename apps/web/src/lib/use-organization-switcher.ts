@@ -13,11 +13,8 @@ export function useOrganizationSwitcher() {
 	const activeOrganization =
 		organizations?.find(
 			(organization) => organization.id === activeOrganizationId,
-		) ??
-		organizations?.[0] ??
-		null
-	const selectedOrganizationId =
-		activeOrganizationId ?? activeOrganization?.id ?? null
+		) ?? null
+	const selectedOrganizationId = activeOrganizationId
 
 	async function setActiveOrganization(organizationId: string) {
 		if (

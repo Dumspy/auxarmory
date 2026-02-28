@@ -209,8 +209,8 @@ function AccountPage() {
 		const callbackURL = `${window.location.origin}/account`
 
 		try {
-			const result = await authClient.linkSocial({
-				provider: selectedWarcraftLogsProvider,
+			const result = await authClient.oauth2.link({
+				providerId: selectedWarcraftLogsProvider,
 				callbackURL,
 				errorCallbackURL: callbackURL,
 			})

@@ -40,11 +40,7 @@ export async function requireAuth({
 	}
 }
 
-export async function redirectAuthenticatedUser({
-	location,
-}: {
-	location: { searchStr?: string }
-}) {
+export async function redirectAuthenticatedUser() {
 	if (typeof window === 'undefined') {
 		return
 	}
@@ -53,10 +49,7 @@ export async function redirectAuthenticatedUser({
 
 	if (session.data?.session) {
 		throw redirect({
-			to: normalizeRedirectPath(
-				getRedirectFromSearchStr(location.searchStr),
-				'/dashboard',
-			),
+			to: '/dashboard',
 		})
 	}
 }

@@ -19,6 +19,9 @@ coverage
 .turbo
 .cache
 
+# Local logs
+.logs
+
 # Build Outputs
 out/
 build

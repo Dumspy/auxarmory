@@ -100,7 +100,7 @@ const GuildActivityType = z.union([
 
 export const GuildActivityResponse = LinkSelfResponse.extend({
 	guild: SimpleGuild,
-	activities: z.array(GuildActivityType),
+	activities: z.array(GuildActivityType).optional(),
 })
 export function GuildActivity(
 	this: WoWGameDataClient,

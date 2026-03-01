@@ -13,6 +13,8 @@ export const ItemIventoryType = z.strictObject({
 	type: z.enum([
 		'WEAPON',
 		'TWOHWEAPON',
+		'WEAPONMAINHAND',
+		'WEAPONOFFHAND',
 		'RANGED',
 		'SHOULDER',
 		'TRINKET',
@@ -33,7 +35,6 @@ export const ItemIventoryType = z.strictObject({
 		'WRIST',
 		'THROWN',
 		'BAG',
-		'WEAPONMAINHAND',
 		'FINGER_1',
 		'FINGER_2',
 		'TRINKET_1',
@@ -45,6 +46,8 @@ export const ItemIventoryType = z.strictObject({
 		'HANDS',
 		'SHIRT',
 		'BODY',
+		'PROFESSION_TOOL',
+		'PROFESSION_GEAR',
 	]),
 	name: LocaleResponse,
 })
@@ -359,6 +362,7 @@ export const PreviewItem = PreviewItemBase.extend({
 			reagents_display_string: LocaleResponse.optional(),
 		})
 		.optional(),
+	toy: LocaleResponse.optional(),
 })
 
 export const CharacterEquipmentItem = BaseItem.extend({
@@ -391,11 +395,20 @@ export const CharacterEquipmentItem = BaseItem.extend({
 		slot: ItemIventoryType,
 		quantity: z.number(),
 		transmog: z
-			.strictObject({
-				item: KeyNameIdResponse,
-				display_string: LocaleResponse,
-				item_modified_appearance_id: z.number().optional(),
-			})
+			.union([
+				z.strictObject({
+					item: KeyNameIdResponse,
+					display_string: LocaleResponse,
+					item_modified_appearance_id: z.number().optional(),
+				}),
+				z.strictObject({
+					item: KeyNameIdResponse,
+					display_string: LocaleResponse,
+					item_modified_appearance_id: z.number().optional(),
+					second_item: KeyNameIdResponse,
+					second_item_modified_appearance_id: z.number(),
+				}),
+			])
 			.optional(),
 		modified_appearance_id: z.number().optional(),
 		sockets: z

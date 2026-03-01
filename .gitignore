@@ -19,6 +19,9 @@ coverage
 .turbo
 .cache
 
+# Test artifacts
+.out
+
 # Local logs
 .logs
 

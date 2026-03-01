@@ -6,7 +6,7 @@ import { CharacterResponse } from '../types/character'
 
 export const CharacterQuestsResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
-	in_progress: z.array(KeyNameIdResponse),
+	in_progress: z.array(KeyNameIdResponse).optional(),
 	completed: KeyResponse,
 })
 export function CharacterQuests(

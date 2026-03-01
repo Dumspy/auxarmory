@@ -27,7 +27,12 @@
       ]
     },
     "test": {
-      "dependsOn": ["^test"]
+      "dependsOn": ["^test"],
+      "env": [
+        "BATTLENET_CLIENT_ID",
+        "BATTLENET_CLIENT_SECRET",
+        "BATTLE_NET_ACCOUNT_TOKEN"
+      ]
     },
     "test:e2e": {
       "dependsOn": ["^build"],

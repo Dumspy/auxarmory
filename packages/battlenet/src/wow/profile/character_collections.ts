@@ -18,6 +18,7 @@ export const CharacterCollectionIndexResponse = LinkSelfResponse.extend({
 	toys: KeyResponse,
 	character: CharacterResponse,
 	transmogs: KeyResponse,
+	decors: KeyResponse,
 })
 export function CharacterCollectionIndex(
 	this: WoWGameDataClient,

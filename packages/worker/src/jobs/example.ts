@@ -19,3 +19,18 @@ export const syncExample = defineJob({
 		return { ok: true }
 	},
 })
+
+export const syncRepeatableExample = defineJob({
+	name: 'sync:example:repeatable',
+	data: {
+		profileId: 'repeatable-example',
+		region: 'us',
+	} satisfies ExampleJobPayload,
+	handler: async function handleSyncRepeatableExample(job) {
+		console.log('[worker] repeatable example handler', {
+			profileId: job.data.profileId,
+			region: job.data.region,
+		})
+		return { ok: true }
+	},
+})

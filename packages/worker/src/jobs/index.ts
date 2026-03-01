@@ -1,9 +1,10 @@
 import type { Job } from 'bullmq'
 
-import { syncExample } from './example.js'
+import { syncExample, syncRepeatableExample } from './example.js'
 
 export const jobRegistry = {
 	[syncExample.name]: syncExample,
+	[syncRepeatableExample.name]: syncRepeatableExample,
 } as const
 
 export type JobName = keyof typeof jobRegistry
@@ -26,7 +27,7 @@ export function isJobName(value: string): value is JobName {
 
 function resolveHandler(name: JobName): JobHandler | undefined {
 	const entry = jobRegistry[name]
-	return entry.handler
+	return entry.handler as JobHandler | undefined
 }
 
 export async function handleJob(

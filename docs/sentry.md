@@ -9,7 +9,7 @@ Sentry is configured for the following applications:
 - **Web App** (`apps/web`): Frontend with TanStack Start SDK
 - **API Service** (`apps/api`): Backend API with Node.js SDK
 - **Auth Service** (`apps/auth`): Authentication service with Node.js SDK
-- **Sync Service** (`apps/sync`): Background worker with Node.js SDK
+- **Sync Service** (`apps/worker-service`): Background worker with Node.js SDK
 
 Each service has its own Sentry project for clean separation and alerting.
 
@@ -40,7 +40,7 @@ Each service requires the following environment variables:
 - `SENTRY_TRACES_SAMPLE_RATE`: Tracing sample rate
 - `SENTRY_RELEASE` (optional): Release version
 
-**Sync Service** (`apps/sync`):
+**Sync Service** (`apps/worker-service`):
 
 - `SENTRY_DSN`: Sentry DSN for the sync project
 - `SENTRY_ENV`: Environment name
@@ -86,7 +86,7 @@ When building the web app with source maps upload enabled:
 
 - **Package**: `packages/observability`
 - **Shared helpers**: Sentry base options, trace sample-rate normalization, payload redaction, and runtime tags
-- **Node preload helper**: `@auxarmory/observability/node-instrument` used by `apps/api`, `apps/auth`, `apps/sync`, and `apps/web` server instrumentation
+- **Node preload helper**: `@auxarmory/observability/node-instrument` used by `apps/api`, `apps/auth`, `apps/worker-service`, and `apps/web` server instrumentation
 
 ## Standard Tags
 
@@ -167,8 +167,8 @@ Sync service worker errors additionally include:
 ### Sync Service
 
 1. Start Redis: `docker compose up -d redis`
-2. Start the sync worker: `pnpm --filter @auxarmory/sync dev`
-3. Create a test job that throws an error in `apps/sync/src/jobs/`:
+2. Start the sync worker: `pnpm --filter @auxarmory/worker-service dev`
+3. Create a test job that throws an error in `apps/worker-service/src/jobs/`:
 
     ```ts
     export const syncExample = defineJob({

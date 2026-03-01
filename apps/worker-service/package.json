@@ -1,0 +1,31 @@
+{
+  "name": "@auxarmory/worker-service",
+  "private": true,
+  "license": "Elastic-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./app": {
+      "default": "./src/app.ts"
+    }
+  },
+  "scripts": {
+    "dev": "NODE_OPTIONS=--conditions=development tsx watch --include ../../packages/worker/src --include src src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest --passWithNoTests"
+  },
+  "dependencies": {
+    "@auxarmory/worker": "workspace:*"
+  },
+  "devDependencies": {
+    "@auxarmory/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "tsx": "^4.21.0",
+    "typescript": "catalog:",
+    "vitest": "^3.2.4"
+  }
+}

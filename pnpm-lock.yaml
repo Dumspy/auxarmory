@@ -128,40 +128,6 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@22.15.24)(jiti@2.6.1)(jsdom@27.4.0(@noble/hashes@2.0.1))(lightningcss@1.31.1)(tsx@4.21.0)
 
-  apps/sync:
-    dependencies:
-      '@auxarmory/battlenet':
-        specifier: workspace:*
-        version: link:../../packages/battlenet
-      '@auxarmory/db':
-        specifier: workspace:*
-        version: link:../../packages/db
-      '@t3-oss/env-core':
-        specifier: 'catalog:'
-        version: 0.13.10(typescript@5.9.3)(zod@4.3.6)
-      bullmq:
-        specifier: ^5.58.6
-        version: 5.70.1
-      zod:
-        specifier: 'catalog:'
-        version: 4.3.6
-    devDependencies:
-      '@auxarmory/typescript-config':
-        specifier: workspace:*
-        version: link:../../tooling/typescript-config
-      '@types/node':
-        specifier: 'catalog:'
-        version: 22.15.24
-      tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/node@22.15.24)(jiti@2.6.1)(jsdom@27.4.0(@noble/hashes@2.0.1))(lightningcss@1.31.1)(tsx@4.21.0)
-
   apps/web:
     dependencies:
       '@auxarmory/api':
@@ -275,6 +241,28 @@ importers:
         version: 5.1.4(typescript@5.9.3)(vite@7.3.1(@types/node@22.15.24)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0))
       vitest:
         specifier: ^3.0.5
+        version: 3.2.4(@types/node@22.15.24)(jiti@2.6.1)(jsdom@27.4.0(@noble/hashes@2.0.1))(lightningcss@1.31.1)(tsx@4.21.0)
+
+  apps/worker-service:
+    dependencies:
+      '@auxarmory/worker':
+        specifier: workspace:*
+        version: link:../../packages/worker
+    devDependencies:
+      '@auxarmory/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.15.24
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vitest:
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.15.24)(jiti@2.6.1)(jsdom@27.4.0(@noble/hashes@2.0.1))(lightningcss@1.31.1)(tsx@4.21.0)
 
   packages/api:
@@ -465,6 +453,37 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.14)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/node@22.15.24)(jiti@2.6.1)(jsdom@27.4.0(@noble/hashes@2.0.1))(lightningcss@1.31.1)(tsx@4.21.0)
+
+  packages/worker:
+    dependencies:
+      '@auxarmory/battlenet':
+        specifier: workspace:*
+        version: link:../battlenet
+      '@auxarmory/db':
+        specifier: workspace:*
+        version: link:../db
+      '@t3-oss/env-core':
+        specifier: 'catalog:'
+        version: 0.13.10(typescript@5.9.3)(zod@4.3.6)
+      bullmq:
+        specifier: ^5.58.6
+        version: 5.70.1
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.6
+    devDependencies:
+      '@auxarmory/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.15.24
       typescript:
         specifier: 'catalog:'
         version: 5.9.3

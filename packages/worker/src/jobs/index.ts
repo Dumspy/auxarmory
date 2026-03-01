@@ -27,7 +27,7 @@ export function isJobName(value: string): value is JobName {
 
 function resolveHandler(name: JobName): JobHandler | undefined {
 	const entry = jobRegistry[name]
-	return entry.handler as JobHandler | undefined
+	return entry?.handler as JobHandler | undefined
 }
 
 export async function handleJob(

@@ -1,0 +1,58 @@
+name: WoW API watch
+
+on:
+    schedule:
+        - cron: '0 12 * * *'
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    issues: write
+    actions: read
+
+jobs:
+    watch:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+
+            - name: Download previous snapshot artifact
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  mkdir -p .wow-api-watch/previous
+                  PREV_RUN_ID=$(gh run list --workflow "wow-api-watch.yml" --status success --limit 1 --json databaseId --jq '.[0].databaseId')
+                  if [ -n "$PREV_RUN_ID" ]; then
+                    gh run download "$PREV_RUN_ID" -n "wow-api-snapshot" -D .wow-api-watch/previous || true
+                  fi
+
+            - name: Generate snapshot and diff
+              run: >-
+                  node packages/battlenet/scripts/wow-api-watch.mjs
+                  --previous .wow-api-watch/previous/snapshot.json
+                  --output .wow-api-watch/snapshot.json
+                  --report .wow-api-watch/report.md
+                  --summary .wow-api-watch/summary.json
+
+            - name: Create issue when changes found
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  HAS_CHANGES=$(node -e "const s=require('./.wow-api-watch/summary.json'); process.stdout.write(String(s.hasChanges))")
+                  if [ "$HAS_CHANGES" = "true" ]; then
+                    TITLE=$(node -e "const s=require('./.wow-api-watch/summary.json'); process.stdout.write(s.title)")
+                    gh issue create --title "$TITLE" --body-file .wow-api-watch/report.md
+                  fi
+
+            - name: Upload snapshot artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: wow-api-snapshot
+                  path: .wow-api-watch/snapshot.json
+                  retention-days: 90

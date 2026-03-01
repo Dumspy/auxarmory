@@ -1,11 +1,11 @@
 {
-  "name": "@auxarmory/sync",
+  "name": "@auxarmory/worker",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "license": "MIT",
+  "license": "Elastic-2.0",
   "scripts": {
-    "dev": "tsx src/index.ts",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
     "build": "tsc",
     "test": "vitest run --passWithNoTests"
   },
@@ -19,13 +19,19 @@
   "devDependencies": {
     "@auxarmory/typescript-config": "workspace:*",
     "@types/node": "catalog:",
-    "tsx": "^4.21.0",
     "typescript": "catalog:",
     "vitest": "^3.2.4"
   },
   "exports": {
     ".": {
-      "default": "./src/queue.ts"
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./contracts": {
+      "types": "./src/contracts.ts",
+      "development": "./src/contracts.ts",
+      "default": "./dist/contracts.js"
     }
   }
 }

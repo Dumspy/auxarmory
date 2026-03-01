@@ -6,6 +6,8 @@ export interface JobDefinition<TName extends string, TData> {
 	handler?: (job: Job<TData, unknown, TName>) => Promise<unknown>
 }
 
-export const defineJob = <TName extends string, TData>(
+export function defineJob<TName extends string, TData>(
 	definition: JobDefinition<TName, TData>,
-) => definition
+): JobDefinition<TName, TData> {
+	return definition
+}

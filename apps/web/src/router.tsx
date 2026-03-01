@@ -1,9 +1,11 @@
+import * as Sentry from '@sentry/tanstackstart-react'
 import { createRouter as createTanStackRouter } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 
 import type { AppRouter } from '@auxarmory/api/routers'
+import { createBrowserSentryOptions } from '@auxarmory/observability'
 
 import { env } from './env'
 import { TRPCProvider } from './lib/trpc'
@@ -69,6 +71,24 @@ export function getRouter() {
 			</QueryClientProvider>
 		),
 	})
+
+	if (env.VITE_SENTRY_DSN && typeof window !== 'undefined') {
+		Sentry.init({
+			...createBrowserSentryOptions({
+				dsn: env.VITE_SENTRY_DSN,
+				environment: env.VITE_SENTRY_ENV,
+				release: env.VITE_SENTRY_RELEASE,
+				tracesSampleRate: env.VITE_SENTRY_TRACES_SAMPLE_RATE,
+				service: 'web',
+			}),
+			integrations: [
+				Sentry.tanstackRouterBrowserTracingIntegration(router),
+				Sentry.replayIntegration(),
+			],
+			replaysSessionSampleRate: 0.1,
+			replaysOnErrorSampleRate: 1.0,
+		})
+	}
 
 	return router
 }

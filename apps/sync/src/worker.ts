@@ -1,34 +1,18 @@
+import * as Sentry from '@sentry/node'
 import type { Job } from 'bullmq'
 import { Worker as BullWorker } from 'bullmq'
+
+import {
+	createSyncJobFailureCaptureContext,
+	redactPayloadValues,
+} from '@auxarmory/observability'
 
 import { connection, queueName } from './queue'
 import { handleJob } from './jobs/index'
 import type { JobName, JobPayloads } from './jobs/index'
 
-const redactPayload = (payload: unknown) => {
-	if (payload == null) {
-		return payload
-	}
-
-	if (Array.isArray(payload)) {
-		return payload.map(() => '[redacted]')
-	}
-
-	if (typeof payload === 'object') {
-		return Object.keys(payload as Record<string, unknown>).reduce(
-			(result, key) => ({
-				...result,
-				[key]: '[redacted]',
-			}),
-			{} as Record<string, string>,
-		)
-	}
-
-	return '[redacted]'
-}
-
 const processor = async (job: Job<JobPayloads[JobName], unknown, JobName>) => {
-	const preview = redactPayload(job.data)
+	const preview = redactPayloadValues(job.data)
 	const priority = job.opts.priority ?? 'standard'
 	console.log(
 		`[sync] job received: ${job.name} (priority: ${priority})`,
@@ -38,8 +22,8 @@ const processor = async (job: Job<JobPayloads[JobName], unknown, JobName>) => {
 	return handleJob(job)
 }
 
-export const startWorker = () =>
-	new BullWorker<JobPayloads[JobName], unknown, JobName>(
+export const startWorker = () => {
+	const worker = new BullWorker<JobPayloads[JobName], unknown, JobName>(
 		queueName,
 		processor,
 		{
@@ -47,6 +31,30 @@ export const startWorker = () =>
 			concurrency: 2,
 		},
 	)
+
+	worker.on(
+		'failed',
+		(
+			job: Job<JobPayloads[JobName], unknown, JobName> | undefined,
+			error: Error,
+		) => {
+			if (job) {
+				Sentry.captureException(
+					error,
+					createSyncJobFailureCaptureContext(job, error),
+				)
+
+				console.error(`[sync] job failed: ${job.name}`, {
+					jobId: job.id,
+					attempts: job.attemptsMade,
+					error: error.message,
+				})
+			}
+		},
+	)
+
+	return worker
+}
 
 export const registerWorkerShutdown = (
 	worker: BullWorker<JobPayloads[JobName], unknown, JobName>,

@@ -21,7 +21,8 @@
         "WEB_ORIGIN",
         "NODE_ENV",
         "VITE_*",
-        "REDIS_URL"
+        "REDIS_URL",
+        "SENTRY_*"
       ]
     },
     "test": {
@@ -43,7 +44,8 @@
         "API_SERVICE_ORIGIN",
         "WEB_ORIGIN",
         "NODE_ENV",
-        "REDIS_URL"
+        "REDIS_URL",
+        "SENTRY_*"
       ]
     },
     "test:watch": {
@@ -63,7 +65,8 @@
         "API_SERVICE_PORT",
         "API_SERVICE_ORIGIN",
         "WEB_ORIGIN",
-        "VITE_*"
+        "VITE_*",
+        "SENTRY_*"
       ]
     },
     "clean": {

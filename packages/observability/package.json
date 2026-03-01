@@ -1,0 +1,27 @@
+{
+  "name": "@auxarmory/observability",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Elastic-2.0",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "build": "tsc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@auxarmory/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./node-instrument": {
+      "default": "./src/node-instrument.mjs"
+    }
+  }
+}

@@ -8,18 +8,20 @@
   },
   "scripts": {
     "dev": "vite dev --port 3000 --host",
-    "build": "vite build",
+    "build": "vite build && cp instrument.server.mjs .output/server",
     "preview": "vite preview",
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts"
   },
   "dependencies": {
     "@auxarmory/api": "workspace:*",
+    "@auxarmory/observability": "workspace:*",
     "@auxarmory/ui": "workspace:*",
+    "@sentry/tanstackstart-react": "^10.40.0",
     "@t3-oss/env-core": "catalog:",
     "@tailwindcss/vite": "^4.1.18",
-    "@tanstack/react-query": "^5.90.3",
     "@tanstack/react-devtools": "^0.7.0",
+    "@tanstack/react-query": "^5.90.3",
     "@tanstack/react-router": "^1.132.0",
     "@tanstack/react-router-devtools": "^1.132.0",
     "@tanstack/react-router-ssr-query": "^1.131.7",

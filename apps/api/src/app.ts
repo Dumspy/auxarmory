@@ -1,6 +1,9 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
+import * as Sentry from '@sentry/node'
+import { createServiceErrorCaptureContext } from '@auxarmory/observability'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { HTTPException } from 'hono/http-exception'
 import { logger } from 'hono/logger'
 
 import { createContext } from '@auxarmory/api/context'
@@ -33,6 +36,28 @@ export function createApiApp() {
 
 	app.get('/health', (c) => {
 		return c.json({ status: 'ok', service: 'api' })
+	})
+
+	app.onError((error, c) => {
+		const status = error instanceof HTTPException ? error.status : 500
+
+		if (status >= 500) {
+			Sentry.captureException(
+				error,
+				createServiceErrorCaptureContext({
+					service: 'api',
+					method: c.req.method,
+					route: c.req.path,
+					status,
+				}),
+			)
+		}
+
+		if (error instanceof HTTPException) {
+			return error.getResponse()
+		}
+
+		return c.text('Internal Server Error', 500)
 	})
 
 	return app

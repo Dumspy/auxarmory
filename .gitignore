@@ -19,6 +19,9 @@ coverage
 .turbo
 .cache
 
+# Local logs
+.logs
+
 # Build Outputs
 out/
 build
@@ -40,3 +43,5 @@ yarn-error.log*
 # Prisma
 generated/
 schema.generated
+
+.wow-api-watch

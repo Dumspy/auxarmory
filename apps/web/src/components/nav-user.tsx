@@ -31,6 +31,7 @@ import {
 
 import { authClient } from '../lib/auth-client'
 import { getUserInitial } from '../lib/user'
+import { ModeToggle } from './mode-toggle'
 
 export function NavUser() {
 	const { isMobile } = useSidebar()
@@ -135,6 +136,7 @@ export function NavUser() {
 								Notifications
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
+						<ModeToggle />
 						<DropdownMenuSeparator />
 						<DropdownMenuItem onClick={handleAuthClick}>
 							<LogOut />

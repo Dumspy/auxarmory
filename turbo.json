@@ -10,6 +10,8 @@
         "DATABASE_URL",
         "BATTLENET_CLIENT_ID",
         "BATTLENET_CLIENT_SECRET",
+        "WARCRAFTLOGS_CLIENT_ID",
+        "WARCRAFTLOGS_CLIENT_SECRET",
         "BETTER_AUTH_SECRET",
         "BETTER_AUTH_URL",
         "AUTH_COOKIE_DOMAIN",
@@ -43,6 +45,10 @@
         "API_SERVICE_PORT",
         "API_SERVICE_ORIGIN",
         "WEB_ORIGIN",
+        "BATTLENET_CLIENT_ID",
+        "BATTLENET_CLIENT_SECRET",
+        "WARCRAFTLOGS_CLIENT_ID",
+        "WARCRAFTLOGS_CLIENT_SECRET",
         "NODE_ENV",
         "REDIS_URL",
         "SENTRY_*"
@@ -65,6 +71,10 @@
         "API_SERVICE_PORT",
         "API_SERVICE_ORIGIN",
         "WEB_ORIGIN",
+        "BATTLENET_CLIENT_ID",
+        "BATTLENET_CLIENT_SECRET",
+        "WARCRAFTLOGS_CLIENT_ID",
+        "WARCRAFTLOGS_CLIENT_SECRET",
         "VITE_*",
         "SENTRY_*"
       ]

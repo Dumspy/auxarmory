@@ -16,7 +16,7 @@
     "format:fix": "oxfmt .",
     "lint": "oxlint . && pnpm lint:node-entrypoints",
     "lint:fix": "oxlint --fix . && pnpm lint:node-entrypoints",
-    "lint:node-entrypoints": "pnpm --filter @auxarmory/auth-service exec tsc --project tsconfig.json --noEmit && pnpm --filter @auxarmory/api-service exec tsc --project tsconfig.json --noEmit",
+    "lint:node-entrypoints": "pnpm --filter @auxarmory/auth-service exec tsc --project tsconfig.json --noEmit && pnpm --filter @auxarmory/api-service exec tsc --project tsconfig.json --noEmit && pnpm --filter @auxarmory/worker-service exec tsc --project tsconfig.json --noEmit",
     "ui:add": "pnpm dlx shadcn@latest add --cwd packages/ui",
     "prepare": "husky"
   },

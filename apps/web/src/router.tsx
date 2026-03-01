@@ -10,6 +10,7 @@ import { createBrowserSentryOptions } from '@auxarmory/observability'
 import { env } from './env'
 import { TRPCProvider } from './lib/trpc'
 import { routeTree } from './routeTree.gen'
+import { ThemeProvider } from './components/theme-provider'
 
 function makeQueryClient() {
 	return new QueryClient({
@@ -64,11 +65,16 @@ export function getRouter() {
 		defaultPreload: 'intent',
 		defaultPreloadStaleTime: 0,
 		Wrap: ({ children }) => (
-			<QueryClientProvider client={queryClient}>
-				<TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-					{children}
-				</TRPCProvider>
-			</QueryClientProvider>
+			<ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
+				<QueryClientProvider client={queryClient}>
+					<TRPCProvider
+						trpcClient={trpcClient}
+						queryClient={queryClient}
+					>
+						{children}
+					</TRPCProvider>
+				</QueryClientProvider>
+			</ThemeProvider>
 		),
 	})
 

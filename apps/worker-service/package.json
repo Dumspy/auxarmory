@@ -12,9 +12,9 @@
     }
   },
   "scripts": {
-    "dev": "SENTRY_DSN=\"${SYNC_SENTRY_DSN:-$SENTRY_DSN}\" NODE_OPTIONS='--import ../../packages/worker/instrument.mjs --conditions=development' tsx watch --include ../../packages/worker/src --include src src/index.ts",
+    "dev": "SENTRY_DSN=\"${SYNC_SENTRY_DSN:-$SENTRY_DSN}\" NODE_OPTIONS='--import ./instrument.mjs --conditions=development' tsx watch --include ../../packages/worker/src --include src src/index.ts",
     "build": "tsc",
-    "start": "node --import ../../packages/worker/instrument.mjs dist/index.js",
+    "start": "node --import ./instrument.mjs dist/index.js",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest --passWithNoTests"
   },

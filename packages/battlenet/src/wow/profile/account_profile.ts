@@ -36,12 +36,13 @@ export const AccountProfileSummaryResponse = ProfileLinkSelf.extend({
 					playable_race: KeyNameIdResponse,
 					gender: Gender,
 					faction: Faction,
-					level: z.int().min(1).max(80),
+					level: z.int().min(1).max(90),
 				}),
 			),
 		}),
 	),
 	collections: KeyResponse,
+	houses: z.array(KeyResponse),
 })
 export function AccountProfileSummary(this: WoWProfileClient) {
 	return this.request<z.infer<typeof AccountProfileSummaryResponse>>({
@@ -102,6 +103,7 @@ export const AccountCollectionIndexResponse = ProfileLinkSelf.extend({
 	heirlooms: KeyResponse,
 	toys: KeyResponse,
 	transmogs: KeyResponse,
+	decors: KeyResponse,
 })
 export function AccountCollectionIndex(this: WoWProfileClient) {
 	return this.request<z.infer<typeof AccountCollectionIndexResponse>>({

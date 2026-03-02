@@ -12,6 +12,8 @@
   "dependencies": {
     "@auxarmory/battlenet": "workspace:*",
     "@auxarmory/db": "workspace:*",
+    "@auxarmory/observability": "workspace:*",
+    "@sentry/node": "^10.40.0",
     "@t3-oss/env-core": "catalog:",
     "bullmq": "^5.58.6",
     "zod": "catalog:"

@@ -23,7 +23,11 @@
         "WEB_ORIGIN",
         "NODE_ENV",
         "VITE_*",
-        "REDIS_URL"
+        "REDIS_URL",
+        "SENTRY_*",
+        "API_SENTRY_*",
+        "AUTH_SENTRY_*",
+        "SYNC_SENTRY_*"
       ]
     },
     "test": {
@@ -73,7 +77,11 @@
         "BATTLENET_CLIENT_SECRET",
         "WARCRAFTLOGS_CLIENT_ID",
         "WARCRAFTLOGS_CLIENT_SECRET",
-        "VITE_*"
+        "VITE_*",
+        "SENTRY_*",
+        "API_SENTRY_*",
+        "AUTH_SENTRY_*",
+        "SYNC_SENTRY_*"
       ]
     },
     "clean": {

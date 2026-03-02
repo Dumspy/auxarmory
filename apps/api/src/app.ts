@@ -1,4 +1,6 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
+import * as Sentry from '@sentry/node'
+import { createServiceErrorCaptureContext } from '@auxarmory/observability'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { HTTPException } from 'hono/http-exception'
@@ -23,12 +25,23 @@ export function createApiApp() {
 		}),
 	)
 
-	app.all('/trpc/*', (c) => {
+	app.all('/trpc/*', async (c) => {
+		const context = await createContext({ headers: c.req.raw.headers })
+
+		if (context.session?.user) {
+			Sentry.setUser({
+				id: context.session.user.id,
+				email: context.session.user.email,
+			})
+		} else {
+			Sentry.setUser(null)
+		}
+
 		return fetchRequestHandler({
 			endpoint: '/trpc',
 			req: c.req.raw,
 			router: appRouter,
-			createContext: () => createContext({ headers: c.req.raw.headers }),
+			createContext: () => context,
 		})
 	})
 
@@ -37,6 +50,18 @@ export function createApiApp() {
 	})
 
 	app.onError((error, c) => {
+		const status = error instanceof HTTPException ? error.status : 500
+
+		Sentry.captureException(
+			error,
+			createServiceErrorCaptureContext({
+				service: 'api',
+				method: c.req.method,
+				route: c.req.path,
+				status,
+			}),
+		)
+
 		if (error instanceof HTTPException) {
 			return error.getResponse()
 		}

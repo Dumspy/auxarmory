@@ -38,7 +38,7 @@ export function createNodeSentryConfigFromEnv({
 
 	return {
 		dsn,
-		environment: env[`${prefix}_ENV`] || 'development',
+		environment: env.NODE_ENV || 'development',
 		release: env[`${prefix}_RELEASE`],
 		sendDefaultPii: true,
 		enableLogs: true,

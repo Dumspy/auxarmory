@@ -2,6 +2,8 @@
 
 This document describes the Sentry error monitoring setup across the AuxArmory monorepo.
 
+For Sentry-side project configuration (projects, DSNs, alerts, ownership, CI token setup), see `docs/sentry-cloud-setup.md`.
+
 ## Overview
 
 Sentry is configured for the following applications:

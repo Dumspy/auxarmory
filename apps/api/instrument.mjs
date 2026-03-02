@@ -4,5 +4,12 @@ import { createNodeSentryConfigFromEnv } from '@auxarmory/observability/node-ins
 const config = createNodeSentryConfigFromEnv({ service: 'api' })
 
 if (config) {
-	Sentry.init(config)
+	Sentry.init({
+		...config,
+		integrations: [
+			Sentry.honoIntegration({
+				shouldHandleError: () => false,
+			}),
+		],
+	})
 }

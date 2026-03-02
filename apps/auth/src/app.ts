@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/node'
+import { createServiceErrorCaptureContext } from '@auxarmory/observability'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { HTTPException } from 'hono/http-exception'
@@ -28,6 +30,18 @@ export function createAuthApp() {
 	})
 
 	app.onError((error, c) => {
+		const status = error instanceof HTTPException ? error.status : 500
+
+		Sentry.captureException(
+			error,
+			createServiceErrorCaptureContext({
+				service: 'auth',
+				method: c.req.method,
+				route: c.req.path,
+				status,
+			}),
+		)
+
 		if (error instanceof HTTPException) {
 			return error.getResponse()
 		}

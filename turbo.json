@@ -24,7 +24,10 @@
         "NODE_ENV",
         "VITE_*",
         "REDIS_URL",
-        "SENTRY_*"
+        "SENTRY_*",
+        "API_SENTRY_*",
+        "AUTH_SENTRY_*",
+        "SYNC_SENTRY_*"
       ]
     },
     "test": {
@@ -50,8 +53,7 @@
         "WARCRAFTLOGS_CLIENT_ID",
         "WARCRAFTLOGS_CLIENT_SECRET",
         "NODE_ENV",
-        "REDIS_URL",
-        "SENTRY_*"
+        "REDIS_URL"
       ]
     },
     "test:watch": {
@@ -76,7 +78,10 @@
         "WARCRAFTLOGS_CLIENT_ID",
         "WARCRAFTLOGS_CLIENT_SECRET",
         "VITE_*",
-        "SENTRY_*"
+        "SENTRY_*",
+        "API_SENTRY_*",
+        "AUTH_SENTRY_*",
+        "SYNC_SENTRY_*"
       ]
     },
     "clean": {

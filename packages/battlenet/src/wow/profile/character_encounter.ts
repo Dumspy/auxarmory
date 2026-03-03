@@ -82,47 +82,49 @@ export function CharacterDungeons(
 
 export const CharacterRaidResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
-	expansions: z.array(
-		z.strictObject({
-			expansion: KeyNameIdResponse,
-			instances: z.array(
-				z.strictObject({
-					instance: KeyNameIdResponse,
-					modes: z.array(
-						z.strictObject({
-							difficulty: z.strictObject({
-								type: z.enum([
-									'LFR',
-									'NORMAL',
-									'HEROIC',
-									'MYTHIC',
-									'LEGACY_25_MAN_HEROIC',
-									'LEGACY_10_MAN',
-									'LEGACY_10_MAN_HEROIC',
-								]),
-								name: LocaleResponse,
+	expansions: z
+		.array(
+			z.strictObject({
+				expansion: KeyNameIdResponse,
+				instances: z.array(
+					z.strictObject({
+						instance: KeyNameIdResponse,
+						modes: z.array(
+							z.strictObject({
+								difficulty: z.strictObject({
+									type: z.enum([
+										'LFR',
+										'NORMAL',
+										'HEROIC',
+										'MYTHIC',
+										'LEGACY_25_MAN_HEROIC',
+										'LEGACY_10_MAN',
+										'LEGACY_10_MAN_HEROIC',
+									]),
+									name: LocaleResponse,
+								}),
+								status: z.strictObject({
+									type: z.enum(['COMPLETE', 'IN_PROGRESS']),
+									name: LocaleResponse,
+								}),
+								progress: z.strictObject({
+									completed_count: z.number(),
+									total_count: z.number(),
+									encounters: z.array(
+										z.strictObject({
+											encounter: KeyNameIdResponse,
+											completed_count: z.number(),
+											last_kill_timestamp: z.number(),
+										}),
+									),
+								}),
 							}),
-							status: z.strictObject({
-								type: z.enum(['COMPLETE', 'IN_PROGRESS']),
-								name: LocaleResponse,
-							}),
-							progress: z.strictObject({
-								completed_count: z.number(),
-								total_count: z.number(),
-								encounters: z.array(
-									z.strictObject({
-										encounter: KeyNameIdResponse,
-										completed_count: z.number(),
-										last_kill_timestamp: z.number(),
-									}),
-								),
-							}),
-						}),
-					),
-				}),
-			),
-		}),
-	),
+						),
+					}),
+				),
+			}),
+		)
+		.optional(),
 })
 
 export function CharacterRaid(

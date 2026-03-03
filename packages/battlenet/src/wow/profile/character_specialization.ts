@@ -68,7 +68,7 @@ export const CharacterSpecializationsSummaryResponse = LinkSelfResponse.extend({
 	),
 	active_specialization: KeyNameIdResponse,
 	character: CharacterResponse,
-	active_hero_talent_tree: KeyNameIdResponse,
+	active_hero_talent_tree: KeyNameIdResponse.optional(),
 })
 export function CharacterSpecializationsSummary(
 	this: WoWGameDataClient,

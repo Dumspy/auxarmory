@@ -1,6 +1,6 @@
-import type { z, ZodError } from 'zod/v4'
+import type { z } from 'zod/v4'
 
-import type { RegionsEnum } from './types'
+import type { ClientReturn, RegionsEnum } from './types'
 import { ApplicationAuthResponse, BattlenetError } from './types'
 import { WoWGameDataClient, WoWProfileClient } from './wow'
 
@@ -22,37 +22,6 @@ interface BaseRequestOptions<T> {
 	authorization: string
 	zod: z.Schema<T>
 }
-
-type ClientReturn<T> =
-	| { success: true; data: T; raw_data: T; error?: never; error_type?: never }
-	| {
-			success: false
-			error: ZodError<T>
-			error_type: 'zod'
-			raw_data: T
-			data?: never
-	  }
-	| {
-			success: false
-			error: Response
-			error_type: 'auth'
-			raw_data: T
-			data?: never
-	  }
-	| {
-			success: false
-			error: z.infer<typeof BattlenetError>
-			error_type: 'battlenet'
-			raw_data: T
-			data?: never
-	  }
-	| {
-			success: false
-			error: Error
-			error_type: 'unknown'
-			raw_data: T
-			data?: never
-	  }
 
 class BaseClient {
 	protected region: Regions
@@ -103,15 +72,47 @@ class BaseClient {
 			headers,
 		})
 
+		const bodyText = await res.text()
+		const hasBody = bodyText.trim().length > 0
+		let parsedJson: unknown
+		let parseError: Error | null = null
+		if (hasBody) {
+			try {
+				parsedJson = JSON.parse(bodyText)
+			} catch (error) {
+				parseError =
+					error instanceof Error ? error : new Error(String(error))
+			}
+		}
+
 		if (res.ok) {
-			const json = await res.json()
-			const { data, success, error } = zod.safeParse(json)
+			if (!hasBody) {
+				return {
+					success: false,
+					error_type: 'unknown',
+					error: new Error(
+						`Empty response: ${res.status} ${res.statusText}`,
+					),
+					raw_data: {} as T,
+				}
+			}
+			if (parseError) {
+				return {
+					success: false,
+					error_type: 'unknown',
+					error: new Error(
+						`Invalid JSON response: ${res.status} ${res.statusText}`,
+					),
+					raw_data: {} as T,
+				}
+			}
+			const { data, success, error } = zod.safeParse(parsedJson)
 			if (!success) {
 				if (this.suppressZodErrors) {
 					return {
 						success: true,
-						data: json as T,
-						raw_data: json as T,
+						data: parsedJson as T,
+						raw_data: parsedJson as T,
 					}
 				}
 
@@ -124,13 +125,13 @@ class BaseClient {
 					success: false,
 					error: error,
 					error_type: 'zod',
-					raw_data: json as T,
+					raw_data: parsedJson as T,
 				}
 			}
 			return {
 				success: true,
 				data,
-				raw_data: json as T,
+				raw_data: parsedJson as T,
 			}
 		}
 
@@ -143,34 +144,29 @@ class BaseClient {
 			}
 		}
 
-		try {
-			const json = await res.json()
-			const { data, success } = BattlenetError.safeParse(json)
-			if (success) {
-				return {
-					success: false,
-					error_type: 'battlenet',
-					error: data,
-					raw_data: json as T,
-				}
-			} else {
-				return {
-					success: false,
-					error_type: 'unknown',
-					error: new Error(
-						`Unknown error: ${res.status} ${res.statusText}`,
-					),
-					raw_data: json as T,
-				}
-			}
-		} catch (e) {
-			const errorMessage = e instanceof Error ? e.message : String(e)
+		if (!hasBody || parseError) {
 			return {
 				success: false,
 				error_type: 'unknown',
-				error: new Error(errorMessage),
+				error: new Error(`Response ${res.status} ${res.statusText}`),
 				raw_data: {} as T,
 			}
+		}
+
+		const { data, success } = BattlenetError.safeParse(parsedJson)
+		if (success) {
+			return {
+				success: false,
+				error_type: 'battlenet',
+				error: data,
+				raw_data: parsedJson as T,
+			}
+		}
+		return {
+			success: false,
+			error_type: 'unknown',
+			error: new Error(`Unknown error: ${res.status} ${res.statusText}`),
+			raw_data: parsedJson as T,
 		}
 	}
 }

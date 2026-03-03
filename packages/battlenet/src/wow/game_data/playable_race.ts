@@ -30,6 +30,7 @@ export const PlayableRaceResponse = LinkSelfResponse.extend({
 	is_selectable: z.boolean(),
 	is_allied_race: z.boolean(),
 	playable_classes: z.array(KeyNameIdResponse),
+	racial_spells: z.array(KeyNameIdResponse),
 })
 export function PlayableRace(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof PlayableRaceResponse>>({

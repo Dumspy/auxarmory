@@ -28,7 +28,7 @@ export const CharacterAppearanceSummaryResponse = LinkSelfResponse.extend({
 				}),
 				color: z.strictObject({
 					id: z.number(),
-					rgba: ColorObject,
+					rgba: ColorObject.optional(),
 				}),
 			}),
 			border: z.strictObject({
@@ -39,13 +39,13 @@ export const CharacterAppearanceSummaryResponse = LinkSelfResponse.extend({
 				}),
 				color: z.strictObject({
 					id: z.number(),
-					rgba: ColorObject,
+					rgba: ColorObject.optional(),
 				}),
 			}),
 			background: z.strictObject({
 				color: z.strictObject({
 					id: z.number(),
-					rgba: ColorObject,
+					rgba: ColorObject.optional(),
 				}),
 			}),
 		})
@@ -55,9 +55,12 @@ export const CharacterAppearanceSummaryResponse = LinkSelfResponse.extend({
 			id: z.number(),
 			slot: ItemIventoryType,
 			enchant: z.number(),
-			item_appearance_modifier_id: z.number(),
+			item_appearance_modifier_id: z.number().optional(),
+			subclass: z.number().optional(),
+			secondary_id: z.number().optional(),
+			secondary_item_appearance_modifier_id: z.number().optional(),
+			secondary_subclass: z.number().optional(),
 			internal_slot_id: z.number(),
-			subclass: z.number(),
 		}),
 	),
 	customizations: z.array(

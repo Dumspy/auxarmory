@@ -75,7 +75,7 @@ export const CharacterAchievementsStatisticsResponse = LinkSelfResponse.extend({
 	character: CharacterResponse,
 	categories: z.array(
 		z.strictObject({
-			id: z.number(),
+			id: z.number().optional(),
 			name: LocaleResponse,
 			sub_categories: z
 				.array(

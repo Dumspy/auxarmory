@@ -34,7 +34,8 @@
     "**/*.pem",
     "**/generated/",
     "**/schema.generated",
-    "**/*.config.*"
+    "**/*.config.*",
+    "**/battlenet/src/dev.ts"
   ],
   "overrides": [
     {

@@ -43,6 +43,20 @@ import {
 } from './game_data/guild_crest'
 import { Heirloom, HeirloomIndex } from './game_data/heirloom'
 import {
+	HousingDecor,
+	HousingDecorIndex,
+	HousingDecorSearch,
+	HousingFixture,
+	HousingFixtureHook,
+	HousingFixtureHookIndex,
+	HousingFixtureHookSearch,
+	HousingFixtureIndex,
+	HousingFixtureSearch,
+	HousingRoom,
+	HousingRoomIndex,
+	HousingRoomSearch,
+} from './game_data/housing'
+import {
 	Item,
 	ItemClass,
 	ItemClassIndex,
@@ -78,6 +92,11 @@ import {
 	ModifiedCraftingReagentSlotType,
 	ModifiedCraftingReagentSlotTypeIndex,
 } from './game_data/modified_crafting'
+import {
+	Neighborhood,
+	NeighborhoodMap,
+	NeighborhoodMapIndex,
+} from './game_data/neighborhood'
 import { Mount, MountIndex, MountSearch } from './game_data/mount'
 import {
 	MythicKeystoneAffix,
@@ -175,6 +194,7 @@ import { Toy, ToyIndex } from './game_data/toy'
 import { WoWTokenIndex } from './game_data/wow_token'
 import {
 	AccountCollectionIndex,
+	AccountDecorCollectionSummary,
 	AccountHeirloomsCollectionSummary,
 	AccountMountsCollectionSummary,
 	AccountPetsCollectionSummary,
@@ -190,6 +210,7 @@ import {
 import { CharacterAppearanceSummary } from './profile/character_appearance'
 import {
 	CharacterCollectionIndex,
+	CharacterDecorCollectionSummary,
 	CharacterHeirloomsCollectionSummary,
 	CharacterMountsCollectionSummary,
 	CharacterPetsCollectionSummary,
@@ -232,6 +253,7 @@ import {
 	GuildActivity,
 	GuildRoster,
 } from './profile/guild'
+import { CharacterHouseSummary } from './profile/character_house'
 
 class WoWGameDataClient {
 	protected client: ApplicationClient
@@ -283,6 +305,19 @@ class WoWGameDataClient {
 	Heirloom = Heirloom.bind(this)
 	HeirloomIndex = HeirloomIndex.bind(this)
 
+	HousingDecorIndex = HousingDecorIndex.bind(this)
+	HousingDecor = HousingDecor.bind(this)
+	HousingDecorSearch = HousingDecorSearch.bind(this)
+	HousingFixtureIndex = HousingFixtureIndex.bind(this)
+	HousingFixture = HousingFixture.bind(this)
+	HousingFixtureSearch = HousingFixtureSearch.bind(this)
+	HousingFixtureHookIndex = HousingFixtureHookIndex.bind(this)
+	HousingFixtureHook = HousingFixtureHook.bind(this)
+	HousingFixtureHookSearch = HousingFixtureHookSearch.bind(this)
+	HousingRoomIndex = HousingRoomIndex.bind(this)
+	HousingRoom = HousingRoom.bind(this)
+	HousingRoomSearch = HousingRoomSearch.bind(this)
+
 	Item = Item.bind(this)
 	ItemClass = ItemClass.bind(this)
 	ItemClassIndex = ItemClassIndex.bind(this)
@@ -316,6 +351,10 @@ class WoWGameDataClient {
 	ModifiedCraftingReagentSlotType = ModifiedCraftingReagentSlotType.bind(this)
 	ModifiedCraftingReagentSlotTypeIndex =
 		ModifiedCraftingReagentSlotTypeIndex.bind(this)
+
+	NeighborhoodMapIndex = NeighborhoodMapIndex.bind(this)
+	NeighborhoodMap = NeighborhoodMap.bind(this)
+	Neighborhood = Neighborhood.bind(this)
 
 	Mount = Mount.bind(this)
 	MountIndex = MountIndex.bind(this)
@@ -430,6 +469,7 @@ class WoWGameDataClient {
 	CharacterAppearanceSummary = CharacterAppearanceSummary.bind(this)
 
 	CharacterCollectionIndex = CharacterCollectionIndex.bind(this)
+	CharacterDecorCollectionSummary = CharacterDecorCollectionSummary.bind(this)
 	CharacterHeirloomsCollectionSummary =
 		CharacterHeirloomsCollectionSummary.bind(this)
 	CharacterMountsCollectionSummary =
@@ -444,6 +484,8 @@ class WoWGameDataClient {
 	CharacterRaid = CharacterRaid.bind(this)
 
 	CharacterEquipmentSummary = CharacterEquipmentSummary.bind(this)
+
+	CharacterHouseSummary = CharacterHouseSummary.bind(this)
 
 	CharacterHunterPetsSummary = CharacterHunterPetsSummary.bind(this)
 
@@ -490,6 +532,7 @@ class WoWProfileClient {
 	}
 
 	AccountCollectionIndex = AccountCollectionIndex.bind(this)
+	AccountDecorCollectionSummary = AccountDecorCollectionSummary.bind(this)
 	AccountHeirloomsCollectionSummary =
 		AccountHeirloomsCollectionSummary.bind(this)
 	AccountMountsCollectionSummary = AccountMountsCollectionSummary.bind(this)

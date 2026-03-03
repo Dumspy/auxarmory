@@ -263,6 +263,9 @@ importers:
 
   apps/worker-service:
     dependencies:
+      '@auxarmory/observability':
+        specifier: workspace:*
+        version: link:../../packages/observability
       '@auxarmory/worker':
         specifier: workspace:*
         version: link:../../packages/worker

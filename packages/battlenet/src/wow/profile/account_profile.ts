@@ -112,6 +112,14 @@ export function AccountCollectionIndex(this: WoWProfileClient) {
 	})
 }
 
+export const AccountDecorCollectionSummaryResponse = z.undefined()
+export function AccountDecorCollectionSummary(this: WoWProfileClient) {
+	return this.request<z.infer<typeof AccountDecorCollectionSummaryResponse>>({
+		endpoint: `profile/user/wow/collections/decor`,
+		zod: AccountDecorCollectionSummaryResponse,
+	})
+}
+
 export const AccountHeirloomsCollectionSummaryResponse = ProfileLinkSelf.extend(
 	{
 		heirlooms: z.array(

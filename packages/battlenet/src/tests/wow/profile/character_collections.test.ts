@@ -14,6 +14,7 @@ describe('battlenet wow profile character collections', () => {
 	let petsFailures: unknown[]
 	let toysFailures: unknown[]
 	let transmogsFailures: unknown[]
+	let decorFailures: unknown[]
 
 	beforeAll(async () => {
 		const identity = await resolveCharacterIdentity()
@@ -94,6 +95,19 @@ describe('battlenet wow profile character collections', () => {
 				`${realmSlug}-${characterName}`,
 		})
 		transmogsFailures = transmogEndpointFailures
+
+		const { failures: decorEndpointFailures } = await runEndpoint({
+			name: 'wow-profile-character-collections-decor',
+			inputs: [{ realmSlug, characterName }],
+			call: async ({ realmSlug, characterName }) =>
+				client.wow.CharacterDecorCollectionSummary(
+					realmSlug,
+					characterName,
+				),
+			saveId: ({ realmSlug, characterName }) =>
+				`${realmSlug}-${characterName}`,
+		})
+		decorFailures = decorEndpointFailures
 	})
 
 	it('validates character collections index endpoint', () => {
@@ -118,5 +132,9 @@ describe('battlenet wow profile character collections', () => {
 
 	it('validates character collections transmogs endpoint', () => {
 		expect(transmogsFailures).toHaveLength(0)
+	})
+
+	it('validates character collections decor endpoint', () => {
+		expect(decorFailures).toHaveLength(0)
 	})
 })

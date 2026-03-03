@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 
-import { createApplicationClient } from '../../../harness.clients'
-import { runEndpoint } from '../../../harness'
+import { createApplicationClient } from '../../harness.clients'
+import { runEndpoint } from '../../harness'
 
 describe('battlenet wow game data media', () => {
 	const client = createApplicationClient()

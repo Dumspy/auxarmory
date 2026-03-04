@@ -1,0 +1,19 @@
+{
+  "name": "@auxarmory/warcraftlogs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Elastic-2.0",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "build": "tsc",
+    "api:update": "graphql-codegen --config codegen.ts"
+  },
+  "devDependencies": {
+    "@auxarmory/typescript-config": "workspace:*",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/typescript": "^4.0.0",
+    "@graphql-codegen/typescript-operations": "^4.0.0",
+    "typescript": "catalog:"
+  }
+}

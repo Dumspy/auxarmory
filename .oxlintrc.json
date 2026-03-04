@@ -35,7 +35,9 @@
     "**/generated/",
     "**/schema.generated",
     "**/*.config.*",
-    "**/battlenet/src/dev.ts"
+    "**/battlenet/src/dev.ts",
+    "**/*.gen.ts",
+    "**/*.gen.d.ts"
   ],
   "overrides": [
     {

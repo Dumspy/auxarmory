@@ -1,0 +1,17 @@
+{
+  "name": "@auxarmory/raiderio",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Elastic-2.0",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "build": "tsc",
+    "api:update": "openapi-typescript https://raider.io/openapi.json --output src/types.gen.d.ts && node scripts/fix-types.mjs"
+  },
+  "devDependencies": {
+    "@auxarmory/typescript-config": "workspace:*",
+    "openapi-typescript": "^7.13.0",
+    "typescript": "catalog:"
+  }
+}

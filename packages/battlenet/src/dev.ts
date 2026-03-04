@@ -1,9 +1,13 @@
 import fs from 'fs'
 
-import { ApplicationClient } from '.'
+import { AccountClient, ApplicationClient } from '.'
 import { env } from './env'
-import { AuctionsResponse } from './wow/game_data/auction'
-import { ConnectedRealmIndexResponse } from './wow/game_data/connected_realm'
+import type { ClientReturn } from './types'
+import { MountIndexResponse, MountResponse } from './wow/game_data/mount'
+import {
+	AccountDecorCollectionSummaryResponse,
+	AccountHeirloomsCollectionSummaryResponse,
+} from './wow/profile/account_profile'
 
 type EndpointFn<T, R> = (input: T) => Promise<R>
 interface Validator<R> {
@@ -16,10 +20,21 @@ interface Validator<R> {
 
 interface ProcessChainParams<T, R> {
 	inputs: T[]
-	endpoint: EndpointFn<T, unknown>
+	endpoint: EndpointFn<T, ClientReturn<R>>
 	validator: Validator<R>
 	saveId: (input: T) => string | number
 	next?: (result: R, input: T) => Promise<void>
+}
+
+function serializeError(error: unknown) {
+	if (error instanceof Error) {
+		return {
+			name: error.name,
+			message: error.message,
+			stack: error.stack,
+		}
+	}
+	return error
 }
 
 async function processChain<T, R>({
@@ -33,15 +48,23 @@ async function processChain<T, R>({
 		const id = saveId(input)
 		try {
 			const data = await endpoint(input)
-			const res = validator.safeParse(data)
+			const res = validator.safeParse(data.raw_data)
 			if (res.success) {
 				console.log('ok', id)
 				if (next) await next(res.data as R, input)
 			} else {
+				fs.mkdirSync('./out', { recursive: true })
 				const errorFile = `./out/error-${id}.txt`
 				const dataFile = `./out/data-${id}.json`
 				fs.writeFileSync(errorFile, String(res.error))
-				fs.writeFileSync(dataFile, JSON.stringify(data, null, 2))
+				const dataWithError = {
+					...data,
+					error: serializeError(data.error),
+				}
+				fs.writeFileSync(
+					dataFile,
+					JSON.stringify(dataWithError, null, 2),
+				)
 				console.error(
 					`Parse error for ${id}, saved to ${errorFile} and ${dataFile}`,
 				)
@@ -61,50 +84,24 @@ async function processChain<T, R>({
 		suppressZodErrors: true,
 	})
 
+	const profileClient = new AccountClient({
+		region: 'eu',
+		accessToken: env.BATTLE_NET_ACCOUNT_TOKEN,
+		suppressZodErrors: true,
+	})
+
 	await processChain({
 		inputs: [null],
-		endpoint: async () => client.wow.Azerite('2000000'),
-		validator: ConnectedRealmIndexResponse,
+		endpoint: async () => profileClient.wow.AccountCollectionIndex(),
+		validator: AccountDecorCollectionSummaryResponse,
 		saveId: () => 'root',
-		next: async (idx) => {
-			await processChain({
-				inputs: idx.connected_realms,
-				endpoint: async (data) =>
-					client.wow.Auctions(
-						Number(data.href.match(/\/(\d+)(?:[/?]|$)/)?.[1]),
-					),
-				validator: AuctionsResponse,
-				saveId: (data) =>
-					Number(data.href.match(/\/(\d+)(?:[/?]|$)/)?.[1]),
-				// next: async (idx, orig_idx) => {
-				// 	if (!idx.skill_tiers) return;
-				// 	await processChain({
-				// 		inputs: idx.skill_tiers,
-				// 		endpoint: async (input) =>
-				// 			client.wow.ProfessionSkillTier(
-				// 				orig_idx.id,
-				// 				input.id,
-				// 			),
-				// 		validator: ProfessionSkillTierResponse,
-				// 		saveId: (input) => `${input.id}-${orig_idx.id}`,
-				// 		// next: async (tier) => {
-				// 		// 	if (!tier.categories) return;
-				// 		// 	for (const category of tier.categories) {
-				// 		// 		await processChain({
-				// 		// 			inputs: category.recipes,
-				// 		// 			endpoint: async (input) =>
-				// 		// 				client.wow.ProfessionRecipeMedia(
-				// 		// 					input.id
-				// 		// 				),
-				// 		// 			validator: ProfessionRecipeMediaResponse,
-				// 		// 			saveId: (input) =>
-				// 		// 				`recipe-${input.id}`,
-				// 		// 		});
-				// 		// 	}
-				// 		// },
-				// 	});
-				// },
-			})
+		next: async (index) => {
+			// await processChain({
+			// 	inputs: index.mounts,
+			// 	endpoint: async (decor) => client.wow.Mount(decor.id),
+			// 	validator: MountResponse,
+			// 	saveId: (decor) => `mount-${decor.id}`,
+			// })
 		},
 	})
 })()

@@ -10,6 +10,7 @@ describe('battlenet wow profile account', () => {
 	let mountsFailures: unknown[]
 	let petsFailures: unknown[]
 	let heirloomsFailures: unknown[]
+	let decorFailures: unknown[]
 	let toysFailures: unknown[]
 	let transmogsFailures: unknown[]
 
@@ -59,6 +60,14 @@ describe('battlenet wow profile account', () => {
 		})
 		heirloomsFailures = heirloomEndpointFailures
 
+		const { failures: decorEndpointFailures } = await runEndpoint({
+			name: 'wow-profile-account-decor',
+			inputs: [null],
+			call: async () => client.wow.AccountDecorCollectionSummary(),
+			saveId: () => 'root',
+		})
+		decorFailures = decorEndpointFailures
+
 		const { failures: toyEndpointFailures } = await runEndpoint({
 			name: 'wow-profile-account-toys',
 			inputs: [null],
@@ -94,6 +103,10 @@ describe('battlenet wow profile account', () => {
 
 	it('validates account heirlooms collection endpoint', () => {
 		expect(heirloomsFailures).toHaveLength(0)
+	})
+
+	it('validates account decor collection endpoint', () => {
+		expect(decorFailures).toHaveLength(0)
 	})
 
 	it('validates account toys collection endpoint', () => {

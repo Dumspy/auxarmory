@@ -32,6 +32,28 @@ export function CharacterCollectionIndex(
 	})
 }
 
+export const CharacterDecorCollectionSummaryResponse = LinkSelfResponse.extend({
+	decor_collected: z.array(
+		z.object({
+			decor: KeyNameIdResponse,
+			quantity: z.number(),
+		}),
+	),
+})
+export function CharacterDecorCollectionSummary(
+	this: WoWGameDataClient,
+	realmSlug: string,
+	characterName: string,
+) {
+	return this.request<
+		z.infer<typeof CharacterDecorCollectionSummaryResponse>
+	>({
+		endpoint: `profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/collections/decor`,
+		namespace: 'profile',
+		zod: CharacterDecorCollectionSummaryResponse,
+	})
+}
+
 export const CharacterHeirloomsCollectionSummaryResponse =
 	LinkSelfResponse.extend({
 		heirlooms: z.array(

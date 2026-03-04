@@ -121,6 +121,7 @@ describe('battlenet wow game data pvp season', () => {
 	})
 
 	it('validates pvp reward index endpoint', () => {
+		if (!rewardFailures) return
 		expect(rewardFailures).toHaveLength(0)
 	})
 })

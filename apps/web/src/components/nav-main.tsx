@@ -1,6 +1,12 @@
+import { useMemo } from 'react'
 import type { LucideIcon } from 'lucide-react'
-import { HomeIcon, UserRound } from 'lucide-react'
+import { HomeIcon, Shield, UserRound } from 'lucide-react'
+import { useQueries } from '@tanstack/react-query'
 import { Link, useRouterState } from '@tanstack/react-router'
+
+import { permissionQueryOptions } from '../lib/auth-client'
+import type { PermissionCheckInput } from '../lib/auth-client'
+
 import {
 	SidebarGroup,
 	SidebarGroupLabel,
@@ -13,6 +19,7 @@ interface NavItem {
 	title: string
 	path: string
 	icon: LucideIcon
+	requiredPermission?: PermissionCheckInput
 }
 
 const navItems: NavItem[] = [
@@ -26,17 +33,61 @@ const navItems: NavItem[] = [
 		path: '/account',
 		icon: UserRound,
 	},
+	{
+		title: 'Admin Users',
+		path: '/admin/users',
+		icon: Shield,
+		requiredPermission: {
+			scope: 'platform',
+			permissions: {
+				user: ['list'],
+			},
+		},
+	},
 ]
 
 export function NavMain() {
 	const state = useRouterState()
 	const currentPath = state.location.pathname
 
+	const protectedItems = useMemo(
+		() =>
+			navItems.filter(
+				(
+					item,
+				): item is NavItem & {
+					requiredPermission: PermissionCheckInput
+				} => item.requiredPermission !== undefined,
+			),
+		[],
+	)
+
+	const permissionQueries = useQueries({
+		queries: protectedItems.map((item) =>
+			permissionQueryOptions(item.requiredPermission),
+		),
+	})
+
+	const visibilityByPath = new Map(
+		protectedItems.map((item, index) => [
+			item.path,
+			permissionQueries[index]?.data === true,
+		]),
+	)
+
+	const visibleItems = navItems.filter((item) => {
+		if (!item.requiredPermission) {
+			return true
+		}
+
+		return visibilityByPath.get(item.path) === true
+	})
+
 	return (
 		<SidebarGroup>
 			<SidebarGroupLabel>Personal</SidebarGroupLabel>
 			<SidebarMenu>
-				{navItems.map((item) => {
+				{visibleItems.map((item) => {
 					const isActive = currentPath === item.path
 
 					return (

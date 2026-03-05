@@ -1,5 +1,7 @@
 import { createAuthClient } from 'better-auth/react'
+import { queryOptions } from '@tanstack/react-query'
 import {
+	adminClient,
 	genericOAuthClient,
 	organizationClient,
 } from 'better-auth/client/plugins'
@@ -11,5 +13,78 @@ export const authClient = createAuthClient({
 	fetchOptions: {
 		credentials: 'include',
 	},
-	plugins: [organizationClient(), genericOAuthClient()],
+	plugins: [adminClient(), organizationClient(), genericOAuthClient()],
 })
+
+export type PermissionMap = Readonly<Record<string, readonly string[]>>
+
+export type PermissionCheckInput =
+	| {
+			scope: 'platform'
+			permissions: PermissionMap
+	  }
+	| {
+			scope: 'organization'
+			permissions: PermissionMap
+			organizationId?: string
+	  }
+
+function normalizePermissionMap(permissions: PermissionMap) {
+	const entries: [string, string[]][] = Object.entries(permissions).map(
+		([resource, actions]) => [
+			resource,
+			Array.from(new Set(actions)).sort(),
+		],
+	)
+
+	entries.sort((left, right) => left[0].localeCompare(right[0]))
+
+	return Object.fromEntries(entries)
+}
+
+function permissionQueryKey(input: PermissionCheckInput) {
+	return [
+		'permission-check',
+		input.scope,
+		input.scope === 'organization' ? (input.organizationId ?? null) : null,
+		normalizePermissionMap(input.permissions),
+	] as const
+}
+
+export async function hasPermission(input: PermissionCheckInput) {
+	if (input.scope === 'platform') {
+		const result = await authClient.admin.hasPermission({
+			permissions: input.permissions,
+		})
+
+		if (result.error) {
+			return false
+		}
+
+		return result.data?.success === true
+	}
+
+	if (!input.organizationId) {
+		return false
+	}
+
+	const result = await authClient.organization.hasPermission({
+		organizationId: input.organizationId,
+		permissions: input.permissions,
+	})
+
+	if (result.error) {
+		return false
+	}
+
+	return result.data?.success === true
+}
+
+export function permissionQueryOptions(input: PermissionCheckInput) {
+	return queryOptions({
+		queryKey: permissionQueryKey(input),
+		queryFn: async () => hasPermission(input),
+		staleTime: 60_000,
+		retry: 1,
+	})
+}

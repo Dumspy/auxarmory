@@ -13,6 +13,7 @@ export async function createContext({
 			: existingSession
 
 	return {
+		headers,
 		session,
 	}
 }

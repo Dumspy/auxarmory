@@ -1,7 +1,8 @@
-import { FormEvent, useMemo, useState } from 'react'
+import type { FormEvent } from 'react'
+import { useMemo, useState } from 'react'
 import type { QueryClient } from '@tanstack/react-query'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { platformPermissions } from '@auxarmory/auth/permissions'
 import { Badge } from '@auxarmory/ui/components/ui/badge'
@@ -14,26 +15,20 @@ import {
 	CardTitle,
 } from '@auxarmory/ui/components/ui/card'
 
-import { permissionQueryOptions } from '../../lib/auth-client'
+import { ensurePermissionOrRedirect } from '../../lib/route-auth'
 import { useTRPC } from '../../lib/trpc'
 
 const PAGE_SIZE = 20
 
 export const Route = createFileRoute('/_auth/admin/jobs' as never)({
 	beforeLoad: async ({ context }) => {
-		if (typeof window === 'undefined') {
-			return
-		}
-
 		const queryClient = (context as { queryClient: QueryClient })
 			.queryClient
-		const allowed = await queryClient.ensureQueryData(
-			permissionQueryOptions(platformPermissions.adminJobsRead),
-		)
 
-		if (!allowed) {
-			throw redirect({ to: '/dashboard' })
-		}
+		await ensurePermissionOrRedirect({
+			queryClient,
+			permission: platformPermissions.adminJobsRead,
+		})
 	},
 	component: AdminJobsPage,
 })

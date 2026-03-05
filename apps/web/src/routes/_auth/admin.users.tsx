@@ -1,4 +1,5 @@
-import { FormEvent, useMemo, useState } from 'react'
+import type { FormEvent } from 'react'
+import { useMemo, useState } from 'react'
 import type { QueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { useMutation, useQuery } from '@tanstack/react-query'

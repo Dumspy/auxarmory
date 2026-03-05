@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@auxarmory/api": "workspace:*",
+    "@auxarmory/auth": "workspace:*",
     "@auxarmory/observability": "workspace:*",
     "@auxarmory/ui": "workspace:*",
     "@sentry/tanstackstart-react": "^10.40.0",

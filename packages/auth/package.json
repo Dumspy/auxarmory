@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auxarmory/db": "workspace:*",
+    "@better-auth/drizzle-adapter": "^1.5.3",
     "@t3-oss/env-core": "catalog:",
     "better-auth": "^1.3.17",
     "zod": "catalog:"
@@ -24,6 +25,11 @@
       "types": "./src/index.ts",
       "development": "./src/index.ts",
       "default": "./dist/index.js"
+    },
+    "./permissions": {
+      "types": "./src/permissions.ts",
+      "development": "./src/permissions.ts",
+      "default": "./dist/permissions.js"
     }
   }
 }

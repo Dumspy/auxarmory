@@ -1,8 +1,10 @@
 import { TRPCError, initTRPC } from '@trpc/server'
 
+import { assertProcedurePermission } from './authz.js'
+import type { AuthzMeta } from './authz.js'
 import type { Context } from './context.js'
 
-const t = initTRPC.context<Context>().create()
+const t = initTRPC.context<Context>().meta<AuthzMeta>().create()
 
 export const router = t.router
 export const publicProcedure = t.procedure
@@ -22,3 +24,15 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
 		},
 	})
 })
+
+export const authorizedProcedure = protectedProcedure.use(
+	async ({ ctx, meta, input, next }) => {
+		await assertProcedurePermission({
+			ctx,
+			meta,
+			input,
+		})
+
+		return next()
+	},
+)

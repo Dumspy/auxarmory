@@ -1,8 +1,12 @@
 import { useMemo } from 'react'
 import type { LucideIcon } from 'lucide-react'
-import { HomeIcon, Shield, UserRound } from 'lucide-react'
+import { Activity, HomeIcon, Shield, UserRound } from 'lucide-react'
 import { useQueries } from '@tanstack/react-query'
 import { Link, useRouterState } from '@tanstack/react-router'
+
+import { platformPermissions } from '@auxarmory/auth/permissions'
+
+import type { FileRoutesByTo } from '../routeTree.gen'
 
 import { permissionQueryOptions } from '../lib/auth-client'
 import type { PermissionCheckInput } from '../lib/auth-client'
@@ -17,7 +21,7 @@ import {
 
 interface NavItem {
 	title: string
-	path: string
+	path: keyof FileRoutesByTo
 	icon: LucideIcon
 	requiredPermission?: PermissionCheckInput
 }
@@ -37,12 +41,13 @@ const navItems: NavItem[] = [
 		title: 'Admin Users',
 		path: '/admin/users',
 		icon: Shield,
-		requiredPermission: {
-			scope: 'platform',
-			permissions: {
-				user: ['list'],
-			},
-		},
+		requiredPermission: platformPermissions.adminUsersList,
+	},
+	{
+		title: 'Admin Jobs',
+		path: '/admin/jobs',
+		icon: Activity,
+		requiredPermission: platformPermissions.adminJobsRead,
 	},
 ]
 

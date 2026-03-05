@@ -1,8 +1,10 @@
 import { z } from 'zod'
 
 import { auth } from '@auxarmory/auth'
+import { platformPermissions } from '@auxarmory/auth/permissions'
 
 import { authorizedProcedure, router } from '../index.js'
+import { adminJobsRouter } from './admin.jobs.js'
 
 const listUsersInput = z.object({
 	limit: z.number().int().min(1).max(100).default(20),
@@ -19,12 +21,7 @@ export const adminRouter = router({
 	users: router({
 		list: authorizedProcedure
 			.meta({
-				authz: {
-					scope: 'platform',
-					permissions: {
-						user: ['list'],
-					},
-				},
+				authz: platformPermissions.adminUsersList,
 			})
 			.input(listUsersInput)
 			.query(async ({ ctx, input }) => {
@@ -50,12 +47,7 @@ export const adminRouter = router({
 			}),
 		setRole: authorizedProcedure
 			.meta({
-				authz: {
-					scope: 'platform',
-					permissions: {
-						user: ['set-role'],
-					},
-				},
+				authz: platformPermissions.adminUsersSetRole,
 			})
 			.input(setRoleInput)
 			.mutation(async ({ ctx, input }) => {
@@ -68,4 +60,5 @@ export const adminRouter = router({
 				})
 			}),
 	}),
+	jobs: adminJobsRouter,
 })

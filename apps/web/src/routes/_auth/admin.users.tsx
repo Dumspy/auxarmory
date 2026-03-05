@@ -3,6 +3,8 @@ import type { QueryClient } from '@tanstack/react-query'
 import { redirect, createFileRoute } from '@tanstack/react-router'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
+import { platformPermissions } from '@auxarmory/auth/permissions'
+
 import { Badge } from '@auxarmory/ui/components/ui/badge'
 import { Button } from '@auxarmory/ui/components/ui/button'
 import {
@@ -18,13 +20,6 @@ import { permissionQueryOptions } from '../../lib/auth-client'
 import { useTRPC } from '../../lib/trpc'
 
 const PAGE_SIZE = 20
-const adminUsersListPermission = {
-	scope: 'platform' as const,
-	permissions: {
-		user: ['list'] as const,
-	},
-}
-
 export const Route = createFileRoute('/_auth/admin/users' as never)({
 	beforeLoad: async ({ context }) => {
 		if (typeof window === 'undefined') {
@@ -35,7 +30,7 @@ export const Route = createFileRoute('/_auth/admin/users' as never)({
 			.queryClient
 
 		const allowed = await queryClient.ensureQueryData(
-			permissionQueryOptions(adminUsersListPermission),
+			permissionQueryOptions(platformPermissions.adminUsersList),
 		)
 
 		if (!allowed) {

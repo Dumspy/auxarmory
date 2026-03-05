@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { getJobNames, handleJob, isJobName } from './index.js'
+import { getJobNames, handleJob, isJobName, parseJobPayload } from './index.js'
 
 describe('job registry', () => {
 	beforeEach(() => {
@@ -36,5 +36,24 @@ describe('job registry', () => {
 				data: {},
 			} as never),
 		).rejects.toThrow('No handler registered for job: sync:unknown')
+	})
+
+	it('validates payloads from schemas', () => {
+		expect(
+			parseJobPayload('sync:example', {
+				profileId: 'profile-1',
+				region: 'eu',
+			}),
+		).toEqual({
+			profileId: 'profile-1',
+			region: 'eu',
+		})
+
+		expect(() =>
+			parseJobPayload('sync:example', {
+				profileId: '',
+				region: 'eu',
+			}),
+		).toThrow()
 	})
 })

@@ -4,7 +4,7 @@ const mocks = vi.hoisted(() => ({
 	startWorkerService: vi.fn(),
 }))
 
-vi.mock('@auxarmory/worker', () => ({
+vi.mock('@auxarmory/worker/runtime', () => ({
 	startWorkerService: mocks.startWorkerService,
 }))
 

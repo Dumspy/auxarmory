@@ -31,9 +31,19 @@
       "default": "./dist/index.js"
     },
     "./contracts": {
-      "types": "./src/contracts.ts",
-      "development": "./src/contracts.ts",
-      "default": "./dist/contracts.js"
+      "types": "./src/contracts/index.ts",
+      "development": "./src/contracts/index.ts",
+      "default": "./dist/contracts/index.js"
+    },
+    "./producer": {
+      "types": "./src/producer/index.ts",
+      "development": "./src/producer/index.ts",
+      "default": "./dist/producer/index.js"
+    },
+    "./runtime": {
+      "types": "./src/runtime/index.ts",
+      "development": "./src/runtime/index.ts",
+      "default": "./dist/runtime/index.js"
     }
   }
 }

@@ -1,33 +1,34 @@
 import type { JobScheduler } from 'bullmq'
 
 import { JOB_PRIORITIES } from './types.js'
+import { getRecurringJobDefinitions } from './contracts.js'
 import { createJobScheduler } from './queue.js'
-import { syncRepeatableExample } from './jobs/example.js'
 
 type RepeatOptions = Parameters<JobScheduler['upsertJobScheduler']>[1]
 type UpsertOptions = Parameters<JobScheduler['upsertJobScheduler']>[4]
 
 interface RepeatableJobConfig {
 	id: string
-	name: typeof syncRepeatableExample.name
+	name: string
 	repeat: RepeatOptions
-	data: typeof syncRepeatableExample.data
+	data: unknown
 	options?: UpsertOptions
 }
 
-const repeatableJobs: RepeatableJobConfig[] = [
-	{
-		id: 'sync-example-repeatable',
-		name: syncRepeatableExample.name,
+const repeatableJobs: RepeatableJobConfig[] = getRecurringJobDefinitions().map(
+	(definition) => ({
+		id: definition.schedule.id,
+		name: definition.name,
 		repeat: {
-			every: 15 * 60 * 1000,
+			every: definition.schedule.everyMs,
+			pattern: definition.schedule.pattern,
 		},
-		data: syncRepeatableExample.data,
+		data: definition.payload,
 		options: {
-			priority: JOB_PRIORITIES.STANDARD,
+			priority: definition.schedule.priority ?? JOB_PRIORITIES.STANDARD,
 		},
-	},
-]
+	}),
+)
 
 export function startScheduler(): JobScheduler {
 	return createJobScheduler()

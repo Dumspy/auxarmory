@@ -14,11 +14,77 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@auxarmory/ui/components/ui/card'
+import { Tabs, TabsList, TabsTrigger } from '@auxarmory/ui/components/ui/tabs'
 
 import { ensurePermissionOrRedirect } from '../../lib/route-auth'
 import { useTRPC } from '../../lib/trpc'
 
 const PAGE_SIZE = 20
+const JOB_STATUSES = [
+	'waiting',
+	'active',
+	'delayed',
+	'failed',
+	'completed',
+] as const
+
+type JobStatus = (typeof JOB_STATUSES)[number]
+
+const nextRunDateFormatter = new Intl.DateTimeFormat(undefined, {
+	month: 'short',
+	day: 'numeric',
+	hour: 'numeric',
+	minute: '2-digit',
+})
+
+const nextRunRelativeFormatter = new Intl.RelativeTimeFormat(undefined, {
+	numeric: 'auto',
+})
+
+function formatSchedulerNextRun(next: number | null | undefined) {
+	if (next == null) {
+		return { label: 'n/a', title: 'No next run scheduled' }
+	}
+
+	const date = new Date(next)
+	if (Number.isNaN(date.getTime())) {
+		return { label: 'n/a', title: 'Invalid next run time' }
+	}
+
+	const diffMinutes = Math.round((date.getTime() - Date.now()) / 60_000)
+	const absDiffMinutes = Math.abs(diffMinutes)
+
+	const relativeLabel =
+		absDiffMinutes < 60
+			? nextRunRelativeFormatter.format(diffMinutes, 'minute')
+			: absDiffMinutes < 1_440
+				? nextRunRelativeFormatter.format(
+						Math.round(diffMinutes / 60),
+						'hour',
+					)
+				: nextRunRelativeFormatter.format(
+						Math.round(diffMinutes / 1_440),
+						'day',
+					)
+
+	return {
+		label: `${relativeLabel} (${nextRunDateFormatter.format(date)})`,
+		title: date.toLocaleString(),
+	}
+}
+
+function formatJobTimestamp(timestamp: number | null | undefined) {
+	if (timestamp == null) {
+		return 'n/a'
+	}
+
+	const date = new Date(timestamp)
+	if (Number.isNaN(date.getTime())) {
+		return 'n/a'
+	}
+
+	return date.toLocaleString()
+}
 
 export const Route = createFileRoute('/_auth/admin/jobs' as never)({
 	beforeLoad: async ({ context }) => {
@@ -35,12 +101,11 @@ export const Route = createFileRoute('/_auth/admin/jobs' as never)({
 
 function AdminJobsPage() {
 	const trpc = useTRPC()
-	const [status, setStatus] = useState<
-		'waiting' | 'active' | 'delayed' | 'failed' | 'completed'
-	>('waiting')
+	const [status, setStatus] = useState<JobStatus>('waiting')
 	const [offset, setOffset] = useState(0)
 	const [jobName, setJobName] = useState('')
 	const [payloadInput, setPayloadInput] = useState('{}')
+	const [expandedJobId, setExpandedJobId] = useState<string | null>(null)
 
 	const listInput = useMemo(
 		() => ({
@@ -126,9 +191,7 @@ function AdminJobsPage() {
 	return (
 		<div className='space-y-6 p-2 md:p-4'>
 			<div>
-				<h1 className='text-foreground text-2xl font-bold'>
-					Admin Jobs
-				</h1>
+				<h1 className='text-foreground text-2xl font-bold'>Jobs</h1>
 				<p className='text-muted-foreground'>
 					Monitor queue activity, run jobs on demand, and inspect
 					recurring schedules.
@@ -212,26 +275,35 @@ function AdminJobsPage() {
 				</CardHeader>
 				<CardContent className='space-y-2'>
 					{overviewQuery.data?.schedulers.length ? (
-						overviewQuery.data.schedulers.map((scheduler) => (
-							<div
-								key={scheduler.id}
-								className='flex items-center justify-between rounded-md border p-2 text-sm'
-							>
-								<div>
-									<p className='font-medium'>
-										{scheduler.name}
-									</p>
-									<p className='text-muted-foreground text-xs'>
-										{scheduler.pattern
-											? scheduler.pattern
-											: `every ${Math.round((scheduler.every ?? 0) / 1000)}s`}
-									</p>
+						overviewQuery.data.schedulers.map((scheduler) => {
+							const nextRun = formatSchedulerNextRun(
+								scheduler.next,
+							)
+
+							return (
+								<div
+									key={scheduler.id}
+									className='flex items-center justify-between rounded-md border p-2 text-sm'
+								>
+									<div>
+										<p className='font-medium'>
+											{scheduler.name}
+										</p>
+										<p className='text-muted-foreground text-xs'>
+											{scheduler.pattern
+												? scheduler.pattern
+												: `every ${Math.round((scheduler.every ?? 0) / 1000)}s`}
+										</p>
+									</div>
+									<Badge
+										variant='outline'
+										title={nextRun.title}
+									>
+										next: {nextRun.label}
+									</Badge>
 								</div>
-								<Badge variant='outline'>
-									next: {scheduler.next ?? 'n/a'}
-								</Badge>
-							</div>
-						))
+							)
+						})
 					) : (
 						<p className='text-muted-foreground text-sm'>
 							No recurring schedulers found.
@@ -245,60 +317,104 @@ function AdminJobsPage() {
 					<CardTitle>Recent Jobs</CardTitle>
 				</CardHeader>
 				<CardContent className='space-y-3'>
-					<div className='flex gap-2'>
-						<select
-							className='bg-background h-9 rounded-md border px-2 text-sm'
-							value={status}
-							onChange={(event) => {
-								setOffset(0)
-								setStatus(
-									event.target.value as
-										| 'waiting'
-										| 'active'
-										| 'delayed'
-										| 'failed'
-										| 'completed',
-								)
-							}}
-						>
-							<option value='waiting'>waiting</option>
-							<option value='active'>active</option>
-							<option value='delayed'>delayed</option>
-							<option value='failed'>failed</option>
-							<option value='completed'>completed</option>
-						</select>
-					</div>
+					<Tabs
+						value={status}
+						onValueChange={(value) => {
+							setOffset(0)
+							setExpandedJobId(null)
+							setStatus(value as JobStatus)
+						}}
+					>
+						<TabsList className='grid w-full grid-cols-2 sm:grid-cols-5'>
+							{JOB_STATUSES.map((item) => (
+								<TabsTrigger key={item} value={item}>
+									{item[0]?.toUpperCase()}
+									{item.slice(1)}
+								</TabsTrigger>
+							))}
+						</TabsList>
+					</Tabs>
+
+					{jobs.length === 0 ? (
+						<p className='text-muted-foreground text-sm'>
+							No jobs in this status.
+						</p>
+					) : null}
 
 					{jobs.map((job) => (
 						<div
 							key={job.id}
-							className='flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between'
+							className='space-y-3 rounded-lg border p-3'
 						>
-							<div className='min-w-0'>
-								<p className='truncate text-sm font-medium'>
-									{job.name}
-								</p>
-								<p className='text-muted-foreground truncate text-xs'>
-									id: {job.id}
-								</p>
-							</div>
+							<div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+								<div className='min-w-0'>
+									<p className='truncate text-sm font-medium'>
+										{job.name}
+									</p>
+									<p className='text-muted-foreground truncate text-xs'>
+										id: {job.id}
+									</p>
+								</div>
 
-							<div className='flex items-center gap-2'>
-								<Badge variant='outline'>{job.status}</Badge>
-								{status === 'failed' ? (
+								<div className='flex items-center gap-2'>
 									<Button
 										variant='outline'
-										disabled={retryMutation.isPending}
 										onClick={() =>
-											void retryMutation.mutateAsync({
-												jobId: job.id,
-											})
+											setExpandedJobId((current) =>
+												current === job.id
+													? null
+													: job.id,
+											)
 										}
 									>
-										Retry
+										{expandedJobId === job.id
+											? 'Hide details'
+											: 'Show details'}
 									</Button>
-								) : null}
+									{status === 'failed' ? (
+										<Button
+											variant='outline'
+											disabled={retryMutation.isPending}
+											onClick={() =>
+												void retryMutation.mutateAsync({
+													jobId: job.id,
+												})
+											}
+										>
+											Retry
+										</Button>
+									) : null}
+								</div>
 							</div>
+
+							{expandedJobId === job.id ? (
+								<div className='bg-muted/30 space-y-2 rounded-md border border-dashed p-3 text-xs'>
+									<p>
+										attempts: {job.attemptsMade} | priority:{' '}
+										{job.priority ?? 'n/a'}
+									</p>
+									<p>
+										queued:{' '}
+										{formatJobTimestamp(job.timestamp)}
+									</p>
+									<p>
+										started:{' '}
+										{formatJobTimestamp(job.processedOn)}
+									</p>
+									<p>
+										finished:{' '}
+										{formatJobTimestamp(job.finishedOn)}
+									</p>
+									{job.failedReason ? (
+										<p className='text-destructive'>
+											failure: {job.failedReason}
+										</p>
+									) : null}
+									<pre className='bg-background max-h-48 overflow-auto rounded border p-2 font-mono text-xs'>
+										{JSON.stringify(job.data, null, 2)}
+									</pre>
+								</div>
+							) : null}
 						</div>
 					))}
 

@@ -48,7 +48,7 @@ const navItems: NavItem[] = [
 		requiredPermission: platformPermissions.adminUsersList,
 	},
 	{
-		title: 'Admin Jobs',
+		title: 'Jobs',
 		path: '/admin/jobs',
 		icon: Activity,
 		section: 'admin',

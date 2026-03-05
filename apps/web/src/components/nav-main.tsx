@@ -17,8 +17,9 @@ import {
 
 interface NavItem {
 	title: string
-	path: string
+	path: '/dashboard' | '/account' | '/admin/users'
 	icon: LucideIcon
+	section: 'personal' | 'admin'
 	requiredPermission?: PermissionCheckInput
 }
 
@@ -27,16 +28,19 @@ const navItems: NavItem[] = [
 		title: 'Dashboard',
 		path: '/dashboard',
 		icon: HomeIcon,
+		section: 'personal',
 	},
 	{
 		title: 'Account',
 		path: '/account',
 		icon: UserRound,
+		section: 'personal',
 	},
 	{
-		title: 'Admin Users',
+		title: 'Users',
 		path: '/admin/users',
 		icon: Shield,
+		section: 'admin',
 		requiredPermission: {
 			scope: 'platform',
 			permissions: {
@@ -83,29 +87,62 @@ export function NavMain() {
 		return visibilityByPath.get(item.path) === true
 	})
 
-	return (
-		<SidebarGroup>
-			<SidebarGroupLabel>Personal</SidebarGroupLabel>
-			<SidebarMenu>
-				{visibleItems.map((item) => {
-					const isActive = currentPath === item.path
+	const personalItems = visibleItems.filter(
+		(item) => item.section === 'personal',
+	)
+	const adminItems = visibleItems.filter((item) => item.section === 'admin')
 
-					return (
-						<SidebarMenuItem key={item.path}>
-							<SidebarMenuButton
-								tooltip={item.title}
-								isActive={isActive}
-								asChild
-							>
-								<Link to={item.path}>
-									<item.icon />
-									<span>{item.title}</span>
-								</Link>
-							</SidebarMenuButton>
-						</SidebarMenuItem>
-					)
-				})}
-			</SidebarMenu>
-		</SidebarGroup>
+	return (
+		<>
+			<SidebarGroup>
+				<SidebarGroupLabel>Personal</SidebarGroupLabel>
+				<SidebarMenu>
+					{personalItems.map((item) => {
+						const isActive = currentPath === item.path
+
+						return (
+							<SidebarMenuItem key={item.path}>
+								<SidebarMenuButton
+									tooltip={item.title}
+									isActive={isActive}
+									asChild
+								>
+									<Link to={item.path}>
+										<item.icon />
+										<span>{item.title}</span>
+									</Link>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						)
+					})}
+				</SidebarMenu>
+			</SidebarGroup>
+
+			{adminItems.length > 0 ? (
+				<SidebarGroup>
+					<SidebarGroupLabel>Admin</SidebarGroupLabel>
+					<SidebarMenu>
+						{adminItems.map((item) => {
+							const isActive = currentPath === item.path
+
+							return (
+								<SidebarMenuItem key={item.path}>
+									<SidebarMenuButton
+										tooltip={item.title}
+										isActive={isActive}
+										asChild
+									>
+										<Link to={item.path}>
+											<item.icon />
+											<span>{item.title}</span>
+										</Link>
+									</SidebarMenuButton>
+								</SidebarMenuItem>
+							)
+						})}
+					</SidebarMenu>
+				</SidebarGroup>
+			) : null}
+		</>
 	)
 }

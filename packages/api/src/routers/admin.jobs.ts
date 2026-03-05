@@ -80,14 +80,11 @@ export const adminJobsRouter = router({
 			const queue = createQueue()
 
 			try {
-				const items = await listJobs(queue, input)
+				const { items, hasMore } = await listJobs(queue, input)
 
 				return {
 					items,
-					nextOffset:
-						items.length < input.limit
-							? null
-							: input.offset + input.limit,
+					nextOffset: hasMore ? input.offset + items.length : null,
 				}
 			} finally {
 				await queue.close()
@@ -156,7 +153,24 @@ export const adminJobsRouter = router({
 			const queue = createQueue()
 
 			try {
-				const retried = await retryJobById(queue, input.jobId)
+				let retried = false
+
+				try {
+					retried = await retryJobById(queue, input.jobId)
+				} catch (error) {
+					if (
+						error instanceof Error &&
+						error.message.includes('not in the failed state')
+					) {
+						throw new TRPCError({
+							code: 'CONFLICT',
+							message:
+								'Job is no longer retryable in its current state',
+						})
+					}
+
+					throw error
+				}
 
 				if (!retried) {
 					throw new TRPCError({

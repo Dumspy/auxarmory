@@ -40,6 +40,44 @@ export interface ListJobsInput {
 	jobName?: JobName
 }
 
+export interface ListJobsResultItem {
+	id: string
+	name: string
+	status: ListableJobStatus
+	attemptsMade: number
+	timestamp: number
+	processedOn?: number
+	finishedOn?: number
+	priority?: number
+	failedReason?: string
+	data: unknown
+}
+
+export interface ListJobsResult {
+	items: ListJobsResultItem[]
+	hasMore: boolean
+}
+
+const LIST_JOBS_SCAN_WINDOW = 200
+
+function toListJobItem(
+	job: Awaited<ReturnType<WorkerQueue['getJobs']>>[number],
+	status: ListableJobStatus,
+): ListJobsResultItem {
+	return {
+		id: String(job.id ?? ''),
+		name: isJobName(job.name) ? job.name : job.name,
+		status,
+		attemptsMade: job.attemptsMade,
+		timestamp: job.timestamp,
+		processedOn: job.processedOn,
+		finishedOn: job.finishedOn,
+		priority: job.opts.priority,
+		failedReason: job.failedReason,
+		data: job.data,
+	}
+}
+
 export async function enqueueJob<TName extends JobName>(
 	queue: WorkerQueue,
 	input: EnqueueJobInput<TName>,
@@ -67,26 +105,89 @@ export async function enqueueJobFromInput(
 export async function listJobs(queue: WorkerQueue, input: ListJobsInput) {
 	const limit = input.limit ?? 20
 	const offset = input.offset ?? 0
-	const start = offset
-	const end = offset + limit - 1
 
-	const jobs = await queue.getJobs([input.status], start, end, false)
-	const filteredJobs = input.jobName
-		? jobs.filter((job) => job.name === input.jobName)
-		: jobs
+	if (!input.jobName) {
+		const start = offset
+		const end = offset + limit - 1
+		const jobs = await queue.getJobs([input.status], start, end, false)
+		const hasMore =
+			jobs.length === limit
+				? (await queue.getJobs([input.status], end + 1, end + 1, false))
+						.length > 0
+				: false
 
-	return filteredJobs.map((job) => ({
-		id: String(job.id ?? ''),
-		name: isJobName(job.name) ? job.name : job.name,
-		status: input.status,
-		attemptsMade: job.attemptsMade,
-		timestamp: job.timestamp,
-		processedOn: job.processedOn,
-		finishedOn: job.finishedOn,
-		priority: job.opts.priority,
-		failedReason: job.failedReason,
-		data: job.data,
-	}))
+		return {
+			items: jobs.map((job) => toListJobItem(job, input.status)),
+			hasMore,
+		}
+	}
+
+	const items: ListJobsResultItem[] = []
+	let skippedMatches = 0
+	let cursor = 0
+	let hasMore = false
+
+	while (items.length < limit && !hasMore) {
+		const batch = await queue.getJobs(
+			[input.status],
+			cursor,
+			cursor + LIST_JOBS_SCAN_WINDOW - 1,
+			false,
+		)
+
+		if (batch.length === 0) {
+			break
+		}
+
+		for (const job of batch) {
+			if (job.name !== input.jobName) {
+				continue
+			}
+
+			if (skippedMatches < offset) {
+				skippedMatches += 1
+				continue
+			}
+
+			if (items.length < limit) {
+				items.push(toListJobItem(job, input.status))
+				continue
+			}
+
+			hasMore = true
+			break
+		}
+
+		cursor += batch.length
+
+		if (batch.length < LIST_JOBS_SCAN_WINDOW) {
+			break
+		}
+	}
+
+	if (!hasMore && items.length === limit) {
+		while (!hasMore) {
+			const batch = await queue.getJobs(
+				[input.status],
+				cursor,
+				cursor + LIST_JOBS_SCAN_WINDOW - 1,
+				false,
+			)
+
+			if (batch.length === 0) {
+				break
+			}
+
+			hasMore = batch.some((job) => job.name === input.jobName)
+			cursor += batch.length
+
+			if (batch.length < LIST_JOBS_SCAN_WINDOW) {
+				break
+			}
+		}
+	}
+
+	return { items, hasMore }
 }
 
 export async function getQueueOverview(queue: WorkerQueue) {

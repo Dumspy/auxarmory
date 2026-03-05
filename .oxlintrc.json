@@ -37,7 +37,8 @@
     "**/*.config.*",
     "**/battlenet/src/dev.ts",
     "**/*.gen.ts",
-    "**/*.gen.d.ts"
+    "**/*.gen.d.ts",
+    "**/packages/ui/*"
   ],
   "overrides": [
     {

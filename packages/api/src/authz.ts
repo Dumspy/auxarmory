@@ -4,7 +4,7 @@ import { auth } from '@auxarmory/auth'
 
 import type { Context } from './context.js'
 
-export type PermissionStatement = Record<string, string[]>
+export type PermissionStatement = Readonly<Record<string, readonly string[]>>
 
 export interface AuthzMeta {
 	authz?: {

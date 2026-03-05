@@ -294,6 +294,9 @@ importers:
       '@auxarmory/auth':
         specifier: workspace:*
         version: link:../auth
+      '@auxarmory/worker':
+        specifier: workspace:*
+        version: link:../worker
       '@trpc/server':
         specifier: ^11.7.2
         version: 11.11.0(typescript@5.9.3)

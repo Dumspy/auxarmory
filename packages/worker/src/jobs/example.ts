@@ -1,12 +1,22 @@
 import { defineJob } from '../registry.js'
+import { JOB_PRIORITIES } from '../types.js'
+import { z } from 'zod'
 
 export interface ExampleJobPayload {
 	profileId: string
 	region: 'us' | 'eu' | 'kr' | 'tw'
 }
 
+const exampleJobPayloadSchema = z.object({
+	profileId: z.string().min(1),
+	region: z.enum(['us', 'eu', 'kr', 'tw']),
+})
+
 export const syncExample = defineJob({
 	name: 'sync:example',
+	description: 'Run a one-off example sync job',
+	allowManualRun: true,
+	schema: exampleJobPayloadSchema,
 	data: {
 		profileId: '',
 		region: 'us',
@@ -22,6 +32,14 @@ export const syncExample = defineJob({
 
 export const syncRepeatableExample = defineJob({
 	name: 'sync:example:repeatable',
+	description: 'Run a scheduled example sync job',
+	allowManualRun: true,
+	schema: exampleJobPayloadSchema,
+	schedule: {
+		id: 'sync-example-repeatable',
+		everyMs: 15 * 60 * 1000,
+		priority: JOB_PRIORITIES.STANDARD,
+	},
 	data: {
 		profileId: 'repeatable-example',
 		region: 'us',

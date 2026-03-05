@@ -7,4 +7,4 @@ export {
 	parseJobPayload,
 	type JobName,
 	type JobPayloads,
-} from './contracts/index.js'
+} from '../jobs/index.js'

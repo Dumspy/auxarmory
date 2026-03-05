@@ -145,6 +145,9 @@ importers:
       '@auxarmory/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@auxarmory/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@auxarmory/observability':
         specifier: workspace:*
         version: link:../../packages/observability

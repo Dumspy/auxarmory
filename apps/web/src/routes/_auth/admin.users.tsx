@@ -17,6 +17,7 @@ import {
 import { Input } from '@auxarmory/ui/components/ui/input'
 
 import { ensurePermissionOrRedirect } from '../../lib/route-auth'
+import { authClient } from '../../lib/auth-client'
 import { useTRPC } from '../../lib/trpc'
 
 const PAGE_SIZE = 20
@@ -39,6 +40,8 @@ function AdminUsersPage() {
 	const [searchInput, setSearchInput] = useState('')
 	const [searchValue, setSearchValue] = useState('')
 	const [offset, setOffset] = useState(0)
+	const [setRoleError, setSetRoleError] = useState<string | null>(null)
+	const { data: session } = authClient.useSession()
 
 	const listUsersInput = useMemo(
 		() => ({
@@ -65,9 +68,20 @@ function AdminUsersPage() {
 	const total = usersQuery.data?.total ?? 0
 	const hasPreviousPage = offset > 0
 	const hasNextPage = offset + PAGE_SIZE < total
+	const currentUserId = session?.user?.id
 
 	async function handleRoleChange(userId: string, role: 'user' | 'admin') {
-		await setRoleMutation.mutateAsync({ userId, role })
+		setSetRoleError(null)
+
+		try {
+			await setRoleMutation.mutateAsync({ userId, role })
+		} catch (error) {
+			const message =
+				error instanceof Error
+					? error.message
+					: 'Unable to update user role right now.'
+			setSetRoleError(message)
+		}
 	}
 
 	function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
@@ -79,9 +93,7 @@ function AdminUsersPage() {
 	return (
 		<div className='space-y-6 p-2 md:p-4'>
 			<div>
-				<h1 className='text-foreground text-2xl font-bold'>
-					Admin Users
-				</h1>
+				<h1 className='text-foreground text-2xl font-bold'>Users</h1>
 				<p className='text-muted-foreground'>
 					Manage platform user roles and access.
 				</p>
@@ -121,6 +133,12 @@ function AdminUsersPage() {
 						</p>
 					) : null}
 
+					{setRoleError ? (
+						<p className='text-destructive text-sm'>
+							{setRoleError}
+						</p>
+					) : null}
+
 					{!usersQuery.isPending &&
 					!usersQuery.isError &&
 					users.length === 0 ? (
@@ -133,6 +151,7 @@ function AdminUsersPage() {
 						{users.map((user) => {
 							const currentRole =
 								user.role === 'admin' ? 'admin' : 'user'
+							const isCurrentUser = user.id === currentUserId
 							const isUpdating =
 								setRoleMutation.isPending &&
 								setRoleMutation.variables?.userId === user.id
@@ -165,7 +184,9 @@ function AdminUsersPage() {
 										<select
 											className='bg-background h-9 rounded-md border px-2 text-sm'
 											value={currentRole}
-											disabled={isUpdating}
+											disabled={
+												isUpdating || isCurrentUser
+											}
 											onChange={(event) => {
 												const nextRole = event.target
 													.value as 'user' | 'admin'
@@ -181,6 +202,11 @@ function AdminUsersPage() {
 											<option value='user'>user</option>
 											<option value='admin'>admin</option>
 										</select>
+										{isCurrentUser ? (
+											<span className='text-muted-foreground text-xs'>
+												You
+											</span>
+										) : null}
 									</div>
 								</div>
 							)

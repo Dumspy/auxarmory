@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { TRPCError } from '@trpc/server'
 
 import { auth } from '@auxarmory/auth'
 import { platformPermissions } from '@auxarmory/auth/permissions'
@@ -51,6 +52,13 @@ export const adminRouter = router({
 			})
 			.input(setRoleInput)
 			.mutation(async ({ ctx, input }) => {
+				if (ctx.session?.user?.id === input.userId) {
+					throw new TRPCError({
+						code: 'FORBIDDEN',
+						message: 'You cannot change your own role',
+					})
+				}
+
 				return await auth.api.setRole({
 					headers: ctx.headers,
 					body: {

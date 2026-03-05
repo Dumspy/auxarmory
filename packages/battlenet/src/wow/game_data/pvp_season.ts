@@ -48,6 +48,7 @@ export async function PvPSeason(this: WoWGameDataClient, pvpSeasonId: number) {
 			success: true,
 			data: null,
 			raw_data: null,
+			request_context: ret.request_context,
 		}
 	}
 

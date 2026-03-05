@@ -1,8 +1,9 @@
 import { FormEvent, useMemo, useState } from 'react'
 import type { QueryClient } from '@tanstack/react-query'
-import { redirect, createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
+import { platformPermissions } from '@auxarmory/auth/permissions'
 import { Badge } from '@auxarmory/ui/components/ui/badge'
 import { Button } from '@auxarmory/ui/components/ui/button'
 import {
@@ -14,33 +15,20 @@ import {
 } from '@auxarmory/ui/components/ui/card'
 import { Input } from '@auxarmory/ui/components/ui/input'
 
-import { permissionQueryOptions } from '../../lib/auth-client'
+import { ensurePermissionOrRedirect } from '../../lib/route-auth'
 import { useTRPC } from '../../lib/trpc'
 
 const PAGE_SIZE = 20
-const adminUsersListPermission = {
-	scope: 'platform' as const,
-	permissions: {
-		user: ['list'] as const,
-	},
-}
 
 export const Route = createFileRoute('/_auth/admin/users' as never)({
 	beforeLoad: async ({ context }) => {
-		if (typeof window === 'undefined') {
-			return
-		}
-
 		const queryClient = (context as { queryClient: QueryClient })
 			.queryClient
 
-		const allowed = await queryClient.ensureQueryData(
-			permissionQueryOptions(adminUsersListPermission),
-		)
-
-		if (!allowed) {
-			throw redirect({ to: '/dashboard' })
-		}
+		await ensurePermissionOrRedirect({
+			queryClient,
+			permission: platformPermissions.adminUsersList,
+		})
 	},
 	component: AdminUsersPage,
 })

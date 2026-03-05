@@ -1,10 +1,11 @@
 import type { z } from 'zod/v4'
 
-import type { ClientReturn, RegionsEnum } from './types'
+import type { ClientRequestContext, ClientReturn, RegionsEnum } from './types'
 import { ApplicationAuthResponse, BattlenetError } from './types'
 import { WoWGameDataClient, WoWProfileClient } from './wow'
 
 export * from './util'
+export * from './unwrap'
 
 type Regions = z.infer<typeof RegionsEnum>
 
@@ -21,6 +22,27 @@ interface BaseRequestOptions<T> {
 	namespace?: 'static' | 'dynamic' | 'profile'
 	authorization: string
 	zod: z.Schema<T>
+}
+
+function paramsToContextObject(params: URLSearchParams) {
+	const result: Record<string, string | string[]> = {}
+
+	for (const [key, value] of params.entries()) {
+		const current = result[key]
+		if (current == null) {
+			result[key] = value
+			continue
+		}
+
+		if (Array.isArray(current)) {
+			current.push(value)
+			continue
+		}
+
+		result[key] = [current, value]
+	}
+
+	return result
 }
 
 class BaseClient {
@@ -56,6 +78,14 @@ class BaseClient {
 
 		if (params.size > 0) {
 			url.search = params.toString()
+		}
+
+		const requestContext: ClientRequestContext = {
+			endpoint,
+			method,
+			namespace,
+			url: url.toString(),
+			params: paramsToContextObject(params),
 		}
 
 		const headers: Record<string, string> = {
@@ -94,6 +124,7 @@ class BaseClient {
 						`Empty response: ${res.status} ${res.statusText}`,
 					),
 					raw_data: {} as T,
+					request_context: requestContext,
 				}
 			}
 			if (parseError) {
@@ -104,6 +135,7 @@ class BaseClient {
 						`Invalid JSON response: ${res.status} ${res.statusText}`,
 					),
 					raw_data: {} as T,
+					request_context: requestContext,
 				}
 			}
 			const { data, success, error } = zod.safeParse(parsedJson)
@@ -113,6 +145,7 @@ class BaseClient {
 						success: true,
 						data: parsedJson as T,
 						raw_data: parsedJson as T,
+						request_context: requestContext,
 					}
 				}
 
@@ -126,12 +159,14 @@ class BaseClient {
 					error: error,
 					error_type: 'zod',
 					raw_data: parsedJson as T,
+					request_context: requestContext,
 				}
 			}
 			return {
 				success: true,
 				data,
 				raw_data: parsedJson as T,
+				request_context: requestContext,
 			}
 		}
 
@@ -141,6 +176,7 @@ class BaseClient {
 				error_type: 'auth',
 				error: res,
 				raw_data: {} as T,
+				request_context: requestContext,
 			}
 		}
 
@@ -150,6 +186,7 @@ class BaseClient {
 				error_type: 'unknown',
 				error: new Error(`Response ${res.status} ${res.statusText}`),
 				raw_data: {} as T,
+				request_context: requestContext,
 			}
 		}
 
@@ -160,6 +197,7 @@ class BaseClient {
 				error_type: 'battlenet',
 				error: data,
 				raw_data: parsedJson as T,
+				request_context: requestContext,
 			}
 		}
 		return {
@@ -167,6 +205,7 @@ class BaseClient {
 			error_type: 'unknown',
 			error: new Error(`Unknown error: ${res.status} ${res.statusText}`),
 			raw_data: parsedJson as T,
+			request_context: requestContext,
 		}
 	}
 }

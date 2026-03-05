@@ -6,6 +6,7 @@ import { db } from '@auxarmory/db/client'
 import * as schema from '@auxarmory/db/schema'
 
 import { env } from './env.js'
+import { ac, roles } from './permissions.js'
 
 const trustedOrigins = env.AUTH_TRUSTED_ORIGINS.split(',').map(
 	(origin: string) => origin.trim(),
@@ -233,8 +234,10 @@ export const auth = betterAuth({
 		},
 	},
 	plugins: [
-		admin(),
+		admin({ ac, roles }),
 		organization({
+			ac,
+			roles,
 			teams: {
 				enabled: true,
 			},

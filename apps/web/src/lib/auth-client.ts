@@ -6,6 +6,12 @@ import {
 	organizationClient,
 } from 'better-auth/client/plugins'
 
+import { ac, roles } from '@auxarmory/auth/permissions'
+import type {
+	PermissionCheckInput,
+	PermissionStatement,
+} from '@auxarmory/auth/permissions'
+
 import { env } from '../env'
 
 export const authClient = createAuthClient({
@@ -13,21 +19,15 @@ export const authClient = createAuthClient({
 	fetchOptions: {
 		credentials: 'include',
 	},
-	plugins: [adminClient(), organizationClient(), genericOAuthClient()],
+	plugins: [
+		adminClient({ ac, roles }),
+		organizationClient({ ac, roles }),
+		genericOAuthClient(),
+	],
 })
 
-export type PermissionMap = Readonly<Record<string, readonly string[]>>
-
-export type PermissionCheckInput =
-	| {
-			scope: 'platform'
-			permissions: PermissionMap
-	  }
-	| {
-			scope: 'organization'
-			permissions: PermissionMap
-			organizationId?: string
-	  }
+export type PermissionMap = PermissionStatement
+export type { PermissionCheckInput } from '@auxarmory/auth/permissions'
 
 function normalizePermissionMap(permissions: PermissionMap) {
 	const entries: [string, string[]][] = Object.entries(permissions).map(

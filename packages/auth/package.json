@@ -25,6 +25,11 @@
       "types": "./src/index.ts",
       "development": "./src/index.ts",
       "default": "./dist/index.js"
+    },
+    "./permissions": {
+      "types": "./src/permissions.ts",
+      "development": "./src/permissions.ts",
+      "default": "./dist/permissions.js"
     }
   }
 }

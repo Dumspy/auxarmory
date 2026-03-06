@@ -52,7 +52,7 @@ export function OrgSwitcher() {
 							/>
 						}
 					>
-						<div className='bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg'>
+						<div className='bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-none'>
 							<Building2 className='size-4' />
 						</div>
 						<div className='grid flex-1 text-left text-sm leading-tight'>
@@ -66,7 +66,7 @@ export function OrgSwitcher() {
 						<ChevronsUpDown className='ml-auto' />
 					</DropdownMenuTrigger>
 					<DropdownMenuContent
-						className='w-(--anchor-width) min-w-56 rounded-lg'
+						className='w-(--anchor-width) min-w-56'
 						align='start'
 						side={isMobile ? 'bottom' : 'right'}
 						sideOffset={4}
@@ -94,7 +94,7 @@ export function OrgSwitcher() {
 										}
 										className='gap-2 p-2'
 									>
-										<div className='bg-muted flex size-6 items-center justify-center rounded-md'>
+										<div className='bg-muted flex size-6 items-center justify-center rounded-none'>
 											<Building2 className='size-3.5 shrink-0' />
 										</div>
 										<div className='flex flex-1 items-center justify-between gap-2'>

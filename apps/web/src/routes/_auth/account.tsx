@@ -306,7 +306,7 @@ function AccountPage() {
 			return (
 				<div
 					key={organization.id}
-					className='flex items-center justify-between gap-3 rounded-lg border p-3'
+					className='flex items-center justify-between gap-3 rounded-none border p-3'
 				>
 					<div className='min-w-0'>
 						<p className='truncate text-sm font-medium'>
@@ -418,13 +418,13 @@ function AccountPage() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent className='space-y-3'>
-							<div className='flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-end'>
+							<div className='flex flex-col gap-3 rounded-none border p-3 sm:flex-row sm:items-end'>
 								<div className='space-y-1'>
 									<p className='text-xs font-medium uppercase'>
 										Battle.net region
 									</p>
 									<select
-										className='bg-background h-9 min-w-36 rounded-md border px-2 text-sm'
+										className='dark:bg-input/30 border-input h-8 min-w-36 rounded-none border bg-transparent px-2.5 text-xs'
 										value={selectedBattlenetProvider}
 										onChange={(event) =>
 											setSelectedBattlenetProvider(
@@ -474,7 +474,7 @@ function AccountPage() {
 								? battlenetAccountsByProvider.map((region) => (
 										<div
 											key={region.providerId}
-											className='space-y-2 rounded-lg border p-3'
+											className='space-y-2 rounded-none border p-3'
 										>
 											<div className='flex items-center justify-between'>
 												<div>
@@ -510,7 +510,7 @@ function AccountPage() {
 													(account) => (
 														<div
 															key={account.id}
-															className='flex items-center justify-between gap-2 rounded-md border p-2'
+															className='flex items-center justify-between gap-2 rounded-none border p-2'
 														>
 															<div className='min-w-0'>
 																<p className='truncate text-sm font-medium'>
@@ -568,13 +568,13 @@ function AccountPage() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent className='space-y-3'>
-							<div className='flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-end'>
+							<div className='flex flex-col gap-3 rounded-none border p-3 sm:flex-row sm:items-end'>
 								<div className='space-y-1'>
 									<p className='text-xs font-medium uppercase'>
 										Warcraft Logs region
 									</p>
 									<select
-										className='bg-background h-9 min-w-36 rounded-md border px-2 text-sm'
+										className='dark:bg-input/30 border-input h-8 min-w-36 rounded-none border bg-transparent px-2.5 text-xs'
 										value={selectedWarcraftLogsProvider}
 										onChange={(event) =>
 											setSelectedWarcraftLogsProvider(
@@ -625,7 +625,7 @@ function AccountPage() {
 										(region) => (
 											<div
 												key={region.providerId}
-												className='space-y-2 rounded-lg border p-3'
+												className='space-y-2 rounded-none border p-3'
 											>
 												<div className='flex items-center justify-between'>
 													<div>
@@ -665,7 +665,7 @@ function AccountPage() {
 														(account) => (
 															<div
 																key={account.id}
-																className='flex items-center justify-between gap-2 rounded-md border p-2'
+																className='flex items-center justify-between gap-2 rounded-none border p-2'
 															>
 																<div className='min-w-0'>
 																	<p className='truncate text-sm font-medium'>

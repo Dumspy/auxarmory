@@ -227,7 +227,7 @@ function AdminJobsPage() {
 				<CardContent>
 					<form className='space-y-3' onSubmit={handleEnqueue}>
 						<select
-							className='bg-background h-9 w-full rounded-md border px-2 text-sm'
+							className='dark:bg-input/30 border-input h-8 w-full rounded-none border bg-transparent px-2.5 text-xs'
 							value={jobName}
 							onChange={(event) =>
 								handleDefinitionChange(event.target.value)
@@ -242,7 +242,7 @@ function AdminJobsPage() {
 						</select>
 
 						<textarea
-							className='bg-background min-h-40 w-full rounded-md border p-3 text-sm font-mono'
+							className='dark:bg-input/30 border-input min-h-40 w-full rounded-none border bg-transparent p-2.5 font-mono text-xs'
 							value={payloadInput}
 							onChange={(event) =>
 								setPayloadInput(event.target.value)
@@ -283,7 +283,7 @@ function AdminJobsPage() {
 							return (
 								<div
 									key={scheduler.id}
-									className='flex items-center justify-between rounded-md border p-2 text-sm'
+									className='flex items-center justify-between rounded-none border p-2 text-xs'
 								>
 									<div>
 										<p className='font-medium'>
@@ -344,7 +344,7 @@ function AdminJobsPage() {
 					{jobs.map((job) => (
 						<div
 							key={job.id}
-							className='space-y-3 rounded-lg border p-3'
+							className='space-y-3 rounded-none border p-3'
 						>
 							<div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
 								<div className='min-w-0'>
@@ -388,7 +388,7 @@ function AdminJobsPage() {
 							</div>
 
 							{expandedJobId === job.id ? (
-								<div className='bg-muted/30 space-y-2 rounded-md border border-dashed p-3 text-xs'>
+								<div className='bg-muted/30 space-y-2 rounded-none border border-dashed p-3 text-xs'>
 									<p>
 										attempts: {job.attemptsMade} | priority:{' '}
 										{job.priority ?? 'n/a'}
@@ -410,7 +410,7 @@ function AdminJobsPage() {
 											failure: {job.failedReason}
 										</p>
 									) : null}
-									<pre className='bg-background max-h-48 overflow-auto rounded border p-2 font-mono text-xs'>
+									<pre className='bg-background max-h-48 overflow-auto rounded-none border p-2 font-mono text-xs'>
 										{JSON.stringify(job.data, null, 2)}
 									</pre>
 								</div>

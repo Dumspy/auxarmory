@@ -159,7 +159,7 @@ function AdminUsersPage() {
 							return (
 								<div
 									key={user.id}
-									className='flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between'
+									className='flex flex-col gap-3 rounded-none border p-3 sm:flex-row sm:items-center sm:justify-between'
 								>
 									<div className='min-w-0'>
 										<p className='truncate text-sm font-medium'>
@@ -182,7 +182,7 @@ function AdminUsersPage() {
 										</Badge>
 
 										<select
-											className='bg-background h-9 rounded-md border px-2 text-sm'
+											className='dark:bg-input/30 border-input h-8 rounded-none border bg-transparent px-2.5 text-xs'
 											value={currentRole}
 											disabled={
 												isUpdating || isCurrentUser

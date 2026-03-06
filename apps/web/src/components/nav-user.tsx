@@ -70,11 +70,9 @@ export function NavUser() {
 							/>
 						}
 					>
-						<Avatar className='h-8 w-8 rounded-lg'>
+						<Avatar className='h-8 w-8'>
 							<AvatarImage src={user.avatar} alt={user.name} />
-							<AvatarFallback className='rounded-lg'>
-								{userInitial}
-							</AvatarFallback>
+							<AvatarFallback>{userInitial}</AvatarFallback>
 						</Avatar>
 						<div className='grid flex-1 text-left text-sm leading-tight'>
 							<span className='truncate font-medium'>
@@ -87,24 +85,24 @@ export function NavUser() {
 						<ChevronsUpDown className='ml-auto size-4' />
 					</DropdownMenuTrigger>
 					<DropdownMenuContent
-						className='w-(--anchor-width) min-w-56 rounded-lg'
+						className='w-(--anchor-width) min-w-56'
 						side={isMobile ? 'bottom' : 'right'}
 						align='end'
 						sideOffset={4}
 					>
 						<DropdownMenuGroup>
 							<DropdownMenuLabel className='p-0 font-normal'>
-								<div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
-									<Avatar className='h-8 w-8 rounded-lg'>
+								<div className='flex items-center gap-2 px-1 py-1.5 text-left text-xs'>
+									<Avatar className='h-8 w-8'>
 										<AvatarImage
 											src={user.avatar}
 											alt={user.name}
 										/>
-										<AvatarFallback className='rounded-lg'>
+										<AvatarFallback>
 											{userInitial}
 										</AvatarFallback>
 									</Avatar>
-									<div className='grid flex-1 text-left text-sm leading-tight'>
+									<div className='grid flex-1 text-left text-xs leading-tight'>
 										<span className='truncate font-medium'>
 											{user.name}
 										</span>

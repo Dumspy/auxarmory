@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm'
+import { and, eq, inArray, sql } from 'drizzle-orm'
 
 import { db } from '@auxarmory/db/client'
 import { wowCacheProfessions } from '@auxarmory/db/schema'
@@ -63,6 +63,26 @@ export const syncWowStaticWeeklyProfessionsJob = defineJob({
 			}))
 
 			const seenAt = new Date()
+			let updatedCount = 0
+			let insertedCount = rows.length
+
+			if (rows.length > 0) {
+				const existing = await db
+					.select({ battlenetId: wowCacheProfessions.battlenetId })
+					.from(wowCacheProfessions)
+					.where(
+						and(
+							eq(wowCacheProfessions.region, job.data.region),
+							inArray(
+								wowCacheProfessions.battlenetId,
+								rows.map((row) => row.battlenetId),
+							),
+						),
+					)
+
+				updatedCount = existing.length
+				insertedCount = rows.length - updatedCount
+			}
 
 			if (rows.length > 0) {
 				await db
@@ -99,7 +119,8 @@ export const syncWowStaticWeeklyProfessionsJob = defineJob({
 				entity: WOW_STATIC_WEEKLY_PROFESSIONS_ENTITY,
 				region: job.data.region,
 				resetKey: job.data.resetKey,
-				insertedCount: processedCount,
+				insertedCount,
+				updatedCount,
 				metadata: { resetKey: job.data.resetKey },
 			})
 

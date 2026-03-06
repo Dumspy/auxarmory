@@ -17,10 +17,7 @@ import {
 	wowStaticWeeklyCoordinatorJobPayloadSchema,
 	startSyncRun,
 } from '../utils.js'
-import type {
-	SyncRunTrigger,
-	WowStaticWeeklyCoordinatorJobPayload,
-} from '../utils.js'
+import type { WowStaticWeeklyCoordinatorJobPayload } from '../utils.js'
 
 export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 	name: 'sync:wow:static:weekly:coordinator',
@@ -74,7 +71,7 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 					{
 						region,
 						resetKey: dueCheck.resetKey,
-						triggeredBy: 'scheduler' satisfies SyncRunTrigger,
+						triggeredBy: job.data.triggeredBy,
 					},
 					{
 						jobId: formatWowStaticWeeklyRegionJobId(

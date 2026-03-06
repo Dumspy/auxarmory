@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm'
+import { and, eq, inArray, sql } from 'drizzle-orm'
 
 import { db } from '@auxarmory/db/client'
 import { wowCacheRealms } from '@auxarmory/db/schema'
@@ -68,6 +68,26 @@ export const syncWowStaticWeeklyRealmsJob = defineJob({
 				.filter((realm) => realm.slug.length > 0)
 
 			const seenAt = new Date()
+			let updatedCount = 0
+			let insertedCount = rows.length
+
+			if (rows.length > 0) {
+				const existing = await db
+					.select({ battlenetId: wowCacheRealms.battlenetId })
+					.from(wowCacheRealms)
+					.where(
+						and(
+							eq(wowCacheRealms.region, job.data.region),
+							inArray(
+								wowCacheRealms.battlenetId,
+								rows.map((row) => row.battlenetId),
+							),
+						),
+					)
+
+				updatedCount = existing.length
+				insertedCount = rows.length - updatedCount
+			}
 
 			if (rows.length > 0) {
 				await db
@@ -108,7 +128,8 @@ export const syncWowStaticWeeklyRealmsJob = defineJob({
 				entity: WOW_STATIC_WEEKLY_REALMS_ENTITY,
 				region: job.data.region,
 				resetKey: job.data.resetKey,
-				insertedCount: processedCount,
+				insertedCount,
+				updatedCount,
 				metadata: { resetKey: job.data.resetKey },
 			})
 

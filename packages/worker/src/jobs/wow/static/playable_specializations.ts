@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm'
+import { and, eq, inArray, sql } from 'drizzle-orm'
 
 import { db } from '@auxarmory/db/client'
 import { wowCachePlayableSpecializations } from '@auxarmory/db/schema'
@@ -80,6 +80,44 @@ export const syncWowStaticWeeklyPlayableSpecializationsJob = defineJob({
 			const rows = [...characterRows, ...petRows]
 
 			const seenAt = new Date()
+			let updatedCount = 0
+			let insertedCount = rows.length
+
+			if (rows.length > 0) {
+				const existing = await db
+					.select({
+						battlenetId:
+							wowCachePlayableSpecializations.battlenetId,
+						specializationType:
+							wowCachePlayableSpecializations.specializationType,
+					})
+					.from(wowCachePlayableSpecializations)
+					.where(
+						and(
+							eq(
+								wowCachePlayableSpecializations.region,
+								job.data.region,
+							),
+							inArray(
+								wowCachePlayableSpecializations.battlenetId,
+								rows.map((row) => row.battlenetId),
+							),
+						),
+					)
+
+				const existingKeys = new Set(
+					existing.map(
+						(row) => `${row.battlenetId}:${row.specializationType}`,
+					),
+				)
+
+				updatedCount = rows.filter((row) =>
+					existingKeys.has(
+						`${row.battlenetId}:${row.specializationType}`,
+					),
+				).length
+				insertedCount = rows.length - updatedCount
+			}
 
 			if (rows.length > 0) {
 				await db
@@ -118,7 +156,8 @@ export const syncWowStaticWeeklyPlayableSpecializationsJob = defineJob({
 				entity: WOW_STATIC_WEEKLY_PLAYABLE_SPECIALIZATIONS_ENTITY,
 				region: job.data.region,
 				resetKey: job.data.resetKey,
-				insertedCount: processedCount,
+				insertedCount,
+				updatedCount,
 				metadata: { resetKey: job.data.resetKey },
 			})
 

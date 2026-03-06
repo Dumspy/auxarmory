@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
+import type { MouseEvent, ReactNode } from 'react'
 import { Fragment } from 'react'
-import { useRouterState } from '@tanstack/react-router'
+import { useRouter, useRouterState } from '@tanstack/react-router'
 
 import {
 	Breadcrumb,
@@ -20,16 +20,46 @@ import {
 import { AppSidebar } from './app-sidebar'
 
 function BreadcrumbNav() {
+	const router = useRouter()
 	const state = useRouterState()
 	const path = state.location.pathname
-	const segments: string[] =
+	const allSegments: string[] =
 		path === '/' ? [] : path.split('/').filter(Boolean)
+	const segments =
+		allSegments[0] === 'dashboard' ? allSegments.slice(1) : allSegments
+
+	function handleBreadcrumbClick(
+		event: MouseEvent<HTMLAnchorElement>,
+		href: string,
+	) {
+		if (
+			event.button !== 0 ||
+			event.metaKey ||
+			event.ctrlKey ||
+			event.shiftKey ||
+			event.altKey
+		) {
+			return
+		}
+
+		event.preventDefault()
+		router.history.push(href)
+	}
 
 	return (
 		<Breadcrumb>
 			<BreadcrumbList>
 				<BreadcrumbItem>
-					<BreadcrumbLink render={<a href='/dashboard' />}>
+					<BreadcrumbLink
+						render={
+							<a
+								href='/dashboard'
+								onClick={(event) =>
+									handleBreadcrumbClick(event, '/dashboard')
+								}
+							/>
+						}
+					>
 						Home
 					</BreadcrumbLink>
 				</BreadcrumbItem>
@@ -47,7 +77,17 @@ function BreadcrumbNav() {
 									<BreadcrumbPage>{title}</BreadcrumbPage>
 								) : (
 									<BreadcrumbLink
-										render={<a href={segmentPath} />}
+										render={
+											<a
+												href={segmentPath}
+												onClick={(event) =>
+													handleBreadcrumbClick(
+														event,
+														segmentPath,
+													)
+												}
+											/>
+										}
 									>
 										{title}
 									</BreadcrumbLink>

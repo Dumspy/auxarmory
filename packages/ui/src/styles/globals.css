@@ -2,9 +2,6 @@
 @source '../../../apps/**/*.{ts,tsx}';
 @source '../**/*.{ts,tsx}';
 
-@import 'geist/font/sans.css';
-@import 'geist/font/mono.css';
-
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
@@ -45,7 +42,7 @@
 	--chart-5: oklch(0.7253 0.1752 349.7607);
 	--font-sans: Geist, system-ui, sans-serif;
 	--font-serif: Georgia, serif;
-	--font-mono: Geist Mono, monospace;
+	--font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 	--shadow-color: #000000;
 	--shadow-opacity: 0.04;
 	--shadow-blur: 12px;
@@ -111,7 +108,7 @@
 	--radius: 0.75rem;
 	--font-sans: Geist, system-ui, sans-serif;
 	--font-serif: Georgia, serif;
-	--font-mono: Geist Mono, monospace;
+	--font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 	--shadow-color: #000000;
 	--shadow-opacity: 0.5;
 	--shadow-blur: 30px;
@@ -169,7 +166,7 @@
 	--color-sidebar-foreground: var(--sidebar-foreground);
 	--color-sidebar: var(--sidebar);
 	--font-sans: Geist, system-ui, sans-serif;
-	--font-mono: Geist Mono, monospace;
+	--font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 	--font-serif: Georgia, serif;
 	--radius: 0.75rem;
 	--tracking-tighter: calc(var(--tracking-normal) - 0.05em);

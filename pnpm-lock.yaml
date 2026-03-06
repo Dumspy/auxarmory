@@ -482,9 +482,6 @@ importers:
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.2.4)
-      geist:
-        specifier: ^1.7.0
-        version: 1.7.0(next@16.1.6(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -4123,11 +4120,6 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  geist@1.7.0:
-    resolution: {integrity: sha512-ZaoiZwkSf0DwwB1ncdLKp+ggAldqxl5L1+SXaNIBGkPAqcu+xjVJLxlf3/S8vLt9UHx1xu5fz3lbzKCj5iOVdQ==}
-    peerDependencies:
-      next: '>=13.2.0'
-
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -6972,7 +6964,8 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@next/env@16.1.6': {}
+  '@next/env@16.1.6':
+    optional: true
 
   '@next/swc-darwin-arm64@16.1.6':
     optional: true
@@ -7956,6 +7949,7 @@ snapshots:
   '@swc/helpers@0.5.15':
     dependencies:
       tslib: 2.8.1
+    optional: true
 
   '@t3-oss/env-core@0.13.10(typescript@5.9.3)(zod@4.3.6)':
     optionalDependencies:
@@ -8878,7 +8872,8 @@ snapshots:
 
   cli-width@3.0.0: {}
 
-  client-only@0.0.1: {}
+  client-only@0.0.1:
+    optional: true
 
   cliui@8.0.1:
     dependencies:
@@ -9309,10 +9304,6 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
-
-  geist@1.7.0(next@16.1.6(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)):
-    dependencies:
-      next: 16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
 
   gensync@1.0.0-beta.2: {}
 
@@ -9854,6 +9845,7 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
+    optional: true
 
   nf3@0.3.10: {}
 
@@ -10157,6 +10149,7 @@ snapshots:
       nanoid: 3.3.11
       picocolors: 1.1.1
       source-map-js: 1.2.1
+    optional: true
 
   postcss@8.5.6:
     dependencies:
@@ -10581,6 +10574,7 @@ snapshots:
       react: 19.2.4
     optionalDependencies:
       '@babel/core': 7.29.0
+    optional: true
 
   supports-color@10.2.2: {}
 

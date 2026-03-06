@@ -3,6 +3,7 @@ import { Building2, ChevronsUpDown } from 'lucide-react'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
@@ -43,67 +44,73 @@ export function OrgSwitcher() {
 		<SidebarMenu>
 			<SidebarMenuItem>
 				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<SidebarMenuButton
-							size='lg'
-							className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
-						>
-							<div className='bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg'>
-								<Building2 className='size-4' />
-							</div>
-							<div className='grid flex-1 text-left text-sm leading-tight'>
-								<span className='truncate font-medium'>
-									{buttonTitle}
-								</span>
-								<span className='truncate text-xs'>
-									{buttonSubtitle}
-								</span>
-							</div>
-							<ChevronsUpDown className='ml-auto' />
-						</SidebarMenuButton>
+					<DropdownMenuTrigger
+						render={
+							<SidebarMenuButton
+								size='lg'
+								className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
+							/>
+						}
+					>
+						<div className='bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-none'>
+							<Building2 className='size-4' />
+						</div>
+						<div className='grid flex-1 text-left text-sm leading-tight'>
+							<span className='truncate font-medium'>
+								{buttonTitle}
+							</span>
+							<span className='truncate text-xs'>
+								{buttonSubtitle}
+							</span>
+						</div>
+						<ChevronsUpDown className='ml-auto' />
 					</DropdownMenuTrigger>
 					<DropdownMenuContent
-						className='w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg'
+						className='w-(--anchor-width) min-w-56'
 						align='start'
 						side={isMobile ? 'bottom' : 'right'}
 						sideOffset={4}
 					>
-						<DropdownMenuLabel className='text-muted-foreground text-xs'>
-							Guilds
-						</DropdownMenuLabel>
-						{organizations?.map((organization) => {
-							const isActive =
-								organization.id === selectedOrganizationId
+						<DropdownMenuGroup>
+							<DropdownMenuLabel className='text-muted-foreground text-xs'>
+								Guilds
+							</DropdownMenuLabel>
+							{organizations?.map((organization) => {
+								const isActive =
+									organization.id === selectedOrganizationId
 
-							return (
-								<DropdownMenuItem
-									key={organization.id}
-									onClick={() =>
-										setActiveOrganization(organization.id)
-									}
-									disabled={
-										isActive ||
-										switchingOrganizationId ===
-											organization.id
-									}
-									className='gap-2 p-2'
-								>
-									<div className='bg-muted flex size-6 items-center justify-center rounded-md'>
-										<Building2 className='size-3.5 shrink-0' />
-									</div>
-									<div className='flex flex-1 items-center justify-between gap-2'>
-										<span className='truncate'>
-											{organization.name}
-										</span>
-										{isActive ? (
-											<span className='text-muted-foreground text-xs'>
-												Active
+								return (
+									<DropdownMenuItem
+										key={organization.id}
+										onClick={() =>
+											setActiveOrganization(
+												organization.id,
+											)
+										}
+										disabled={
+											isActive ||
+											switchingOrganizationId ===
+												organization.id
+										}
+										className='gap-2 p-2'
+									>
+										<div className='bg-muted flex size-6 items-center justify-center rounded-none'>
+											<Building2 className='size-3.5 shrink-0' />
+										</div>
+										<div className='flex flex-1 items-center justify-between gap-2'>
+											<span className='truncate'>
+												{organization.name}
 											</span>
-										) : null}
-									</div>
-								</DropdownMenuItem>
-							)
-						})}
+											{isActive ? (
+												<span className='text-muted-foreground text-xs'>
+													Active
+												</span>
+											) : null}
+										</div>
+									</DropdownMenuItem>
+								)
+							})}
+						</DropdownMenuGroup>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</SidebarMenuItem>

@@ -3,7 +3,6 @@ import { useState } from 'react'
 import {
 	Navigate,
 	createFileRoute,
-	useNavigate,
 	useRouterState,
 } from '@tanstack/react-router'
 
@@ -24,7 +23,6 @@ export const Route = createFileRoute('/auth/signup')({
 })
 
 function SignupPage() {
-	const navigate = useNavigate()
 	const { location } = useRouterState()
 	const { isPending: isSessionPending, isAuthenticated } = useAuthPageState()
 	const redirectTo = getRedirectFromSearchStr(location.searchStr)
@@ -61,7 +59,7 @@ function SignupPage() {
 			return
 		}
 
-		await navigate({ to: normalizedRedirectTo })
+		window.location.assign(normalizedRedirectTo)
 	}
 
 	const safeRedirect = encodeURIComponent(normalizedRedirectTo)

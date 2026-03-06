@@ -1,0 +1,8 @@
+export { syncWowStaticWeeklyCoordinatorJob } from './static/coordinator.js'
+export { syncWowStaticWeeklyConnectedRealmsJob } from './static/connected_realms.js'
+export { syncWowStaticWeeklyPlayableClassesJob } from './static/playable_classes.js'
+export { syncWowStaticWeeklyPlayableRacesJob } from './static/playable_races.js'
+export { syncWowStaticWeeklyPlayableSpecializationsJob } from './static/playable_specializations.js'
+export { syncWowStaticWeeklyProfessionsJob } from './static/professions.js'
+export { syncWowStaticWeeklyRegionJob } from './static/region.js'
+export { syncWowStaticWeeklyRealmsJob } from './static/realms.js'

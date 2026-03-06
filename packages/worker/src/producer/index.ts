@@ -24,6 +24,7 @@ export interface EnqueueJobInput<TName extends JobName> {
 	payload: JobPayloads[TName]
 	priority?: JobPriority
 	delayMs?: number
+	jobId?: string
 }
 
 export interface EnqueueUnknownJobInput {
@@ -31,6 +32,7 @@ export interface EnqueueUnknownJobInput {
 	payload: unknown
 	priority?: JobPriority
 	delayMs?: number
+	jobId?: string
 }
 
 export interface ListJobsInput {
@@ -87,6 +89,7 @@ export async function enqueueJob<TName extends JobName>(
 	return queue.add(input.name, payload, {
 		priority: input.priority ?? JOB_PRIORITIES.STANDARD,
 		delay: input.delayMs,
+		jobId: input.jobId,
 	})
 }
 
@@ -99,6 +102,7 @@ export async function enqueueJobFromInput(
 	return queue.add(input.name, payload, {
 		priority: input.priority ?? JOB_PRIORITIES.STANDARD,
 		delay: input.delayMs,
+		jobId: input.jobId,
 	})
 }
 

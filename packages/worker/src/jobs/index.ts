@@ -2,10 +2,32 @@ import type { Job } from 'bullmq'
 import { z } from 'zod'
 
 import { syncExample, syncRepeatableExample } from './example.js'
+import {
+	syncWowStaticWeeklyCoordinatorJob,
+	syncWowStaticWeeklyConnectedRealmsJob,
+	syncWowStaticWeeklyPlayableClassesJob,
+	syncWowStaticWeeklyPlayableRacesJob,
+	syncWowStaticWeeklyPlayableSpecializationsJob,
+	syncWowStaticWeeklyProfessionsJob,
+	syncWowStaticWeeklyRegionJob,
+	syncWowStaticWeeklyRealmsJob,
+} from './wow/index.js'
 
 export const jobRegistry = {
 	[syncExample.name]: syncExample,
 	[syncRepeatableExample.name]: syncRepeatableExample,
+	[syncWowStaticWeeklyCoordinatorJob.name]: syncWowStaticWeeklyCoordinatorJob,
+	[syncWowStaticWeeklyConnectedRealmsJob.name]:
+		syncWowStaticWeeklyConnectedRealmsJob,
+	[syncWowStaticWeeklyRealmsJob.name]: syncWowStaticWeeklyRealmsJob,
+	[syncWowStaticWeeklyPlayableClassesJob.name]:
+		syncWowStaticWeeklyPlayableClassesJob,
+	[syncWowStaticWeeklyPlayableRacesJob.name]:
+		syncWowStaticWeeklyPlayableRacesJob,
+	[syncWowStaticWeeklyPlayableSpecializationsJob.name]:
+		syncWowStaticWeeklyPlayableSpecializationsJob,
+	[syncWowStaticWeeklyProfessionsJob.name]: syncWowStaticWeeklyProfessionsJob,
+	[syncWowStaticWeeklyRegionJob.name]: syncWowStaticWeeklyRegionJob,
 } as const
 
 export type JobName = keyof typeof jobRegistry
@@ -85,7 +107,7 @@ export function parseJobPayload<TName extends JobName>(
 		throw new z.ZodError(result.error.issues)
 	}
 
-	return result.data
+	return result.data as JobPayloads[TName]
 }
 
 export async function handleJob(

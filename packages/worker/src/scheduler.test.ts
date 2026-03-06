@@ -25,17 +25,25 @@ describe('scheduler', () => {
 		expect(mocks.createJobScheduler).toHaveBeenCalledTimes(1)
 	})
 
-	it('registers the expected repeatable job', async () => {
+	it('registers expected repeatable jobs', async () => {
 		const upsertJobScheduler = vi.fn().mockResolvedValue(undefined)
 
 		await registerRepeatables({ upsertJobScheduler } as never)
 
-		expect(upsertJobScheduler).toHaveBeenCalledTimes(1)
+		expect(upsertJobScheduler).toHaveBeenCalledTimes(2)
 		expect(upsertJobScheduler).toHaveBeenCalledWith(
 			'sync-example-repeatable',
 			{ every: 15 * 60 * 1000 },
 			'sync:example:repeatable',
 			{ profileId: 'repeatable-example', region: 'us' },
+			{ priority: JOB_PRIORITIES.STANDARD },
+			{ override: true },
+		)
+		expect(upsertJobScheduler).toHaveBeenCalledWith(
+			'sync-wow-static-weekly-coordinator',
+			{ every: 30 * 60 * 1000 },
+			'sync:wow:static:weekly:coordinator',
+			{ triggeredBy: 'scheduler' },
 			{ priority: JOB_PRIORITIES.STANDARD },
 			{ override: true },
 		)

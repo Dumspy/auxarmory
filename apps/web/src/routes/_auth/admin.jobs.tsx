@@ -14,7 +14,18 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@auxarmory/ui/components/ui/card'
+import {
+	Item,
+	ItemActions,
+	ItemContent,
+	ItemHeader,
+} from '@auxarmory/ui/components/ui/item'
+import {
+	NativeSelect,
+	NativeSelectOption,
+} from '@auxarmory/ui/components/ui/native-select'
 import { Tabs, TabsList, TabsTrigger } from '@auxarmory/ui/components/ui/tabs'
+import { Textarea } from '@auxarmory/ui/components/ui/textarea'
 
 import { ensurePermissionOrRedirect } from '../../lib/route-auth'
 import { useTRPC } from '../../lib/trpc'
@@ -226,23 +237,28 @@ function AdminJobsPage() {
 				</CardHeader>
 				<CardContent>
 					<form className='space-y-3' onSubmit={handleEnqueue}>
-						<select
-							className='dark:bg-input/30 border-input h-8 w-full rounded-none border bg-transparent px-2.5 text-xs'
+						<NativeSelect
+							className='w-full'
 							value={jobName}
 							onChange={(event) =>
 								handleDefinitionChange(event.target.value)
 							}
 						>
-							<option value=''>Select a job</option>
+							<NativeSelectOption value=''>
+								Select a job
+							</NativeSelectOption>
 							{definitionsQuery.data?.jobs.map((job) => (
-								<option key={job.name} value={job.name}>
+								<NativeSelectOption
+									key={job.name}
+									value={job.name}
+								>
 									{job.name}
-								</option>
+								</NativeSelectOption>
 							))}
-						</select>
+						</NativeSelect>
 
-						<textarea
-							className='dark:bg-input/30 border-input min-h-40 w-full rounded-none border bg-transparent p-2.5 font-mono text-xs'
+						<Textarea
+							className='min-h-40 font-mono'
 							value={payloadInput}
 							onChange={(event) =>
 								setPayloadInput(event.target.value)
@@ -281,11 +297,13 @@ function AdminJobsPage() {
 							)
 
 							return (
-								<div
+								<Item
 									key={scheduler.id}
-									className='flex items-center justify-between rounded-none border p-2 text-xs'
+									variant='outline'
+									size='xs'
+									className='justify-between'
 								>
-									<div>
+									<ItemContent>
 										<p className='font-medium'>
 											{scheduler.name}
 										</p>
@@ -294,14 +312,16 @@ function AdminJobsPage() {
 												? scheduler.pattern
 												: `every ${Math.round((scheduler.every ?? 0) / 1000)}s`}
 										</p>
-									</div>
-									<Badge
-										variant='outline'
-										title={nextRun.title}
-									>
-										next: {nextRun.label}
-									</Badge>
-								</div>
+									</ItemContent>
+									<ItemActions className='justify-end'>
+										<Badge
+											variant='outline'
+											title={nextRun.title}
+										>
+											next: {nextRun.label}
+										</Badge>
+									</ItemActions>
+								</Item>
 							)
 						})
 					) : (
@@ -342,21 +362,22 @@ function AdminJobsPage() {
 					) : null}
 
 					{jobs.map((job) => (
-						<div
+						<Item
 							key={job.id}
-							className='space-y-3 rounded-none border p-3'
+							variant='outline'
+							className='flex-col items-stretch gap-3'
 						>
-							<div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
-								<div className='min-w-0'>
+							<ItemHeader className='flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between'>
+								<ItemContent className='min-w-0'>
 									<p className='truncate text-sm font-medium'>
 										{job.name}
 									</p>
 									<p className='text-muted-foreground truncate text-xs'>
 										id: {job.id}
 									</p>
-								</div>
+								</ItemContent>
 
-								<div className='flex items-center gap-2'>
+								<ItemActions className='w-full justify-start sm:w-auto sm:justify-end'>
 									<Button
 										variant='outline'
 										onClick={() =>
@@ -384,8 +405,8 @@ function AdminJobsPage() {
 											Retry
 										</Button>
 									) : null}
-								</div>
-							</div>
+								</ItemActions>
+							</ItemHeader>
 
 							{expandedJobId === job.id ? (
 								<div className='bg-muted/30 space-y-2 rounded-none border border-dashed p-3 text-xs'>
@@ -415,7 +436,7 @@ function AdminJobsPage() {
 									</pre>
 								</div>
 							) : null}
-						</div>
+						</Item>
 					))}
 
 					<div className='flex items-center justify-end gap-2'>

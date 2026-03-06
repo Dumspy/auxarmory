@@ -86,7 +86,7 @@ export function CharacterCard({
 							</AvatarFallback>
 						</Avatar>
 						{character.favorite ? (
-							<div className='bg-primary absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full'>
+							<div className='bg-primary absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-none'>
 								<Star className='text-primary-foreground h-2 w-2' />
 							</div>
 						) : null}

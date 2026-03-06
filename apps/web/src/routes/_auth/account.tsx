@@ -17,6 +17,16 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@auxarmory/ui/components/ui/card'
+import {
+	Item,
+	ItemActions,
+	ItemContent,
+	ItemHeader,
+} from '@auxarmory/ui/components/ui/item'
+import {
+	NativeSelect,
+	NativeSelectOption,
+} from '@auxarmory/ui/components/ui/native-select'
 import { Separator } from '@auxarmory/ui/components/ui/separator'
 
 import { authClient } from '../../lib/auth-client'
@@ -304,19 +314,20 @@ function AccountPage() {
 			const isSwitching = switchingOrganizationId === organization.id
 
 			return (
-				<div
+				<Item
 					key={organization.id}
-					className='flex items-center justify-between gap-3 rounded-none border p-3'
+					variant='outline'
+					className='justify-between gap-3'
 				>
-					<div className='min-w-0'>
+					<ItemContent className='min-w-0'>
 						<p className='truncate text-sm font-medium'>
 							{organization.name}
 						</p>
 						<p className='text-muted-foreground truncate text-xs'>
 							{organization.slug}
 						</p>
-					</div>
-					<div className='flex items-center gap-2'>
+					</ItemContent>
+					<ItemActions className='justify-end'>
 						{isActive ? <Badge>Active</Badge> : null}
 						<Button
 							variant='outline'
@@ -331,8 +342,8 @@ function AccountPage() {
 								isSwitching,
 							})}
 						</Button>
-					</div>
-				</div>
+					</ItemActions>
+				</Item>
 			)
 		})
 	}
@@ -418,13 +429,16 @@ function AccountPage() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent className='space-y-3'>
-							<div className='flex flex-col gap-3 rounded-none border p-3 sm:flex-row sm:items-end'>
+							<Item
+								variant='outline'
+								className='flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between'
+							>
 								<div className='space-y-1'>
 									<p className='text-xs font-medium uppercase'>
 										Battle.net region
 									</p>
-									<select
-										className='dark:bg-input/30 border-input h-8 min-w-36 rounded-none border bg-transparent px-2.5 text-xs'
+									<NativeSelect
+										className='min-w-36'
 										value={selectedBattlenetProvider}
 										onChange={(event) =>
 											setSelectedBattlenetProvider(
@@ -434,29 +448,31 @@ function AccountPage() {
 										}
 									>
 										{battlenetRegions.map((region) => (
-											<option
+											<NativeSelectOption
 												key={region.providerId}
 												value={region.providerId}
 											>
 												{region.label}
-											</option>
+											</NativeSelectOption>
 										))}
-									</select>
+									</NativeSelect>
 								</div>
-								<Button
-									onClick={handleLinkBattlenetAccount}
-									disabled={
-										!user?.id ||
-										!!linkingProviderId ||
-										isLoadingLinkedAccounts
-									}
-								>
-									{linkingProviderId ===
-									selectedBattlenetProvider
-										? 'Redirecting...'
-										: 'Link Battle.net account'}
-								</Button>
-							</div>
+								<ItemActions className='w-full justify-start sm:w-auto sm:justify-end'>
+									<Button
+										onClick={handleLinkBattlenetAccount}
+										disabled={
+											!user?.id ||
+											!!linkingProviderId ||
+											isLoadingLinkedAccounts
+										}
+									>
+										{linkingProviderId ===
+										selectedBattlenetProvider
+											? 'Redirecting...'
+											: 'Link Battle.net account'}
+									</Button>
+								</ItemActions>
+							</Item>
 
 							{linkedAccountError ? (
 								<p className='text-destructive text-sm'>
@@ -472,11 +488,12 @@ function AccountPage() {
 
 							{!isLoadingLinkedAccounts
 								? battlenetAccountsByProvider.map((region) => (
-										<div
+										<Item
 											key={region.providerId}
-											className='space-y-2 rounded-none border p-3'
+											variant='outline'
+											className='flex-col items-stretch gap-2'
 										>
-											<div className='flex items-center justify-between'>
+											<ItemHeader>
 												<div>
 													<p className='text-sm font-medium'>
 														Battle.net{' '}
@@ -503,16 +520,18 @@ function AccountPage() {
 														? 'Linked'
 														: 'Not linked'}
 												</Badge>
-											</div>
+											</ItemHeader>
 
 											{region.accounts.length > 0 ? (
 												region.accounts.map(
 													(account) => (
-														<div
+														<Item
 															key={account.id}
-															className='flex items-center justify-between gap-2 rounded-none border p-2'
+															variant='outline'
+															size='xs'
+															className='justify-between gap-2'
 														>
-															<div className='min-w-0'>
+															<ItemContent className='min-w-0'>
 																<p className='truncate text-sm font-medium'>
 																	{
 																		account.accountId
@@ -523,26 +542,28 @@ function AccountPage() {
 																		account.providerId
 																	}
 																</p>
-															</div>
-															<Button
-																variant='outline'
-																size='sm'
-																onClick={() =>
-																	handleUnlinkBattlenetAccount(
-																		account,
-																	)
-																}
-																disabled={
-																	unlinkingAccountId ===
+															</ItemContent>
+															<ItemActions className='justify-end'>
+																<Button
+																	variant='outline'
+																	size='sm'
+																	onClick={() =>
+																		handleUnlinkBattlenetAccount(
+																			account,
+																		)
+																	}
+																	disabled={
+																		unlinkingAccountId ===
+																		account.id
+																	}
+																>
+																	{unlinkingAccountId ===
 																	account.id
-																}
-															>
-																{unlinkingAccountId ===
-																account.id
-																	? 'Unlinking...'
-																	: 'Unlink'}
-															</Button>
-														</div>
+																		? 'Unlinking...'
+																		: 'Unlink'}
+																</Button>
+															</ItemActions>
+														</Item>
 													),
 												)
 											) : (
@@ -551,7 +572,7 @@ function AccountPage() {
 													region.
 												</p>
 											)}
-										</div>
+										</Item>
 									))
 								: null}
 						</CardContent>
@@ -568,13 +589,16 @@ function AccountPage() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent className='space-y-3'>
-							<div className='flex flex-col gap-3 rounded-none border p-3 sm:flex-row sm:items-end'>
+							<Item
+								variant='outline'
+								className='flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between'
+							>
 								<div className='space-y-1'>
 									<p className='text-xs font-medium uppercase'>
 										Warcraft Logs region
 									</p>
-									<select
-										className='dark:bg-input/30 border-input h-8 min-w-36 rounded-none border bg-transparent px-2.5 text-xs'
+									<NativeSelect
+										className='min-w-36'
 										value={selectedWarcraftLogsProvider}
 										onChange={(event) =>
 											setSelectedWarcraftLogsProvider(
@@ -584,29 +608,31 @@ function AccountPage() {
 										}
 									>
 										{warcraftLogsRegions.map((region) => (
-											<option
+											<NativeSelectOption
 												key={region.providerId}
 												value={region.providerId}
 											>
 												{region.label}
-											</option>
+											</NativeSelectOption>
 										))}
-									</select>
+									</NativeSelect>
 								</div>
-								<Button
-									onClick={handleLinkWarcraftLogsAccount}
-									disabled={
-										!user?.id ||
-										!!linkingProviderId ||
-										isLoadingLinkedAccounts
-									}
-								>
-									{linkingProviderId ===
-									selectedWarcraftLogsProvider
-										? 'Redirecting...'
-										: 'Link Warcraft Logs account'}
-								</Button>
-							</div>
+								<ItemActions className='w-full justify-start sm:w-auto sm:justify-end'>
+									<Button
+										onClick={handleLinkWarcraftLogsAccount}
+										disabled={
+											!user?.id ||
+											!!linkingProviderId ||
+											isLoadingLinkedAccounts
+										}
+									>
+										{linkingProviderId ===
+										selectedWarcraftLogsProvider
+											? 'Redirecting...'
+											: 'Link Warcraft Logs account'}
+									</Button>
+								</ItemActions>
+							</Item>
 
 							{linkedAccountError ? (
 								<p className='text-destructive text-sm'>
@@ -623,11 +649,12 @@ function AccountPage() {
 							{!isLoadingLinkedAccounts
 								? warcraftLogsAccountsByProvider.map(
 										(region) => (
-											<div
+											<Item
 												key={region.providerId}
-												className='space-y-2 rounded-none border p-3'
+												variant='outline'
+												className='flex-col items-stretch gap-2'
 											>
-												<div className='flex items-center justify-between'>
+												<ItemHeader>
 													<div>
 														<p className='text-sm font-medium'>
 															Warcraft Logs{' '}
@@ -658,16 +685,18 @@ function AccountPage() {
 															? 'Linked'
 															: 'Not linked'}
 													</Badge>
-												</div>
+												</ItemHeader>
 
 												{region.accounts.length > 0 ? (
 													region.accounts.map(
 														(account) => (
-															<div
+															<Item
 																key={account.id}
-																className='flex items-center justify-between gap-2 rounded-none border p-2'
+																variant='outline'
+																size='xs'
+																className='justify-between gap-2'
 															>
-																<div className='min-w-0'>
+																<ItemContent className='min-w-0'>
 																	<p className='truncate text-sm font-medium'>
 																		{
 																			account.accountId
@@ -678,26 +707,28 @@ function AccountPage() {
 																			account.providerId
 																		}
 																	</p>
-																</div>
-																<Button
-																	variant='outline'
-																	size='sm'
-																	onClick={() =>
-																		handleUnlinkWarcraftLogsAccount(
-																			account,
-																		)
-																	}
-																	disabled={
-																		unlinkingAccountId ===
+																</ItemContent>
+																<ItemActions className='justify-end'>
+																	<Button
+																		variant='outline'
+																		size='sm'
+																		onClick={() =>
+																			handleUnlinkWarcraftLogsAccount(
+																				account,
+																			)
+																		}
+																		disabled={
+																			unlinkingAccountId ===
+																			account.id
+																		}
+																	>
+																		{unlinkingAccountId ===
 																		account.id
-																	}
-																>
-																	{unlinkingAccountId ===
-																	account.id
-																		? 'Unlinking...'
-																		: 'Unlink'}
-																</Button>
-															</div>
+																			? 'Unlinking...'
+																			: 'Unlink'}
+																	</Button>
+																</ItemActions>
+															</Item>
 														),
 													)
 												) : (
@@ -706,7 +737,7 @@ function AccountPage() {
 														this region.
 													</p>
 												)}
-											</div>
+											</Item>
 										),
 									)
 								: null}

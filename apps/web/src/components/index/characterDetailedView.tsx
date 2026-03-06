@@ -110,7 +110,7 @@ export function CharacterDetailedView({
 									Raid Progress - Nerub-ar Palace
 								</h4>
 								<div className='grid grid-cols-3 gap-4'>
-									<div className='bg-muted rounded-lg p-3 text-center'>
+									<div className='bg-muted rounded-none p-3 text-center'>
 										<div className='text-lg font-bold'>
 											{character.raidProgress.normal}
 										</div>
@@ -118,7 +118,7 @@ export function CharacterDetailedView({
 											Normal
 										</div>
 									</div>
-									<div className='bg-muted rounded-lg p-3 text-center'>
+									<div className='bg-muted rounded-none p-3 text-center'>
 										<div className='text-lg font-bold'>
 											{character.raidProgress.heroic}
 										</div>
@@ -126,7 +126,7 @@ export function CharacterDetailedView({
 											Heroic
 										</div>
 									</div>
-									<div className='bg-muted rounded-lg p-3 text-center'>
+									<div className='bg-muted rounded-none p-3 text-center'>
 										<div className='text-lg font-bold'>
 											{character.raidProgress.mythic}
 										</div>
@@ -142,7 +142,7 @@ export function CharacterDetailedView({
 									<Zap className='h-4 w-4' />
 									Mythic+ Score: {character.mythicScore}
 								</h4>
-								<div className='bg-muted rounded-lg p-3'>
+								<div className='bg-muted rounded-none p-3'>
 									<div className='mb-2 flex items-center justify-between'>
 										<span className='text-foreground text-sm'>
 											Season Progress
@@ -165,7 +165,7 @@ export function CharacterDetailedView({
 									<Target className='h-4 w-4' />
 									PvP Rating: {character.pvpRating}
 								</h4>
-								<div className='bg-muted rounded-lg p-3'>
+								<div className='bg-muted rounded-none p-3'>
 									<div className='flex items-center justify-between'>
 										<span className='text-foreground text-sm'>
 											3v3 Arena
@@ -177,7 +177,7 @@ export function CharacterDetailedView({
 						</TabsContent>
 
 						<TabsContent value='weekly' className='mt-4 space-y-4'>
-							<div className='bg-muted rounded-lg p-4'>
+							<div className='bg-muted rounded-none p-4'>
 								<h4 className='text-foreground mb-3 font-medium'>
 									Great Vault Progress
 								</h4>
@@ -237,7 +237,7 @@ export function CharacterDetailedView({
 									</div>
 								</div>
 							</div>
-							<div className='bg-muted rounded-lg p-4'>
+							<div className='bg-muted rounded-none p-4'>
 								<div className='mb-2 flex justify-between text-sm'>
 									<span>Weekly Conquest</span>
 									<span>
@@ -258,7 +258,7 @@ export function CharacterDetailedView({
 
 						<TabsContent value='stats' className='mt-4 space-y-4'>
 							<div className='grid grid-cols-2 gap-4'>
-								<div className='bg-muted rounded-lg p-4'>
+								<div className='bg-muted rounded-none p-4'>
 									<div className='mb-2 flex items-center gap-2'>
 										<Sword className='h-4 w-4' />
 										<span className='text-foreground text-sm font-medium'>
@@ -269,7 +269,7 @@ export function CharacterDetailedView({
 										847,392
 									</div>
 								</div>
-								<div className='bg-muted rounded-lg p-4'>
+								<div className='bg-muted rounded-none p-4'>
 									<div className='mb-2 flex items-center gap-2'>
 										<Shield className='h-4 w-4' />
 										<span className='text-foreground text-sm font-medium'>
@@ -280,7 +280,7 @@ export function CharacterDetailedView({
 										234,567
 									</div>
 								</div>
-								<div className='bg-muted rounded-lg p-4'>
+								<div className='bg-muted rounded-none p-4'>
 									<div className='mb-2 flex items-center gap-2'>
 										<Activity className='h-4 w-4' />
 										<span className='text-foreground text-sm font-medium'>
@@ -291,7 +291,7 @@ export function CharacterDetailedView({
 										92%
 									</div>
 								</div>
-								<div className='bg-muted rounded-lg p-4'>
+								<div className='bg-muted rounded-none p-4'>
 									<div className='mb-2 flex items-center gap-2'>
 										<TrendingUp className='h-4 w-4' />
 										<span className='text-foreground text-sm font-medium'>
@@ -320,9 +320,9 @@ export function CharacterDetailedView({
 						{recentActivity.map((activity) => (
 							<div
 								key={activity.title}
-								className='bg-muted flex items-center gap-3 rounded-lg p-3'
+								className='bg-muted flex items-center gap-3 rounded-none p-3'
 							>
-								<div className='bg-muted flex h-8 w-8 items-center justify-center rounded-lg'>
+								<div className='bg-muted flex h-8 w-8 items-center justify-center rounded-none'>
 									<activity.icon className='text-muted-foreground h-4 w-4' />
 								</div>
 								<div className='flex-1'>

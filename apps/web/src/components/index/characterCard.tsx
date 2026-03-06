@@ -2,6 +2,7 @@ import { Star } from 'lucide-react'
 
 import {
 	Avatar,
+	AvatarBadge,
 	AvatarFallback,
 	AvatarImage,
 } from '@auxarmory/ui/components/ui/avatar'
@@ -78,18 +79,18 @@ export function CharacterCard({
 		>
 			<CardContent>
 				<div className='mb-3 flex items-center gap-3'>
-					<div className='relative'>
+					<div>
 						<Avatar className='bg-muted h-12 w-12'>
 							<AvatarImage src={character.avatarUrl ?? ''} />
 							<AvatarFallback>
 								{character.name.charAt(0).toUpperCase()}
 							</AvatarFallback>
+							{character.favorite ? (
+								<AvatarBadge className='-right-1 -top-1 bottom-auto'>
+									<Star />
+								</AvatarBadge>
+							) : null}
 						</Avatar>
-						{character.favorite ? (
-							<div className='bg-primary absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-none'>
-								<Star className='text-primary-foreground h-2 w-2' />
-							</div>
-						) : null}
 					</div>
 					<div className='flex-1'>
 						<div className='flex items-center gap-2'>

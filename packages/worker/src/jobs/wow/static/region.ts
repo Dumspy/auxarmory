@@ -31,7 +31,6 @@ export const syncWowStaticWeeklyRegionJob = defineJob({
 		triggeredBy: 'scheduler',
 	} satisfies WowStaticWeeklyRegionJobPayload,
 	handler: async function handleSyncWowStaticWeeklyRegion(job) {
-		const queue = createQueue()
 		const { runId } = await startSyncRun({
 			provider: SYNC_PROVIDER,
 			domain: SYNC_DOMAIN,
@@ -46,6 +45,7 @@ export const syncWowStaticWeeklyRegionJob = defineJob({
 				resetKey: job.data.resetKey,
 			},
 		})
+		const queue = createQueue()
 
 		try {
 			const entityJobs = [

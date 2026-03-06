@@ -32,7 +32,6 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 		triggeredBy: 'scheduler',
 	} satisfies WowStaticWeeklyCoordinatorJobPayload,
 	handler: async function handleSyncWowStaticWeeklyCoordinator(job) {
-		const queue = createQueue()
 		const { runId } = await startSyncRun({
 			provider: SYNC_PROVIDER,
 			domain: SYNC_DOMAIN,
@@ -46,6 +45,7 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 
 		let enqueuedCount = 0
 		let skippedCount = 0
+		const queue = createQueue()
 
 		try {
 			for (const region of WOW_SYNC_REGIONS) {

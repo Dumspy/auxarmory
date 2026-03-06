@@ -24,14 +24,25 @@ function HomePage() {
 						Track your characters, vault progress, and weekly goals.
 					</p>
 					<div className='flex flex-wrap gap-2'>
-						<Button asChild>
-							<Link to='/dashboard'>Go to dashboard</Link>
+						<Button
+							render={<Link to='/dashboard' search={{}} />}
+							nativeButton={false}
+						>
+							Go to dashboard
 						</Button>
-						<Button asChild variant='outline'>
-							<Link to='/auth/login'>Log in</Link>
+						<Button
+							render={<Link to='/auth/login' search={{}} />}
+							nativeButton={false}
+							variant='outline'
+						>
+							Log in
 						</Button>
-						<Button asChild variant='outline'>
-							<Link to='/auth/signup'>Sign up</Link>
+						<Button
+							render={<Link to='/auth/signup' search={{}} />}
+							nativeButton={false}
+							variant='outline'
+						>
+							Sign up
 						</Button>
 					</div>
 				</CardContent>

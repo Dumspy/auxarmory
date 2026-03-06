@@ -15,6 +15,15 @@ import {
 	CardTitle,
 } from '@auxarmory/ui/components/ui/card'
 import { Input } from '@auxarmory/ui/components/ui/input'
+import {
+	Item,
+	ItemActions,
+	ItemContent,
+} from '@auxarmory/ui/components/ui/item'
+import {
+	NativeSelect,
+	NativeSelectOption,
+} from '@auxarmory/ui/components/ui/native-select'
 
 import { ensurePermissionOrRedirect } from '../../lib/route-auth'
 import { authClient } from '../../lib/auth-client'
@@ -157,20 +166,21 @@ function AdminUsersPage() {
 								setRoleMutation.variables?.userId === user.id
 
 							return (
-								<div
+								<Item
 									key={user.id}
-									className='flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between'
+									variant='outline'
+									className='flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between'
 								>
-									<div className='min-w-0'>
+									<ItemContent className='min-w-0'>
 										<p className='truncate text-sm font-medium'>
 											{user.name ?? 'Unnamed user'}
 										</p>
 										<p className='text-muted-foreground truncate text-xs'>
 											{user.email}
 										</p>
-									</div>
+									</ItemContent>
 
-									<div className='flex items-center gap-2'>
+									<ItemActions className='w-full justify-start sm:w-auto sm:justify-end'>
 										<Badge
 											variant={
 												currentRole === 'admin'
@@ -181,8 +191,9 @@ function AdminUsersPage() {
 											{currentRole}
 										</Badge>
 
-										<select
-											className='bg-background h-9 rounded-md border px-2 text-sm'
+										<NativeSelect
+											size='sm'
+											className='min-w-24'
 											value={currentRole}
 											disabled={
 												isUpdating || isCurrentUser
@@ -199,16 +210,20 @@ function AdminUsersPage() {
 												}
 											}}
 										>
-											<option value='user'>user</option>
-											<option value='admin'>admin</option>
-										</select>
+											<NativeSelectOption value='user'>
+												user
+											</NativeSelectOption>
+											<NativeSelectOption value='admin'>
+												admin
+											</NativeSelectOption>
+										</NativeSelect>
 										{isCurrentUser ? (
 											<span className='text-muted-foreground text-xs'>
 												You
 											</span>
 										) : null}
-									</div>
-								</div>
+									</ItemActions>
+								</Item>
 							)
 						})}
 					</div>

@@ -431,9 +431,15 @@ function AdminJobsPage() {
 											failure: {job.failedReason}
 										</p>
 									) : null}
-									<pre className='bg-background max-h-48 overflow-auto rounded-none border p-2 font-mono text-xs'>
-										{JSON.stringify(job.data, null, 2)}
-									</pre>
+									<Textarea
+										readOnly
+										value={JSON.stringify(
+											job.data,
+											null,
+											2,
+										)}
+										className='min-h-40 max-h-48 overflow-auto font-mono'
+									/>
 								</div>
 							) : null}
 						</Item>

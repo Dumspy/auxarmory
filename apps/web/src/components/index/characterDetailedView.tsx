@@ -85,12 +85,19 @@ export function CharacterDetailedView({
 				</CardHeader>
 				<CardContent>
 					<Tabs defaultValue='progression' className='w-full'>
-						<TabsList className='grid w-full grid-cols-3'>
-							<TabsTrigger value='progression'>
+						<TabsList className='grid h-8 w-full grid-cols-3 p-0.5'>
+							<TabsTrigger
+								value='progression'
+								className='h-7 text-xs'
+							>
 								Progression
 							</TabsTrigger>
-							<TabsTrigger value='weekly'>Weekly</TabsTrigger>
-							<TabsTrigger value='stats'>Stats</TabsTrigger>
+							<TabsTrigger value='weekly' className='h-7 text-xs'>
+								Weekly
+							</TabsTrigger>
+							<TabsTrigger value='stats' className='h-7 text-xs'>
+								Stats
+							</TabsTrigger>
 						</TabsList>
 
 						<TabsContent

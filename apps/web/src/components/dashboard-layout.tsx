@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Fragment } from 'react'
-import { Link, useRouterState } from '@tanstack/react-router'
+import { useRouterState } from '@tanstack/react-router'
 
 import {
 	Breadcrumb,
@@ -29,8 +29,8 @@ function BreadcrumbNav() {
 		<Breadcrumb>
 			<BreadcrumbList>
 				<BreadcrumbItem>
-					<BreadcrumbLink asChild>
-						<Link to='/dashboard'>Home</Link>
+					<BreadcrumbLink render={<a href='/dashboard' />}>
+						Home
 					</BreadcrumbLink>
 				</BreadcrumbItem>
 				{segments.map((segment, index) => {
@@ -46,8 +46,10 @@ function BreadcrumbNav() {
 								{isLast ? (
 									<BreadcrumbPage>{title}</BreadcrumbPage>
 								) : (
-									<BreadcrumbLink asChild>
-										<Link to={segmentPath}>{title}</Link>
+									<BreadcrumbLink
+										render={<a href={segmentPath} />}
+									>
+										{title}
 									</BreadcrumbLink>
 								)}
 							</BreadcrumbItem>
@@ -64,7 +66,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
 		<SidebarProvider>
 			<AppSidebar />
 			<SidebarInset className='text-foreground'>
-				<header className='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12'>
+				<header className='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12'>
 					<div className='flex items-center gap-2 px-4'>
 						<SidebarTrigger className='-ml-1' />
 						<Separator

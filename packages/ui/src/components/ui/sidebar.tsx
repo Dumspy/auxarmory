@@ -1,5 +1,3 @@
-'use client'
-
 import * as React from 'react'
 import { mergeProps } from '@base-ui/react/merge-props'
 import { useRender } from '@base-ui/react/use-render'
@@ -275,8 +273,8 @@ function SidebarTrigger({
 			variant='ghost'
 			size='icon-sm'
 			className={cn(className)}
-			onClick={(event) => {
-				onClick?.(event)
+			onClick={(...args) => {
+				onClick?.(...args)
 				toggleSidebar()
 			}}
 			{...props}

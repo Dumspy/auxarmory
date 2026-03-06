@@ -74,8 +74,12 @@ function RootErrorComponent({ error }: { error: Error }) {
 					</CardDescription>
 				</CardHeader>
 				<CardContent className='space-y-2'>
-					<Button asChild className='w-full'>
-						<Link to='/'>Go to home</Link>
+					<Button
+						render={<Link to='/' search={{}} />}
+						nativeButton={false}
+						className='w-full'
+					>
+						Go to home
 					</Button>
 					<Button
 						variant='outline'

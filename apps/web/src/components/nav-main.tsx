@@ -111,12 +111,10 @@ export function NavMain() {
 								<SidebarMenuButton
 									tooltip={item.title}
 									isActive={isActive}
-									asChild
+									render={<Link to={item.path} />}
 								>
-									<Link to={item.path}>
-										<item.icon />
-										<span>{item.title}</span>
-									</Link>
+									<item.icon />
+									<span>{item.title}</span>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 						)
@@ -136,12 +134,10 @@ export function NavMain() {
 									<SidebarMenuButton
 										tooltip={item.title}
 										isActive={isActive}
-										asChild
+										render={<Link to={item.path} />}
 									>
-										<Link to={item.path}>
-											<item.icon />
-											<span>{item.title}</span>
-										</Link>
+										<item.icon />
+										<span>{item.title}</span>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 							)

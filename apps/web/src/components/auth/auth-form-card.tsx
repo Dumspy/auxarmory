@@ -136,8 +136,13 @@ export function AuthFormCard({
 										? 'Create account'
 										: 'Sign in'}
 							</Button>
-							<Button asChild variant='ghost' className='w-full'>
-								<a href={switchHref}>{switchLabel}</a>
+							<Button
+								render={<a href={switchHref} />}
+								nativeButton={false}
+								variant='ghost'
+								className='w-full'
+							>
+								{switchLabel}
 							</Button>
 						</form>
 					</CardContent>

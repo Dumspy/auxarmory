@@ -15,7 +15,7 @@ import type { WowStaticWeeklyRegionJobPayload } from '../utils.js'
 export const syncWowStaticWeeklyRegionJob = defineJob({
 	name: 'sync:wow:static:weekly:region',
 	description: 'Sync WoW static cache for one region weekly window',
-	allowManualRun: true,
+	allowManualRun: false,
 	schema: wowStaticWeeklyRegionJobPayloadSchema,
 	data: {
 		region: 'us',

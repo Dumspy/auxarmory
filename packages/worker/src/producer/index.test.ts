@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import {
+	getManualJobDefinitions,
 	getJobDependencyDetails,
 	getQueueOverview,
 	LISTABLE_JOB_STATUSES,
@@ -8,6 +9,13 @@ import {
 import type { ListableJobStatus } from './index.js'
 
 describe('producer job status visibility', () => {
+	it('does not expose weekly region parent as manually runnable', () => {
+		const manualJobs = getManualJobDefinitions().map((job) => job.name)
+
+		expect(manualJobs).not.toContain('sync:wow:static:weekly:region')
+		expect(manualJobs).toContain('sync:wow:static:weekly:coordinator')
+	})
+
 	it('includes waiting-children in listable statuses', () => {
 		expect(LISTABLE_JOB_STATUSES).toContain(
 			'waiting-children' satisfies ListableJobStatus,

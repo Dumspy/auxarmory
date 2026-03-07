@@ -55,6 +55,8 @@ const dependenciesInput = z.object({
 	jobId: z.string().min(1),
 })
 
+const manualJobNames = new Set(getManualJobDefinitions().map((job) => job.name))
+
 export interface ManualJobDefinitionDto {
 	name: string
 	description: string
@@ -153,6 +155,13 @@ export const adminJobsRouter = router({
 		.meta({ authz: platformPermissions.adminJobsEnqueue })
 		.input(enqueueInput)
 		.mutation(async ({ input }) => {
+			if (!manualJobNames.has(input.name)) {
+				throw new TRPCError({
+					code: 'BAD_REQUEST',
+					message: 'This job cannot be enqueued manually',
+				})
+			}
+
 			const queue = createQueue()
 
 			try {

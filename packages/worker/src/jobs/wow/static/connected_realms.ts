@@ -13,6 +13,7 @@ import {
 	SYNC_PROVIDER,
 	startSyncRun,
 	toErrorPayload,
+	parseConnectedRealmIdFromHref,
 	WOW_STATIC_WEEKLY_CONNECTED_REALMS_ENTITY,
 	wowStaticWeeklyEntityJobPayloadSchema,
 } from '../utils.js'
@@ -32,16 +33,6 @@ interface ConnectedRealmData {
 	population: {
 		type: string
 	}
-}
-
-function parseConnectedRealmId(href: string) {
-	const match = href.match(/connected-realm\/(\d+)/)
-	if (!match?.[1]) {
-		return null
-	}
-
-	const id = Number.parseInt(match[1], 10)
-	return Number.isFinite(id) ? id : null
 }
 
 export const syncWowStaticWeeklyConnectedRealmsJob = defineJob({
@@ -82,7 +73,7 @@ export const syncWowStaticWeeklyConnectedRealmsJob = defineJob({
 			}[] = []
 
 			for (const reference of index.connected_realms) {
-				const id = parseConnectedRealmId(reference.href)
+				const id = parseConnectedRealmIdFromHref(reference.href)
 				if (!id) {
 					continue
 				}

@@ -10,6 +10,7 @@ import {
 	completeSyncRunSuccess,
 	createBattlenetClient,
 	localizeName,
+	parseConnectedRealmIdFromHref,
 	SYNC_DOMAIN,
 	SYNC_PROVIDER,
 	startSyncRun,
@@ -25,6 +26,22 @@ interface RealmIndexData {
 		slug: string
 		name: string | Record<string, string>
 	}[]
+}
+
+interface RealmData {
+	id: number
+	connected_realm: {
+		href: string
+	}
+	name: string | Record<string, string>
+	category: string | Record<string, string>
+	locale: string
+	timezone: string
+	type: {
+		type: string
+	}
+	is_tournament: boolean
+	slug: string
 }
 
 export const syncWowStaticWeeklyRealmsJob = defineJob({
@@ -57,15 +74,43 @@ export const syncWowStaticWeeklyRealmsJob = defineJob({
 				await client.wow.RealmIndex(),
 			) as RealmIndexData
 
-			const rows = index.realms
-				.map((realm) => ({
-					battlenetId: realm.id,
-					connectedRealmId: null,
-					slug: realm.slug,
-					name: localizeName(realm.name) ?? realm.slug,
-					payload: realm as unknown as Record<string, unknown>,
-				}))
-				.filter((realm) => realm.slug.length > 0)
+			const rows: {
+				battlenetId: number
+				connectedRealmId: number | null
+				slug: string
+				name: string
+				category: string | null
+				locale: string | null
+				timezone: string | null
+				realmType: string | null
+				isTournament: boolean | null
+				payload: Record<string, unknown>
+			}[] = []
+
+			for (const realm of index.realms) {
+				if (realm.slug.length === 0) {
+					continue
+				}
+
+				const realmData = unwrap(
+					await client.wow.Realm(realm.slug),
+				) as RealmData
+
+				rows.push({
+					battlenetId: realmData.id,
+					connectedRealmId: parseConnectedRealmIdFromHref(
+						realmData.connected_realm.href,
+					),
+					slug: realmData.slug,
+					name: localizeName(realmData.name) ?? realmData.slug,
+					category: localizeName(realmData.category),
+					locale: realmData.locale,
+					timezone: realmData.timezone,
+					realmType: realmData.type.type,
+					isTournament: realmData.is_tournament,
+					payload: realmData as unknown as Record<string, unknown>,
+				})
+			}
 
 			const seenAt = new Date()
 			let updatedCount = 0

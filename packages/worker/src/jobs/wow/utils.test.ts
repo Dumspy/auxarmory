@@ -6,6 +6,7 @@ import {
 	formatWowStaticWeeklyRegionJobId,
 	getMostRecentWeeklyResetAt,
 	isRegionWeeklySyncDue,
+	parseConnectedRealmIdFromHref,
 } from './utils.js'
 
 describe('weekly reset helpers', () => {
@@ -62,5 +63,24 @@ describe('weekly reset helpers', () => {
 		)
 		expect(regionJobId.includes(':')).toBe(false)
 		expect(entityJobId.includes(':')).toBe(false)
+	})
+
+	it('parses connected realm IDs from href values', () => {
+		expect(
+			parseConnectedRealmIdFromHref(
+				'https://us.api.blizzard.com/data/wow/connected-realm/1136?namespace=dynamic-us',
+			),
+		).toBe(1136)
+
+		expect(
+			parseConnectedRealmIdFromHref('/data/wow/connected-realm/42'),
+		).toBe(42)
+
+		expect(
+			parseConnectedRealmIdFromHref(
+				'https://example.com/data/wow/realm/1',
+			),
+		).toBeNull()
+		expect(parseConnectedRealmIdFromHref('')).toBeNull()
 	})
 })

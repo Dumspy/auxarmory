@@ -45,6 +45,7 @@ export type WowSyncRegion = (typeof WOW_SYNC_REGIONS)[number]
 
 export const wowStaticWeeklyCoordinatorJobPayloadSchema = z.object({
 	triggeredBy: syncRunTriggerSchema.default('scheduler'),
+	force: z.boolean().default(false),
 })
 
 export type WowStaticWeeklyCoordinatorJobPayload = z.infer<
@@ -161,6 +162,16 @@ export function formatWowStaticWeeklyEntityJobId(
 	const normalizedResetKey = resetKey.replaceAll(':', '-')
 
 	return `wow-static-weekly-${normalizedEntity}-${region}-${normalizedResetKey}`
+}
+
+export function parseConnectedRealmIdFromHref(href: string): number | null {
+	const match = href.match(/connected-realm\/(\d+)/)
+	if (!match?.[1]) {
+		return null
+	}
+
+	const id = Number.parseInt(match[1], 10)
+	return Number.isFinite(id) ? id : null
 }
 
 export const battlenetEnvSchema = z.object({

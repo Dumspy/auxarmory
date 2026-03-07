@@ -10,6 +10,7 @@ export {
 export {
 	addJob,
 	connection,
+	createFlowProducer,
 	createJobScheduler,
 	createQueue,
 	queueName,

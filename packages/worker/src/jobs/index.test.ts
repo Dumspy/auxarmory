@@ -11,9 +11,27 @@ describe('job registry', () => {
 		expect(getJobNames()).toEqual([
 			'sync:example',
 			'sync:example:repeatable',
+			'sync:wow:static:weekly:coordinator',
+			'sync:wow:static:weekly:connected-realms',
+			'sync:wow:static:weekly:realms',
+			'sync:wow:static:weekly:playable-classes',
+			'sync:wow:static:weekly:playable-races',
+			'sync:wow:static:weekly:playable-specializations',
+			'sync:wow:static:weekly:professions',
+			'sync:wow:static:weekly:region',
 		])
 		expect(isJobName('sync:example')).toBe(true)
 		expect(isJobName('sync:example:repeatable')).toBe(true)
+		expect(isJobName('sync:wow:static:weekly:coordinator')).toBe(true)
+		expect(isJobName('sync:wow:static:weekly:connected-realms')).toBe(true)
+		expect(isJobName('sync:wow:static:weekly:realms')).toBe(true)
+		expect(isJobName('sync:wow:static:weekly:playable-classes')).toBe(true)
+		expect(isJobName('sync:wow:static:weekly:playable-races')).toBe(true)
+		expect(
+			isJobName('sync:wow:static:weekly:playable-specializations'),
+		).toBe(true)
+		expect(isJobName('sync:wow:static:weekly:professions')).toBe(true)
+		expect(isJobName('sync:wow:static:weekly:region')).toBe(true)
 		expect(isJobName('unknown:job')).toBe(false)
 	})
 

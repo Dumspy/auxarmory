@@ -59,6 +59,12 @@ export const ConnectedRealmResponse = LinkSelfResponse.extend({
 	),
 	mythic_leaderboards: KeyResponse,
 	auctions: KeyResponse,
+	realm_locked_status: z
+		.strictObject({
+			is_locked_for_pct: z.boolean(),
+			is_locked_for_new_characters: z.boolean(),
+		})
+		.optional(),
 })
 export function ConnectedRealm(this: WoWGameDataClient, id: number) {
 	return this.request<z.infer<typeof ConnectedRealmResponse>>({

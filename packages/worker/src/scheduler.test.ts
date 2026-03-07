@@ -33,7 +33,7 @@ describe('scheduler', () => {
 		expect(upsertJobScheduler).toHaveBeenCalledTimes(2)
 		expect(upsertJobScheduler).toHaveBeenCalledWith(
 			'sync-example-repeatable',
-			{ every: 15 * 60 * 1000 },
+			{ every: 15 * 60 * 1000, pattern: undefined },
 			'sync:example:repeatable',
 			{ profileId: 'repeatable-example', region: 'us' },
 			{ priority: JOB_PRIORITIES.STANDARD },
@@ -41,9 +41,9 @@ describe('scheduler', () => {
 		)
 		expect(upsertJobScheduler).toHaveBeenCalledWith(
 			'sync-wow-static-weekly-coordinator',
-			{ every: 30 * 60 * 1000 },
+			{ every: 30 * 60 * 1000, pattern: undefined },
 			'sync:wow:static:weekly:coordinator',
-			{ triggeredBy: 'scheduler' },
+			{ triggeredBy: 'scheduler', force: false },
 			{ priority: JOB_PRIORITIES.STANDARD },
 			{ override: true },
 		)

@@ -54,6 +54,7 @@ export interface EnsureWowStaticWeeklyFlowResult {
 	created: boolean
 	recovered: boolean
 	retriedCount: number
+	forced: boolean
 }
 
 export function getWowStaticWeeklyFlowJobIds(
@@ -78,22 +79,29 @@ export function getWowStaticWeeklyFlowJobIds(
 
 export function buildWowStaticWeeklyRegionFlow(
 	data: WowStaticWeeklyRegionJobPayload,
+	options?: {
+		jobIdSuffix?: string
+	},
 ): FlowJob {
 	const jobIds = getWowStaticWeeklyFlowJobIds(data)
+	const suffix = options?.jobIdSuffix
+	const parentJobId = suffix ? `${jobIds.parent}-${suffix}` : jobIds.parent
 
 	return {
 		name: syncWowStaticWeeklyRegionJob.name,
 		queueName,
 		data,
 		opts: {
-			jobId: jobIds.parent,
+			jobId: parentJobId,
 		},
 		children: WEEKLY_FLOW_CHILDREN.map((child) => ({
 			name: child.name,
 			queueName,
 			data,
 			opts: {
-				jobId: jobIds.children[child.entity],
+				jobId: suffix
+					? `${jobIds.children[child.entity]}-${suffix}`
+					: jobIds.children[child.entity],
 			},
 		})),
 	}
@@ -103,7 +111,25 @@ export async function ensureWowStaticWeeklyRegionFlow(args: {
 	queue: WorkerQueue
 	flowProducer: FlowProducer
 	data: WowStaticWeeklyRegionJobPayload
+	force?: boolean
 }): Promise<EnsureWowStaticWeeklyFlowResult> {
+	if (args.force) {
+		const forceSuffix = `manual-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+
+		await args.flowProducer.add(
+			buildWowStaticWeeklyRegionFlow(args.data, {
+				jobIdSuffix: forceSuffix,
+			}),
+		)
+
+		return {
+			created: true,
+			recovered: false,
+			retriedCount: 0,
+			forced: true,
+		}
+	}
+
 	const flowJobIds = getWowStaticWeeklyFlowJobIds(args.data)
 	const parentJob = await args.queue.getJob(flowJobIds.parent)
 
@@ -114,6 +140,7 @@ export async function ensureWowStaticWeeklyRegionFlow(args: {
 			created: true,
 			recovered: false,
 			retriedCount: 0,
+			forced: false,
 		}
 	}
 
@@ -145,5 +172,6 @@ export async function ensureWowStaticWeeklyRegionFlow(args: {
 		created: false,
 		recovered: retriedCount > 0,
 		retriedCount,
+		forced: false,
 	}
 }

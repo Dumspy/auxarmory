@@ -29,6 +29,7 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 	},
 	data: {
 		triggeredBy: 'scheduler',
+		force: false,
 	} satisfies WowStaticWeeklyCoordinatorJobPayload,
 	handler: async function handleSyncWowStaticWeeklyCoordinator(job) {
 		const { runId } = await startSyncRun({
@@ -43,6 +44,7 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 		})
 
 		let createdCount = 0
+		let forcedCount = 0
 		let recoveredCount = 0
 		let retriedCount = 0
 		let skippedCount = 0
@@ -63,7 +65,7 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 					lastResetKey: state?.lastResetKey,
 				})
 
-				if (!dueCheck.due) {
+				if (!job.data.force && !dueCheck.due) {
 					skippedCount += 1
 					continue
 				}
@@ -76,10 +78,15 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 						resetKey: dueCheck.resetKey,
 						triggeredBy: job.data.triggeredBy,
 					},
+					force: job.data.force,
 				})
 
 				if (result.created) {
-					createdCount += 1
+					if (result.forced) {
+						forcedCount += 1
+					} else {
+						createdCount += 1
+					}
 				}
 
 				if (result.recovered) {
@@ -94,11 +101,12 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 				provider: SYNC_PROVIDER,
 				domain: SYNC_DOMAIN,
 				entity: WOW_STATIC_WEEKLY_COORDINATOR_ENTITY,
-				insertedCount: createdCount,
+				insertedCount: createdCount + forcedCount,
 				skippedCount,
 				metadata: {
 					regions: WOW_SYNC_REGIONS,
 					createdCount,
+					forcedCount,
 					recoveredCount,
 					retriedCount,
 					skippedCount,
@@ -108,6 +116,7 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 			return {
 				ok: true,
 				createdCount,
+				forcedCount,
 				recoveredCount,
 				retriedCount,
 				skippedCount,

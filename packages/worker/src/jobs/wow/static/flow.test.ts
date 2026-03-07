@@ -52,6 +52,7 @@ describe('wow static weekly flow helpers', () => {
 			created: true,
 			recovered: false,
 			retriedCount: 0,
+			forced: false,
 		})
 		expect(flowProducer.add).toHaveBeenCalledTimes(1)
 		expect(flowProducer.add).toHaveBeenCalledWith(
@@ -103,10 +104,55 @@ describe('wow static weekly flow helpers', () => {
 			created: false,
 			recovered: true,
 			retriedCount: 2,
+			forced: false,
 		})
 		expect(failedChildJob.retry).toHaveBeenCalledTimes(1)
 		expect(completedChildJob.retry).not.toHaveBeenCalled()
 		expect(failedParentJob.retry).toHaveBeenCalledTimes(1)
 		expect(flowProducer.add).not.toHaveBeenCalled()
+	})
+
+	it('creates a fresh flow when force is enabled', async () => {
+		const data = {
+			region: 'us',
+			resetKey: 'us:2026-03-03T15:00',
+			triggeredBy: 'manual',
+			force: true,
+		} as const
+		const ids = getWowStaticWeeklyFlowJobIds(data)
+
+		const existingParentJob = {
+			getState: vi.fn().mockResolvedValue('completed'),
+			retry: vi.fn().mockResolvedValue(undefined),
+		}
+
+		const queue = {
+			getJob: vi.fn(async (jobId: string) => {
+				if (jobId === ids.parent) {
+					return existingParentJob
+				}
+
+				return null
+			}),
+		} as unknown as EnsureFlowArgs['queue']
+		const flowProducer = {
+			add: vi.fn().mockResolvedValue(undefined),
+		} as unknown as EnsureFlowArgs['flowProducer']
+
+		const result = await ensureWowStaticWeeklyRegionFlow({
+			queue,
+			flowProducer,
+			data,
+			force: true,
+		})
+
+		expect(result).toEqual({
+			created: true,
+			recovered: false,
+			retriedCount: 0,
+			forced: true,
+		})
+		expect(flowProducer.add).toHaveBeenCalledTimes(1)
+		expect(queue.getJob).not.toHaveBeenCalled()
 	})
 })

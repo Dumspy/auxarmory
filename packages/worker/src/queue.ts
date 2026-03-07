@@ -1,4 +1,4 @@
-import { JobScheduler, Queue } from 'bullmq'
+import { FlowProducer, JobScheduler, Queue } from 'bullmq'
 
 import type { JobName, JobPayloads } from './contracts.js'
 import { env } from './env.js'
@@ -21,6 +21,12 @@ export function createQueue(): WorkerQueue {
 
 export function createJobScheduler(): JobScheduler {
 	return new JobScheduler(queueName, {
+		connection,
+	})
+}
+
+export function createFlowProducer(): FlowProducer {
+	return new FlowProducer({
 		connection,
 	})
 }

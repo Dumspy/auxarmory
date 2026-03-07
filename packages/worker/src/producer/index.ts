@@ -11,6 +11,7 @@ import type { WorkerQueue } from '../queue.js'
 
 const LISTABLE_JOB_STATUSES = [
 	'waiting',
+	'waiting-children',
 	'active',
 	'delayed',
 	'failed',
@@ -58,6 +59,30 @@ export interface ListJobsResultItem {
 export interface ListJobsResult {
 	items: ListJobsResultItem[]
 	hasMore: boolean
+}
+
+export interface JobDependencyCounts {
+	processed: number
+	unprocessed: number
+	failed: number
+	ignored: number
+}
+
+export interface JobDependencyItem {
+	id: string
+	name: string
+	state: string
+	attemptsMade: number
+	timestamp: number
+	processedOn?: number
+	finishedOn?: number
+	failedReason?: string
+	data: unknown
+}
+
+export interface JobDependencyDetails {
+	counts: JobDependencyCounts
+	waitingOn: JobDependencyItem[]
 }
 
 const LIST_JOBS_SCAN_WINDOW = 200
@@ -219,6 +244,87 @@ export async function retryJobById(queue: WorkerQueue, jobId: string) {
 
 	await job.retry()
 	return true
+}
+
+function parseDependencyJobId(dependencyKey: string): string {
+	const separatorIndex = dependencyKey.lastIndexOf(':')
+
+	if (separatorIndex < 0) {
+		return dependencyKey
+	}
+
+	return dependencyKey.slice(separatorIndex + 1)
+}
+
+function toDependencyCount(value: number | undefined): number {
+	return typeof value === 'number' ? value : 0
+}
+
+export async function getJobDependencyDetails(
+	queue: WorkerQueue,
+	jobId: string,
+): Promise<JobDependencyDetails | null> {
+	const job = await queue.getJob(jobId)
+
+	if (!job) {
+		return null
+	}
+
+	const dependencyCounts = await job.getDependenciesCount({
+		processed: true,
+		unprocessed: true,
+		failed: true,
+		ignored: true,
+	})
+
+	const counts: JobDependencyCounts = {
+		processed: toDependencyCount(dependencyCounts.processed),
+		unprocessed: toDependencyCount(dependencyCounts.unprocessed),
+		failed: toDependencyCount(dependencyCounts.failed),
+		ignored: toDependencyCount(dependencyCounts.ignored),
+	}
+
+	const dependencies = await job.getDependencies({
+		unprocessed: { count: counts.unprocessed || 1000 },
+		failed: { count: counts.failed || 1000 },
+	})
+
+	const dependencyKeys = new Set<string>([
+		...(dependencies.unprocessed ?? []),
+		...(dependencies.failed ?? []),
+	])
+
+	const waitingOn = (
+		await Promise.all(
+			[...dependencyKeys].map(async (dependencyKey) => {
+				const dependencyJobId = parseDependencyJobId(dependencyKey)
+				const dependencyJob = await queue.getJob(dependencyJobId)
+
+				if (!dependencyJob) {
+					return null
+				}
+
+				return {
+					id: String(dependencyJob.id ?? ''),
+					name: dependencyJob.name,
+					state: await dependencyJob.getState(),
+					attemptsMade: dependencyJob.attemptsMade,
+					timestamp: dependencyJob.timestamp,
+					processedOn: dependencyJob.processedOn,
+					finishedOn: dependencyJob.finishedOn,
+					failedReason: dependencyJob.failedReason,
+					data: dependencyJob.data,
+				} satisfies JobDependencyItem
+			}),
+		)
+	).filter((item) => item !== null)
+
+	waitingOn.sort((left, right) => right.timestamp - left.timestamp)
+
+	return {
+		counts,
+		waitingOn,
+	}
 }
 
 export function getManualJobDefinitions() {

@@ -31,6 +31,10 @@
     "./types": {
       "types": "./dist/types.d.ts",
       "default": "./src/types.ts"
+    },
+    "./unwrap": {
+      "types": "./dist/unwrap.d.ts",
+      "default": "./src/unwrap.ts"
     }
   }
 }

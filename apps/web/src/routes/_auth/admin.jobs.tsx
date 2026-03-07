@@ -33,6 +33,7 @@ import { useTRPC } from '../../lib/trpc'
 const PAGE_SIZE = 20
 const JOB_STATUSES = [
 	'waiting',
+	'waiting-children',
 	'active',
 	'delayed',
 	'failed',
@@ -95,6 +96,109 @@ function formatJobTimestamp(timestamp: number | null | undefined) {
 	}
 
 	return date.toLocaleString()
+}
+
+function formatJobStatusLabel(status: string) {
+	return status
+		.split('-')
+		.map((part) =>
+			part.length > 0
+				? `${part[0]?.toUpperCase()}${part.slice(1)}`
+				: part,
+		)
+		.join(' ')
+}
+
+function WaitingChildrenDependencyDetails({
+	jobId,
+	enabled,
+}: {
+	jobId: string
+	enabled: boolean
+}) {
+	const trpc = useTRPC()
+	const dependenciesQuery = useQuery(
+		trpc.admin.jobs.dependencies.queryOptions(
+			{ jobId },
+			{
+				enabled,
+				refetchInterval: enabled ? 5_000 : false,
+			},
+		),
+	)
+
+	if (!enabled) {
+		return null
+	}
+
+	if (dependenciesQuery.isLoading) {
+		return <p className='text-muted-foreground'>loading dependencies...</p>
+	}
+
+	if (dependenciesQuery.isError) {
+		return (
+			<p className='text-destructive'>
+				unable to load dependency details:{' '}
+				{dependenciesQuery.error.message}
+			</p>
+		)
+	}
+
+	const details = dependenciesQuery.data
+	if (!details) {
+		return null
+	}
+
+	return (
+		<div className='space-y-2 border-t border-dashed pt-2'>
+			<p>
+				dependencies: processed {details.counts.processed} | unprocessed{' '}
+				{details.counts.unprocessed} | failed {details.counts.failed} |
+				ignored {details.counts.ignored}
+			</p>
+			{details.waitingOn.length > 0 ? (
+				<div className='space-y-2'>
+					<p>waiting on {details.waitingOn.length} child jobs:</p>
+					{details.waitingOn.map((child) => (
+						<div
+							key={child.id}
+							className='space-y-1 border border-dashed p-2'
+						>
+							<p>
+								{child.name} | id: {child.id}
+							</p>
+							<p>
+								status: {formatJobStatusLabel(child.state)} |
+								attempts: {child.attemptsMade}
+							</p>
+							<p>queued: {formatJobTimestamp(child.timestamp)}</p>
+							{child.processedOn ? (
+								<p>
+									started:{' '}
+									{formatJobTimestamp(child.processedOn)}
+								</p>
+							) : null}
+							{child.finishedOn ? (
+								<p>
+									finished:{' '}
+									{formatJobTimestamp(child.finishedOn)}
+								</p>
+							) : null}
+							{child.failedReason ? (
+								<p className='text-destructive'>
+									failure: {child.failedReason}
+								</p>
+							) : null}
+						</div>
+					))}
+				</div>
+			) : (
+				<p className='text-muted-foreground'>
+					no unresolved child jobs found.
+				</p>
+			)}
+		</div>
+	)
 }
 
 export const Route = createFileRoute('/_auth/admin/jobs' as never)({
@@ -209,9 +313,13 @@ function AdminJobsPage() {
 				</p>
 			</div>
 
-			<div className='grid grid-cols-2 gap-3 md:grid-cols-5'>
+			<div className='grid grid-cols-2 gap-3 md:grid-cols-6'>
 				{[
 					{ label: 'Waiting', value: counts?.waiting ?? 0 },
+					{
+						label: 'Waiting Children',
+						value: counts?.['waiting-children'] ?? 0,
+					},
 					{ label: 'Active', value: counts?.active ?? 0 },
 					{ label: 'Delayed', value: counts?.delayed ?? 0 },
 					{ label: 'Failed', value: counts?.failed ?? 0 },
@@ -274,6 +382,7 @@ function AdminJobsPage() {
 
 						<div className='flex justify-end'>
 							<Button
+								type='submit'
 								disabled={enqueueMutation.isPending || !jobName}
 							>
 								{enqueueMutation.isPending
@@ -345,11 +454,10 @@ function AdminJobsPage() {
 							setStatus(value as JobStatus)
 						}}
 					>
-						<TabsList className='grid w-full grid-cols-2 sm:grid-cols-5'>
+						<TabsList className='grid w-full grid-cols-2 sm:grid-cols-6'>
 							{JOB_STATUSES.map((item) => (
 								<TabsTrigger key={item} value={item}>
-									{item[0]?.toUpperCase()}
-									{item.slice(1)}
+									{formatJobStatusLabel(item)}
 								</TabsTrigger>
 							))}
 						</TabsList>
@@ -439,6 +547,10 @@ function AdminJobsPage() {
 											2,
 										)}
 										className='min-h-40 max-h-48 overflow-auto font-mono'
+									/>
+									<WaitingChildrenDependencyDetails
+										jobId={job.id}
+										enabled={status === 'waiting-children'}
 									/>
 								</div>
 							) : null}

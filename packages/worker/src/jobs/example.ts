@@ -4,12 +4,12 @@ import { z } from 'zod'
 
 export interface ExampleJobPayload {
 	profileId: string
-	region: 'us' | 'eu' | 'kr' | 'tw'
+	region: 'us' | 'eu' | 'kr'
 }
 
 const exampleJobPayloadSchema = z.object({
 	profileId: z.string().min(1),
-	region: z.enum(['us', 'eu', 'kr', 'tw']),
+	region: z.enum(['us', 'eu', 'kr']),
 })
 
 export const syncExample = defineJob({

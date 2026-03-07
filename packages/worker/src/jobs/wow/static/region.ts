@@ -1,10 +1,8 @@
-import { createQueue } from '../../../queue.js'
 import { defineJob } from '../../../registry.js'
 
 import {
 	completeSyncRunFailure,
 	completeSyncRunSuccess,
-	formatWowStaticWeeklyEntityJobId,
 	SYNC_DOMAIN,
 	SYNC_PROVIDER,
 	toErrorPayload,
@@ -13,12 +11,6 @@ import {
 	wowStaticWeeklyRegionJobPayloadSchema,
 } from '../utils.js'
 import type { WowStaticWeeklyRegionJobPayload } from '../utils.js'
-import { syncWowStaticWeeklyConnectedRealmsJob } from './connected_realms.js'
-import { syncWowStaticWeeklyPlayableClassesJob } from './playable_classes.js'
-import { syncWowStaticWeeklyPlayableRacesJob } from './playable_races.js'
-import { syncWowStaticWeeklyPlayableSpecializationsJob } from './playable_specializations.js'
-import { syncWowStaticWeeklyProfessionsJob } from './professions.js'
-import { syncWowStaticWeeklyRealmsJob } from './realms.js'
 
 export const syncWowStaticWeeklyRegionJob = defineJob({
 	name: 'sync:wow:static:weekly:region',
@@ -45,36 +37,8 @@ export const syncWowStaticWeeklyRegionJob = defineJob({
 				resetKey: job.data.resetKey,
 			},
 		})
-		const queue = createQueue()
 
 		try {
-			const entityJobs = [
-				syncWowStaticWeeklyConnectedRealmsJob,
-				syncWowStaticWeeklyRealmsJob,
-				syncWowStaticWeeklyPlayableClassesJob,
-				syncWowStaticWeeklyPlayableRacesJob,
-				syncWowStaticWeeklyPlayableSpecializationsJob,
-				syncWowStaticWeeklyProfessionsJob,
-			]
-
-			for (const entityJob of entityJobs) {
-				await queue.add(
-					entityJob.name,
-					{
-						region: job.data.region,
-						resetKey: job.data.resetKey,
-						triggeredBy: job.data.triggeredBy,
-					},
-					{
-						jobId: formatWowStaticWeeklyEntityJobId(
-							entityJob.name.split(':').at(-1) ?? entityJob.name,
-							job.data.region,
-							job.data.resetKey,
-						),
-					},
-				)
-			}
-
 			await completeSyncRunSuccess({
 				runId,
 				provider: SYNC_PROVIDER,
@@ -82,9 +46,9 @@ export const syncWowStaticWeeklyRegionJob = defineJob({
 				entity: WOW_STATIC_WEEKLY_REGION_ENTITY,
 				region: job.data.region,
 				resetKey: job.data.resetKey,
-				insertedCount: entityJobs.length,
+				insertedCount: 0,
 				metadata: {
-					queuedEntities: entityJobs.map((item) => item.name),
+					resetKey: job.data.resetKey,
 				},
 			})
 
@@ -106,8 +70,6 @@ export const syncWowStaticWeeklyRegionJob = defineJob({
 			})
 
 			throw error
-		} finally {
-			await queue.close()
 		}
 	},
 })

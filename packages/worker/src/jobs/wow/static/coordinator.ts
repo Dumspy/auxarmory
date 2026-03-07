@@ -1,11 +1,10 @@
-import { createQueue } from '../../../queue.js'
+import { createFlowProducer, createQueue } from '../../../queue.js'
 import { defineJob } from '../../../registry.js'
 
-import { syncWowStaticWeeklyRegionJob } from './region.js'
+import { ensureWowStaticWeeklyRegionFlow } from './flow.js'
 import {
 	completeSyncRunFailure,
 	completeSyncRunSuccess,
-	formatWowStaticWeeklyRegionJobId,
 	getSyncStateByScope,
 	isRegionWeeklySyncDue,
 	SYNC_DOMAIN,
@@ -43,9 +42,12 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 			scheduledFor: job.timestamp ? new Date(job.timestamp) : undefined,
 		})
 
-		let enqueuedCount = 0
+		let createdCount = 0
+		let recoveredCount = 0
+		let retriedCount = 0
 		let skippedCount = 0
 		const queue = createQueue()
+		const flowProducer = createFlowProducer()
 
 		try {
 			for (const region of WOW_SYNC_REGIONS) {
@@ -66,22 +68,25 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 					continue
 				}
 
-				await queue.add(
-					syncWowStaticWeeklyRegionJob.name,
-					{
+				const result = await ensureWowStaticWeeklyRegionFlow({
+					queue,
+					flowProducer,
+					data: {
 						region,
 						resetKey: dueCheck.resetKey,
 						triggeredBy: job.data.triggeredBy,
 					},
-					{
-						jobId: formatWowStaticWeeklyRegionJobId(
-							region,
-							dueCheck.resetKey,
-						),
-					},
-				)
+				})
 
-				enqueuedCount += 1
+				if (result.created) {
+					createdCount += 1
+				}
+
+				if (result.recovered) {
+					recoveredCount += 1
+				}
+
+				retriedCount += result.retriedCount
 			}
 
 			await completeSyncRunSuccess({
@@ -89,16 +94,22 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 				provider: SYNC_PROVIDER,
 				domain: SYNC_DOMAIN,
 				entity: WOW_STATIC_WEEKLY_COORDINATOR_ENTITY,
-				insertedCount: enqueuedCount,
+				insertedCount: createdCount,
 				skippedCount,
 				metadata: {
 					regions: WOW_SYNC_REGIONS,
+					createdCount,
+					recoveredCount,
+					retriedCount,
+					skippedCount,
 				},
 			})
 
 			return {
 				ok: true,
-				enqueuedCount,
+				createdCount,
+				recoveredCount,
+				retriedCount,
 				skippedCount,
 			}
 		} catch (error) {
@@ -114,6 +125,7 @@ export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 
 			throw error
 		} finally {
+			await flowProducer.close()
 			await queue.close()
 		}
 	},

@@ -2,6 +2,7 @@ import { and, eq, inArray, sql } from 'drizzle-orm'
 
 import { db } from '@auxarmory/db/client'
 import { wowCacheConnectedRealms } from '@auxarmory/db/schema'
+import { unwrap } from '@auxarmory/battlenet/unwrap'
 
 import { defineJob } from '../../../registry.js'
 import {
@@ -12,7 +13,6 @@ import {
 	SYNC_PROVIDER,
 	startSyncRun,
 	toErrorPayload,
-	unwrap,
 	WOW_STATIC_WEEKLY_CONNECTED_REALMS_ENTITY,
 	wowStaticWeeklyEntityJobPayloadSchema,
 } from '../utils.js'

@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 
 import {
 	buildWowWeeklyResetKey,
+	formatWowStaticWeeklyEntityJobId,
+	formatWowStaticWeeklyRegionJobId,
 	getMostRecentWeeklyResetAt,
 	isRegionWeeklySyncDue,
 } from './utils.js'
@@ -39,5 +41,26 @@ describe('weekly reset helpers', () => {
 		})
 
 		expect(notDueCheck.due).toBe(false)
+	})
+
+	it('formats deterministic weekly job IDs without colons', () => {
+		const regionJobId = formatWowStaticWeeklyRegionJobId(
+			'us',
+			'us:2026-03-03T15:00',
+		)
+		const entityJobId = formatWowStaticWeeklyEntityJobId(
+			'connected-realms',
+			'us',
+			'us:2026-03-03T15:00',
+		)
+
+		expect(regionJobId).toBe(
+			'wow-static-weekly-region-us-us-2026-03-03T15-00',
+		)
+		expect(entityJobId).toBe(
+			'wow-static-weekly-connected-realms-us-us-2026-03-03T15-00',
+		)
+		expect(regionJobId.includes(':')).toBe(false)
+		expect(entityJobId.includes(':')).toBe(false)
 	})
 })

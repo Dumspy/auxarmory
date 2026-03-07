@@ -5,6 +5,7 @@ import { platformPermissions } from '@auxarmory/auth/permissions'
 import {
 	createQueue,
 	enqueueJobFromInput,
+	getJobDependencyDetails,
 	getManualJobDefinitions,
 	getQueueOverview,
 	isJobName,
@@ -21,7 +22,14 @@ const jobNameSchema = z
 	.refine(isJobName, { message: 'Unknown job name' })
 
 const listJobsInput = z.object({
-	status: z.enum(['waiting', 'active', 'delayed', 'failed', 'completed']),
+	status: z.enum([
+		'waiting',
+		'waiting-children',
+		'active',
+		'delayed',
+		'failed',
+		'completed',
+	]),
 	limit: z.number().int().min(1).max(100).default(20),
 	offset: z.number().int().min(0).default(0),
 	jobName: jobNameSchema.optional(),
@@ -40,6 +48,10 @@ const enqueueInput = z.object({
 })
 
 const retryInput = z.object({
+	jobId: z.string().min(1),
+})
+
+const dependenciesInput = z.object({
 	jobId: z.string().min(1),
 })
 
@@ -86,6 +98,30 @@ export const adminJobsRouter = router({
 					items,
 					nextOffset: hasMore ? input.offset + items.length : null,
 				}
+			} finally {
+				await queue.close()
+			}
+		}),
+	dependencies: authorizedProcedure
+		.meta({ authz: platformPermissions.adminJobsRead })
+		.input(dependenciesInput)
+		.query(async ({ input }) => {
+			const queue = createQueue()
+
+			try {
+				const dependencies = await getJobDependencyDetails(
+					queue,
+					input.jobId,
+				)
+
+				if (!dependencies) {
+					throw new TRPCError({
+						code: 'NOT_FOUND',
+						message: 'Job not found',
+					})
+				}
+
+				return dependencies
 			} finally {
 				await queue.close()
 			}

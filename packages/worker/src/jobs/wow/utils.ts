@@ -39,7 +39,6 @@ export const WOW_SYNC_REGIONS = [
 	'us',
 	'eu',
 	'kr',
-	'tw',
 ] as const satisfies readonly BattlenetRegion[]
 
 export type WowSyncRegion = (typeof WOW_SYNC_REGIONS)[number]
@@ -85,7 +84,6 @@ export const WOW_WEEKLY_RESET_UTC_BY_REGION: Record<
 	us: { dayOfWeek: 2, hour: 15, minute: 0 },
 	eu: { dayOfWeek: 3, hour: 7, minute: 0 },
 	kr: { dayOfWeek: 3, hour: 1, minute: 0 },
-	tw: { dayOfWeek: 3, hour: 1, minute: 0 },
 }
 
 function toResetKey(date: Date): string {
@@ -150,7 +148,8 @@ export function formatWowStaticWeeklyRegionJobId(
 	region: WowSyncRegion,
 	resetKey: string,
 ): string {
-	return `wow-static-weekly:region:${region}:${resetKey}`
+	const normalizedResetKey = resetKey.replaceAll(':', '-')
+	return `wow-static-weekly-region-${region}-${normalizedResetKey}`
 }
 
 export function formatWowStaticWeeklyEntityJobId(
@@ -158,7 +157,10 @@ export function formatWowStaticWeeklyEntityJobId(
 	region: WowSyncRegion,
 	resetKey: string,
 ): string {
-	return `wow-static-weekly:${entity}:${region}:${resetKey}`
+	const normalizedEntity = entity.replaceAll(':', '-')
+	const normalizedResetKey = resetKey.replaceAll(':', '-')
+
+	return `wow-static-weekly-${normalizedEntity}-${region}-${normalizedResetKey}`
 }
 
 export const battlenetEnvSchema = z.object({
@@ -198,31 +200,4 @@ export function localizeName(value: unknown): string | null {
 	}
 
 	return null
-}
-
-type BattlenetClientResponse<T> =
-	| {
-			success: true
-			data: T
-	  }
-	| {
-			success: false
-			error: unknown
-			error_type: string
-			request_context: {
-				endpoint: string
-			}
-	  }
-
-export function unwrap<T>(response: BattlenetClientResponse<T>): T {
-	if (response.success) {
-		return response.data
-	}
-
-	throw new Error(
-		`Battle.net request failed with ${response.error_type} error for ${response.request_context.endpoint}`,
-		{
-			cause: response.error,
-		},
-	)
 }

@@ -4,10 +4,11 @@ import type { ClientRequestContext, ClientReturn, RegionsEnum } from './types'
 import { ApplicationAuthResponse, BattlenetError } from './types'
 import { WoWGameDataClient, WoWProfileClient } from './wow'
 
+export { RegionsConst, RegionsEnum } from './types'
 export * from './util'
 export * from './unwrap'
 
-type Regions = z.infer<typeof RegionsEnum>
+export type Regions = z.infer<typeof RegionsEnum>
 
 interface BaseClientOptions {
 	region: Regions

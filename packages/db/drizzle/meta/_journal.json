@@ -26,8 +26,29 @@
     {
       "idx": 3,
       "version": "7",
-      "when": 1773129600000,
-      "tag": "0003_fresh_silver_samurai",
+      "when": 1773121679194,
+      "tag": "0003_brainy_grandmaster",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1773123008680,
+      "tag": "0004_easy_vector",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1773125037185,
+      "tag": "0005_typical_frightful_four",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1773176433235,
+      "tag": "0006_ordinary_loners",
       "breakpoints": true
     }
   ]

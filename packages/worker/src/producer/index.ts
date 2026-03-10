@@ -18,7 +18,15 @@ const LISTABLE_JOB_STATUSES = [
 	'completed',
 ] as const
 
+export const PENDING_JOB_STATUSES = [
+	'waiting',
+	'waiting-children',
+	'active',
+	'delayed',
+] as const
+
 type ListableJobStatus = (typeof LISTABLE_JOB_STATUSES)[number]
+type PendingJobStatus = (typeof PENDING_JOB_STATUSES)[number]
 
 export interface EnqueueJobInput<TName extends JobName> {
 	name: TName
@@ -85,6 +93,13 @@ export interface JobDependencyDetails {
 	waitingOn: JobDependencyItem[]
 }
 
+export interface EnqueueUniqueJobResult {
+	job: Awaited<ReturnType<WorkerQueue['add']>>
+	deduplicated: boolean
+	replaced: boolean
+	previousState: string | null
+}
+
 const LIST_JOBS_SCAN_WINDOW = 200
 
 function toListJobItem(
@@ -116,6 +131,65 @@ export async function enqueueJob<TName extends JobName>(
 		delay: input.delayMs,
 		jobId: input.jobId,
 	})
+}
+
+export function isPendingJobState(state: string): state is PendingJobStatus {
+	return PENDING_JOB_STATUSES.includes(state as PendingJobStatus)
+}
+
+export async function getJobStateById(queue: WorkerQueue, jobId: string) {
+	const job = await queue.getJob(jobId)
+
+	if (!job) {
+		return null
+	}
+
+	return job.getState()
+}
+
+export async function enqueueUniqueJob<TName extends JobName>(
+	queue: WorkerQueue,
+	input: EnqueueJobInput<TName>,
+): Promise<EnqueueUniqueJobResult> {
+	if (!input.jobId) {
+		return {
+			job: await enqueueJob(queue, input),
+			deduplicated: false,
+			replaced: false,
+			previousState: null,
+		}
+	}
+
+	const existingJob = await queue.getJob(input.jobId)
+
+	if (!existingJob) {
+		return {
+			job: await enqueueJob(queue, input),
+			deduplicated: false,
+			replaced: false,
+			previousState: null,
+		}
+	}
+
+	const previousState = await existingJob.getState()
+
+	if (isPendingJobState(previousState)) {
+		return {
+			job: existingJob,
+			deduplicated: true,
+			replaced: false,
+			previousState,
+		}
+	}
+
+	await existingJob.remove()
+
+	return {
+		job: await enqueueJob(queue, input),
+		deduplicated: false,
+		replaced: true,
+		previousState,
+	}
 }
 
 export async function enqueueJobFromInput(
@@ -339,4 +413,5 @@ export {
 	type JobName,
 	type JobPayloads,
 	type ListableJobStatus,
+	type PendingJobStatus,
 }

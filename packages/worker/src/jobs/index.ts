@@ -3,6 +3,9 @@ import { z } from 'zod'
 
 import { syncExample, syncRepeatableExample } from './example.js'
 import {
+	syncWowProfileAccountCoordinatorJob,
+	syncWowProfileAccountJob,
+	syncWowProfileCharacterJob,
 	syncWowStaticWeeklyCoordinatorJob,
 	syncWowStaticWeeklyConnectedRealmsJob,
 	syncWowStaticWeeklyPlayableClassesJob,
@@ -16,6 +19,10 @@ import {
 export const jobRegistry = {
 	[syncExample.name]: syncExample,
 	[syncRepeatableExample.name]: syncRepeatableExample,
+	[syncWowProfileAccountCoordinatorJob.name]:
+		syncWowProfileAccountCoordinatorJob,
+	[syncWowProfileAccountJob.name]: syncWowProfileAccountJob,
+	[syncWowProfileCharacterJob.name]: syncWowProfileCharacterJob,
 	[syncWowStaticWeeklyCoordinatorJob.name]: syncWowStaticWeeklyCoordinatorJob,
 	[syncWowStaticWeeklyConnectedRealmsJob.name]:
 		syncWowStaticWeeklyConnectedRealmsJob,

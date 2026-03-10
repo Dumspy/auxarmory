@@ -199,11 +199,14 @@ async function getWowSyncRunState(userId: string) {
 					})
 					.from(wowProfileAccountCharacters)
 					.where(
-						inArray(
-							wowProfileAccountCharacters.wowProfileAccountId,
-							profileAccounts.map(
-								(profileAccount) => profileAccount.id,
+						and(
+							inArray(
+								wowProfileAccountCharacters.wowProfileAccountId,
+								profileAccounts.map(
+									(profileAccount) => profileAccount.id,
+								),
 							),
+							eq(wowProfileAccountCharacters.isActive, true),
 						),
 					)
 			).map((row) => row.characterId)
@@ -314,7 +317,7 @@ async function getWowSyncRunState(userId: string) {
 
 		const hasActiveJob = queuedJobStates.includes('active')
 		const isQueued = queuedJobStates.some(
-			(state) =>
+			(state: string | null) =>
 				state !== 'active' && !!state && isPendingJobState(state),
 		)
 		const relevantStates = [...accountStates, ...characterStates]

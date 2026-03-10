@@ -1,5 +1,5 @@
 import { createQueue } from '../../queue.js'
-import { enqueueJob } from '../../producer/index.js'
+import { enqueueUniqueJob } from '../../producer/index.js'
 import { defineJob } from '../../registry.js'
 
 import {
@@ -13,6 +13,7 @@ import {
 	WOW_PROFILE_ACCOUNT_COORDINATOR_ENTITY,
 	WOW_PROFILE_ACCOUNT_ENTITY,
 	WOW_PROFILE_SYNC_DOMAIN,
+	formatWowProfileAccountJobId,
 	wowProfileAccountCoordinatorJobPayloadSchema,
 } from './profile_utils.js'
 import { listWowLinkedBattlenetAccounts } from './profile_accounts.js'
@@ -51,13 +52,17 @@ export const syncWowProfileAccountCoordinatorJob = defineJob({
 			let enqueuedCount = 0
 
 			for (const linkedAccount of accounts) {
-				await enqueueJob(queue, {
+				const accountId = linkedAccount.id
+				const accountJobId = formatWowProfileAccountJobId(accountId)
+
+				await enqueueUniqueJob(queue, {
 					name: 'sync:wow:profile:account',
 					payload: {
-						authAccountId: linkedAccount.id,
+						authAccountId: accountId,
 						triggeredBy: job.data.triggeredBy,
 						force: job.data.force,
 					},
+					jobId: accountJobId,
 				})
 
 				enqueuedCount += 1

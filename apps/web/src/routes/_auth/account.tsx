@@ -206,7 +206,10 @@ function AccountPage() {
 		trpc.wow.syncStatus.queryOptions(undefined, {
 			enabled: !!user?.id,
 			refetchInterval: (query) =>
-				query.state.data?.status === 'running' ? 5_000 : false,
+				query.state.data?.status === 'running' ||
+				query.state.data?.status === 'queued'
+					? 5_000
+					: false,
 		}),
 	)
 
@@ -215,6 +218,8 @@ function AccountPage() {
 			onSuccess: async (result) => {
 				if (result.status === 'queued') {
 					setWowSyncFeedback('WoW sync queued just now.')
+				} else if (result.status === 'already_queued') {
+					setWowSyncFeedback('A WoW sync is already queued.')
 				} else if (result.status === 'already_running') {
 					setWowSyncFeedback('A WoW sync is already running.')
 				} else if (result.status === 'not_linked') {
@@ -237,10 +242,16 @@ function AccountPage() {
 		0,
 	)
 	const isWowSyncRunning =
-		triggerWowSyncMutation.isPending || wowSyncStatus?.status === 'running'
+		triggerWowSyncMutation.isPending ||
+		wowSyncStatus?.status === 'running' ||
+		wowSyncStatus?.status === 'queued'
 	const wowSyncButtonLabel = (() => {
 		if (triggerWowSyncMutation.isPending) {
 			return 'Queueing...'
+		}
+
+		if (wowSyncStatus?.status === 'queued') {
+			return 'Sync queued...'
 		}
 
 		if (wowSyncStatus?.status === 'running') {
@@ -255,6 +266,8 @@ function AccountPage() {
 	})()
 	const wowSyncStatusLabel = (() => {
 		switch (wowSyncStatus?.status) {
+			case 'queued':
+				return 'Queued'
 			case 'running':
 				return 'Syncing'
 			case 'ready':

@@ -9,7 +9,7 @@ import {
 } from '@auxarmory/db/schema'
 
 import { createQueue } from '../../queue.js'
-import { enqueueJob } from '../../producer/index.js'
+import { enqueueUniqueJob } from '../../producer/index.js'
 import { defineJob } from '../../registry.js'
 import {
 	completeSyncRunFailure,
@@ -23,6 +23,7 @@ import {
 	WOW_PROFILE_ACCOUNT_ENTITY,
 	WOW_PROFILE_CHARACTER_ENTITY,
 	WOW_PROFILE_SYNC_DOMAIN,
+	formatWowProfileCharacterJobId,
 	wowProfileAccountJobPayloadSchema,
 } from './profile_utils.js'
 import type { WowProfileAccountJobPayload } from './profile_utils.js'
@@ -347,17 +348,25 @@ export const syncWowProfileAccountJob = defineJob({
 				existingLinkIds.size
 
 			for (const character of characterSummaries) {
-				await enqueueJob(queue, {
+				const characterId = String(character.characterId)
+				const region = linkedAccount.region
+				const characterJobId = formatWowProfileCharacterJobId(
+					region,
+					characterId,
+				)
+
+				await enqueueUniqueJob(queue, {
 					name: 'sync:wow:profile:character',
 					payload: {
 						authAccountId: linkedAccount.id,
-						characterId: String(character.characterId),
-						region: linkedAccount.region,
+						characterId,
+						region,
 						realmSlug: character.realmSlug,
 						characterName: character.name,
 						triggeredBy: job.data.triggeredBy,
 						force: job.data.force,
 					},
+					jobId: characterJobId,
 				})
 			}
 

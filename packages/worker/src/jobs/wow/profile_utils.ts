@@ -41,14 +41,3 @@ export const wowProfileCharacterJobPayloadSchema = z.object({
 export type WowProfileCharacterJobPayload = z.infer<
 	typeof wowProfileCharacterJobPayloadSchema
 >
-
-export function formatWowProfileAccountJobId(authAccountId: string) {
-	return `wow-profile-account-${authAccountId.replaceAll(':', '-')}`
-}
-
-export function formatWowProfileCharacterJobId(args: {
-	region: string
-	characterId: string
-}) {
-	return `wow-profile-character-${args.region}-${args.characterId.replaceAll(':', '-')}`
-}

@@ -10,7 +10,6 @@ import {
 	startSyncRun,
 } from './utils.js'
 import {
-	formatWowProfileAccountJobId,
 	WOW_PROFILE_ACCOUNT_COORDINATOR_ENTITY,
 	WOW_PROFILE_ACCOUNT_ENTITY,
 	WOW_PROFILE_SYNC_DOMAIN,
@@ -59,7 +58,6 @@ export const syncWowProfileAccountCoordinatorJob = defineJob({
 						triggeredBy: job.data.triggeredBy,
 						force: job.data.force,
 					},
-					jobId: formatWowProfileAccountJobId(linkedAccount.id),
 				})
 
 				enqueuedCount += 1

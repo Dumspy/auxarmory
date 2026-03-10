@@ -23,7 +23,6 @@ import {
 	WOW_PROFILE_ACCOUNT_ENTITY,
 	WOW_PROFILE_CHARACTER_ENTITY,
 	WOW_PROFILE_SYNC_DOMAIN,
-	formatWowProfileCharacterJobId,
 	wowProfileAccountJobPayloadSchema,
 } from './profile_utils.js'
 import type { WowProfileAccountJobPayload } from './profile_utils.js'
@@ -359,10 +358,6 @@ export const syncWowProfileAccountJob = defineJob({
 						triggeredBy: job.data.triggeredBy,
 						force: job.data.force,
 					},
-					jobId: formatWowProfileCharacterJobId({
-						region: linkedAccount.region,
-						characterId: String(character.characterId),
-					}),
 				})
 			}
 

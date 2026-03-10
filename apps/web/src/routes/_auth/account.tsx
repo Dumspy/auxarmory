@@ -118,6 +118,7 @@ function AccountPage() {
 	const [linkedAccountError, setLinkedAccountError] = useState<string | null>(
 		null,
 	)
+	const [wowSyncFeedback, setWowSyncFeedback] = useState<string | null>(null)
 	const trpc = useTRPC()
 
 	const loadLinkedAccounts = useCallback(async () => {
@@ -211,7 +212,17 @@ function AccountPage() {
 
 	const triggerWowSyncMutation = useMutation(
 		trpc.wow.triggerSync.mutationOptions({
-			onSuccess: async () => {
+			onSuccess: async (result) => {
+				if (result.status === 'queued') {
+					setWowSyncFeedback('WoW sync queued just now.')
+				} else if (result.status === 'already_running') {
+					setWowSyncFeedback('A WoW sync is already running.')
+				} else if (result.status === 'not_linked') {
+					setWowSyncFeedback(
+						'Link a Battle.net account before syncing.',
+					)
+				}
+
 				await Promise.all([
 					wowSyncStatusQuery.refetch(),
 					loadLinkedAccounts(),
@@ -266,6 +277,7 @@ function AccountPage() {
 		}
 
 		setLinkedAccountError(null)
+		setWowSyncFeedback(null)
 		setLinkingProviderId(providerId)
 
 		const callbackURL = `${window.location.origin}/account`
@@ -303,6 +315,7 @@ function AccountPage() {
 
 	async function handleUnlinkAccount(account: LinkedAccount) {
 		setLinkedAccountError(null)
+		setWowSyncFeedback(null)
 		setUnlinkingAccountId(account.id)
 
 		try {
@@ -328,6 +341,7 @@ function AccountPage() {
 
 	async function handleTriggerWowSync() {
 		setLinkedAccountError(null)
+		setWowSyncFeedback(null)
 
 		try {
 			await triggerWowSyncMutation.mutateAsync()
@@ -497,6 +511,12 @@ function AccountPage() {
 							{wowSyncStatus?.lastErrorMessage ? (
 								<p className='text-destructive text-sm'>
 									{wowSyncStatus.lastErrorMessage}
+								</p>
+							) : null}
+
+							{wowSyncFeedback ? (
+								<p className='text-muted-foreground text-sm'>
+									{wowSyncFeedback}
 								</p>
 							) : null}
 						</CardContent>

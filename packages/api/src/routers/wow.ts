@@ -130,17 +130,15 @@ async function getLinkedBattlenetAccounts(userId: string) {
 		)
 }
 
-async function getWowSyncStatus(userId: string) {
+async function getWowSyncRunState(userId: string) {
 	const linkedAccounts = await getLinkedBattlenetAccounts(userId)
 
 	if (linkedAccounts.length === 0) {
 		return {
-			status: 'not_linked' as WowSyncStatus,
-			linkedBattlenetAccountCount: 0,
-			lastStartedAt: null,
-			lastFinishedAt: null,
-			lastSuccessAt: null,
-			lastErrorMessage: null,
+			linkedAccounts,
+			profileAccounts: [],
+			coordinatorState: null,
+			isRunning: false,
 		}
 	}
 
@@ -153,7 +151,7 @@ async function getWowSyncStatus(userId: string) {
 		.from(wowProfileAccounts)
 		.where(eq(wowProfileAccounts.userId, userId))
 
-	const coordinatorState = await db
+	const [coordinatorState] = await db
 		.select()
 		.from(syncState)
 		.where(
@@ -210,13 +208,36 @@ async function getWowSyncStatus(userId: string) {
 				.limit(1)
 		: []
 
-	if (runningRuns.length > 0) {
+	return {
+		linkedAccounts,
+		profileAccounts,
+		coordinatorState: coordinatorState ?? null,
+		isRunning: runningRuns.length > 0,
+	}
+}
+
+async function getWowSyncStatus(userId: string) {
+	const { linkedAccounts, profileAccounts, coordinatorState, isRunning } =
+		await getWowSyncRunState(userId)
+
+	if (linkedAccounts.length === 0) {
+		return {
+			status: 'not_linked' as WowSyncStatus,
+			linkedBattlenetAccountCount: 0,
+			lastStartedAt: null,
+			lastFinishedAt: null,
+			lastSuccessAt: null,
+			lastErrorMessage: null,
+		}
+	}
+
+	if (isRunning) {
 		return {
 			status: 'running' as WowSyncStatus,
 			linkedBattlenetAccountCount: linkedAccounts.length,
-			lastStartedAt: toIsoString(coordinatorState[0]?.lastStartedAt),
-			lastFinishedAt: toIsoString(coordinatorState[0]?.lastFinishedAt),
-			lastSuccessAt: toIsoString(coordinatorState[0]?.lastSuccessAt),
+			lastStartedAt: toIsoString(coordinatorState?.lastStartedAt),
+			lastFinishedAt: toIsoString(coordinatorState?.lastFinishedAt),
+			lastSuccessAt: toIsoString(coordinatorState?.lastSuccessAt),
 			lastErrorMessage:
 				profileAccounts.find((row) => row.lastErrorMessage)
 					?.lastErrorMessage ?? null,
@@ -243,8 +264,8 @@ async function getWowSyncStatus(userId: string) {
 	return {
 		status,
 		linkedBattlenetAccountCount: linkedAccounts.length,
-		lastStartedAt: toIsoString(coordinatorState[0]?.lastStartedAt),
-		lastFinishedAt: toIsoString(coordinatorState[0]?.lastFinishedAt),
+		lastStartedAt: toIsoString(coordinatorState?.lastStartedAt),
+		lastFinishedAt: toIsoString(coordinatorState?.lastFinishedAt),
 		lastSuccessAt: toIsoString(lastSuccessAt),
 		lastErrorMessage:
 			profileAccounts.find((row) => row.lastErrorMessage)
@@ -412,6 +433,28 @@ export const wowRouter = router({
 		}
 	}),
 	triggerSync: protectedProcedure.mutation(async ({ ctx }) => {
+		const syncState = await getWowSyncRunState(ctx.session.user.id)
+
+		if (syncState.linkedAccounts.length === 0) {
+			return {
+				status: 'not_linked' as const,
+				jobId: null,
+				queuedAt: null,
+				lastStartedAt: null,
+			}
+		}
+
+		if (syncState.isRunning) {
+			return {
+				status: 'already_running' as const,
+				jobId: null,
+				queuedAt: null,
+				lastStartedAt: toIsoString(
+					syncState.coordinatorState?.lastStartedAt,
+				),
+			}
+		}
+
 		const queue = createQueue()
 
 		try {
@@ -422,11 +465,13 @@ export const wowRouter = router({
 					triggeredBy: 'manual',
 					force: true,
 				},
-				jobId: `wow-profile-account-coordinator-${ctx.session.user.id}`,
 			})
 
 			return {
+				status: 'queued' as const,
 				jobId: String(job.id),
+				queuedAt: new Date().toISOString(),
+				lastStartedAt: null,
 			}
 		} finally {
 			await queue.close()

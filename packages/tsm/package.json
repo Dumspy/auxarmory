@@ -1,0 +1,47 @@
+{
+  "name": "@auxarmory/tsm",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Elastic-2.0",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "build": "tsc",
+    "api:update": "node scripts/fetch-swagger.mjs && node scripts/generate-types.mjs",
+    "test": "vitest run --config vitest.config.ts --passWithNoTests",
+    "test:watch": "vitest --config vitest.config.ts"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.14.0"
+  },
+  "devDependencies": {
+    "@auxarmory/typescript-config": "workspace:*",
+    "@auxarmory/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "openapi-typescript": "^7.13.0",
+    "typescript": "catalog:",
+    "vitest": "^3.2.4"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./realm": {
+      "types": "./dist/realm.d.ts",
+      "default": "./src/realm.ts"
+    },
+    "./pricing": {
+      "types": "./dist/pricing.d.ts",
+      "default": "./src/pricing.ts"
+    },
+    "./types/realm": {
+      "types": "./dist/types/realm.gen.d.ts",
+      "default": "./src/types/realm.gen.d.ts"
+    },
+    "./types/pricing": {
+      "types": "./dist/types/pricing.gen.d.ts",
+      "default": "./src/types/pricing.gen.d.ts"
+    }
+  }
+}

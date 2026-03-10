@@ -3,7 +3,8 @@ import { z } from 'zod'
 import { syncRunTriggerSchema } from './utils.js'
 
 export const WOW_PROFILE_SYNC_DOMAIN = 'wow-user'
-export const WOW_PROFILE_ACCOUNT_COORDINATOR_ENTITY = 'profile-account-coordinator'
+export const WOW_PROFILE_ACCOUNT_COORDINATOR_ENTITY =
+	'profile-account-coordinator'
 export const WOW_PROFILE_ACCOUNT_ENTITY = 'profile-account'
 
 export const wowProfileAccountCoordinatorJobPayloadSchema = z.object({

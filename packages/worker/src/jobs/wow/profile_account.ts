@@ -28,7 +28,10 @@ function formatWowCharacterId(region: string, battlenetCharacterId: number) {
 	return `${region}:${battlenetCharacterId}`
 }
 
-function formatWowProfileAccountCharacterId(wowProfileAccountId: string, characterId: string) {
+function formatWowProfileAccountCharacterId(
+	wowProfileAccountId: string,
+	characterId: string,
+) {
 	return `${wowProfileAccountId}:${characterId}`
 }
 
@@ -52,15 +55,16 @@ interface AccountProfileSummaryCharacter {
 
 interface AccountProfileSummary {
 	id: number
-	wow_accounts: Array<{
+	wow_accounts: {
 		id: number
 		characters: AccountProfileSummaryCharacter[]
-	}>
+	}[]
 }
 
 export const syncWowProfileAccountJob = defineJob({
 	name: 'sync:wow:profile:account',
-	description: 'Sync one linked Battle.net account roster into WoW profile tables',
+	description:
+		'Sync one linked Battle.net account roster into WoW profile tables',
 	allowManualRun: true,
 	schema: wowProfileAccountJobPayloadSchema,
 	data: {
@@ -92,9 +96,7 @@ export const syncWowProfileAccountJob = defineJob({
 			const wowProfileAccountId = linkedAccount.id
 
 			const characterSummaries = summary.wow_accounts.flatMap(
-				(
-					wowAccount: AccountProfileSummary['wow_accounts'][number],
-				) =>
+				(wowAccount: AccountProfileSummary['wow_accounts'][number]) =>
 					wowAccount.characters.map(
 						(
 							character: AccountProfileSummary['wow_accounts'][number]['characters'][number],
@@ -109,14 +111,19 @@ export const syncWowProfileAccountJob = defineJob({
 							raceId: character.playable_race.id,
 							raceName: character.playable_race.name,
 							level: character.level,
-							summaryPayload:
-								character as unknown as Record<string, unknown>,
+							summaryPayload: character as unknown as Record<
+								string,
+								unknown
+							>,
 						}),
 					),
 			)
 
 			const characterIds = characterSummaries.map((character) =>
-				formatWowCharacterId(linkedAccount.region, character.characterId),
+				formatWowCharacterId(
+					linkedAccount.region,
+					character.characterId,
+				),
 			)
 
 			const existingProfileAccount = await db
@@ -128,9 +135,9 @@ export const syncWowProfileAccountJob = defineJob({
 			const existingCharacters =
 				characterIds.length > 0
 					? await db
-						.select({ id: wowCharacters.id })
-						.from(wowCharacters)
-						.where(inArray(wowCharacters.id, characterIds))
+							.select({ id: wowCharacters.id })
+							.from(wowCharacters)
+							.where(inArray(wowCharacters.id, characterIds))
 					: []
 
 			const existingCharacterIds = new Set(
@@ -140,20 +147,23 @@ export const syncWowProfileAccountJob = defineJob({
 			const existingLinks =
 				characterIds.length > 0
 					? await db
-						.select({ characterId: wowProfileAccountCharacters.characterId })
-						.from(wowProfileAccountCharacters)
-						.where(
-							and(
-								eq(
-									wowProfileAccountCharacters.wowProfileAccountId,
-									wowProfileAccountId,
-								),
-								inArray(
+							.select({
+								characterId:
 									wowProfileAccountCharacters.characterId,
-									characterIds,
+							})
+							.from(wowProfileAccountCharacters)
+							.where(
+								and(
+									eq(
+										wowProfileAccountCharacters.wowProfileAccountId,
+										wowProfileAccountId,
+									),
+									inArray(
+										wowProfileAccountCharacters.characterId,
+										characterIds,
+									),
 								),
-							),
-						)
+							)
 					: []
 
 			const existingLinkIds = new Set(
@@ -176,7 +186,10 @@ export const syncWowProfileAccountJob = defineJob({
 					lastSuccessfulSyncAt: syncedAt,
 					lastErrorAt: null,
 					lastErrorMessage: null,
-					summaryPayload: summary as unknown as Record<string, unknown>,
+					summaryPayload: summary as unknown as Record<
+						string,
+						unknown
+					>,
 					metadata: {
 						wowAccountCount: summary.wow_accounts.length,
 						characterCount: characterSummaries.length,
@@ -222,7 +235,7 @@ export const syncWowProfileAccountJob = defineJob({
 							level: character.level,
 							lastSeenAt: syncedAt,
 							summaryPayload: character.summaryPayload,
-						}))
+						})),
 					)
 					.onConflictDoUpdate({
 						target: wowCharacters.id,
@@ -300,13 +313,12 @@ export const syncWowProfileAccountJob = defineJob({
 			const insertedCount =
 				(existingProfileAccount.length === 0 ? 1 : 0) +
 				characterIds.filter(
-					(characterId: string) => !existingCharacterIds.has(characterId),
-				)
-					.length +
+					(characterId: string) =>
+						!existingCharacterIds.has(characterId),
+				).length +
 				characterIds.filter(
 					(characterId: string) => !existingLinkIds.has(characterId),
-				)
-					.length
+				).length
 
 			const updatedCount =
 				(existingProfileAccount.length > 0 ? 1 : 0) +

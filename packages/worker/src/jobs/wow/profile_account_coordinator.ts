@@ -21,7 +21,8 @@ import type { WowProfileAccountCoordinatorJobPayload } from './profile_utils.js'
 
 export const syncWowProfileAccountCoordinatorJob = defineJob({
 	name: 'sync:wow:profile:account:coordinator',
-	description: 'Discover linked Battle.net accounts and enqueue roster sync jobs',
+	description:
+		'Discover linked Battle.net accounts and enqueue roster sync jobs',
 	allowManualRun: true,
 	schema: wowProfileAccountCoordinatorJobPayloadSchema,
 	data: {
@@ -45,7 +46,9 @@ export const syncWowProfileAccountCoordinatorJob = defineJob({
 		const queue = createQueue()
 
 		try {
-			const accounts = await listWowLinkedBattlenetAccounts(job.data.userId)
+			const accounts = await listWowLinkedBattlenetAccounts(
+				job.data.userId,
+			)
 			let enqueuedCount = 0
 
 			for (const linkedAccount of accounts) {

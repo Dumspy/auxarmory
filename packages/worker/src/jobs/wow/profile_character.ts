@@ -13,10 +13,10 @@ import {
 	completeSyncRunFailure,
 	completeSyncRunSuccess,
 	SYNC_PROVIDER,
+	createBattlenetClient,
 	toErrorPayload,
 	startSyncRun,
 } from './utils.js'
-import { createWowAccountClient } from './profile_accounts.js'
 import {
 	WOW_PROFILE_CHARACTER_ENTITY,
 	WOW_PROFILE_SYNC_DOMAIN,
@@ -198,9 +198,7 @@ export const syncWowProfileCharacterJob = defineJob({
 		})
 
 		try {
-			const { client } = await createWowAccountClient(
-				job.data.authAccountId,
-			)
+			const client = createBattlenetClient(job.data.region)
 			const syncedAt = new Date()
 
 			const profile = unwrap(

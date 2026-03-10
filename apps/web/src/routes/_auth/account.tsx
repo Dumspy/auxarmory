@@ -358,12 +358,8 @@ function AccountPage() {
 
 		try {
 			await triggerWowSyncMutation.mutateAsync()
-		} catch (error) {
-			setLinkedAccountError(
-				error instanceof Error
-					? error.message
-					: 'Unable to queue WoW sync right now.',
-			)
+		} catch {
+			setWowSyncFeedback(null)
 		}
 	}
 
@@ -500,11 +496,7 @@ function AccountPage() {
 								</div>
 								<div className='flex items-center gap-2'>
 									<Badge
-										variant={
-											wowSyncStatus?.status === 'failed'
-												? 'destructive'
-												: 'outline'
-										}
+										variant='outline'
 									>
 										{wowSyncStatusLabel}
 									</Badge>
@@ -520,12 +512,6 @@ function AccountPage() {
 									</Button>
 								</div>
 							</div>
-
-							{wowSyncStatus?.lastErrorMessage ? (
-								<p className='text-destructive text-sm'>
-									{wowSyncStatus.lastErrorMessage}
-								</p>
-							) : null}
 
 							{wowSyncFeedback ? (
 								<p className='text-muted-foreground text-sm'>

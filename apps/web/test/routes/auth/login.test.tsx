@@ -1,3 +1,5 @@
+import type { ComponentProps } from 'react'
+
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -15,6 +17,9 @@ const mockSearchState = {
 
 vi.mock('@tanstack/react-router', () => ({
 	createFileRoute: () => (config: unknown) => config,
+	Link: ({ children, ...props }: ComponentProps<'a'>) => (
+		<a {...props}>{children}</a>
+	),
 	Navigate: ({ to }: { to: string }) => <span>Navigate:{to}</span>,
 	useRouterState: () => ({ location: mockSearchState }),
 }))

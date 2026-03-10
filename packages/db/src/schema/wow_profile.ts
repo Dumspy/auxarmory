@@ -26,7 +26,8 @@ export const wowProfileAccounts = pgTable(
 		lastSuccessfulSyncAt: timestamp('last_successful_sync_at'),
 		lastErrorAt: timestamp('last_error_at'),
 		lastErrorMessage: text('last_error_message'),
-		summaryPayload: jsonb('summary_payload').$type<Record<string, unknown>>(),
+		summaryPayload:
+			jsonb('summary_payload').$type<Record<string, unknown>>(),
 		metadata: jsonb('metadata').$type<Record<string, unknown>>(),
 		createdAt: timestamp('created_at').defaultNow().notNull(),
 		updatedAt: timestamp('updated_at')
@@ -58,7 +59,8 @@ export const wowGuilds = pgTable(
 		memberCount: integer('member_count'),
 		achievementPoints: integer('achievement_points'),
 		crestPayload: jsonb('crest_payload').$type<Record<string, unknown>>(),
-		summaryPayload: jsonb('summary_payload').$type<Record<string, unknown>>(),
+		summaryPayload:
+			jsonb('summary_payload').$type<Record<string, unknown>>(),
 		lastSeenAt: timestamp('last_seen_at').notNull(),
 		lastProfileSyncAt: timestamp('last_profile_sync_at'),
 		lastRosterSyncAt: timestamp('last_roster_sync_at'),
@@ -101,8 +103,10 @@ export const wowCharacters = pgTable(
 		lastLoginAt: timestamp('last_login_at'),
 		lastSeenAt: timestamp('last_seen_at').notNull(),
 		lastProfileSyncAt: timestamp('last_profile_sync_at'),
-		summaryPayload: jsonb('summary_payload').$type<Record<string, unknown>>(),
-		profilePayload: jsonb('profile_payload').$type<Record<string, unknown>>(),
+		summaryPayload:
+			jsonb('summary_payload').$type<Record<string, unknown>>(),
+		profilePayload:
+			jsonb('profile_payload').$type<Record<string, unknown>>(),
 		createdAt: timestamp('created_at').defaultNow().notNull(),
 		updatedAt: timestamp('updated_at')
 			.defaultNow()
@@ -154,7 +158,9 @@ export const wowProfileAccountCharacters = pgTable(
 			table.wowProfileAccountId,
 			table.isActive,
 		),
-		index('wow_profile_account_characters_character_idx').on(table.characterId),
+		index('wow_profile_account_characters_character_idx').on(
+			table.characterId,
+		),
 	],
 )
 
@@ -183,7 +189,9 @@ export const wowCharacterDashboard = pgTable(
 			.$onUpdate(() => new Date())
 			.notNull(),
 	},
-	(table) => [index('wow_character_dashboard_snapshot_idx').on(table.snapshotAt)],
+	(table) => [
+		index('wow_character_dashboard_snapshot_idx').on(table.snapshotAt),
+	],
 )
 
 export const wowUserCharacterPreferences = pgTable(

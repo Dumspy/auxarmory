@@ -126,7 +126,8 @@ export const syncWowProfileAccountJob = defineJob({
 					),
 			)
 			const characterSummaries = allCharacterSummaries.filter(
-				(character) => character.level >= WOW_PROFILE_MIN_CHARACTER_LEVEL,
+				(character) =>
+					character.level >= WOW_PROFILE_MIN_CHARACTER_LEVEL,
 			)
 			const filteredOutCharacterCount =
 				allCharacterSummaries.length - characterSummaries.length

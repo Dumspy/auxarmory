@@ -3,6 +3,7 @@ import { useState } from 'react'
 import {
 	Navigate,
 	createFileRoute,
+	Link,
 	useRouterState,
 } from '@tanstack/react-router'
 
@@ -60,21 +61,24 @@ export function LoginPage() {
 		window.location.assign(normalizedRedirectTo)
 	}
 
-	const safeRedirect = encodeURIComponent(normalizedRedirectTo)
-
 	return (
 		<AuthFormCard
 			mode='login'
 			error={error}
 			isSubmitting={isSubmitting}
 			onSubmit={onSubmit}
-			name=''
+			username=''
 			email={email}
 			password={password}
-			onNameChange={() => undefined}
+			onUsernameChange={() => undefined}
 			onEmailChange={setEmail}
 			onPasswordChange={setPassword}
-			switchHref={`/auth/signup?redirect=${safeRedirect}`}
+			switchRender={
+				<Link
+					to='/auth/signup'
+					search={{ redirect: normalizedRedirectTo }}
+				/>
+			}
 			switchLabel='Need an account? Sign up'
 		/>
 	)

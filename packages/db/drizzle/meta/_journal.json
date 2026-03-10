@@ -43,6 +43,13 @@
       "when": 1773125037185,
       "tag": "0005_typical_frightful_four",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1773176433235,
+      "tag": "0006_ordinary_loners",
+      "breakpoints": true
     }
   ]
 }

@@ -1,10 +1,12 @@
 import { protectedProcedure, publicProcedure, router } from '../index.js'
 import { adminRouter } from './admin.js'
+import { wowRouter } from './wow.js'
 import { createQueue, enqueueJob } from '@auxarmory/worker/producer'
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => 'OK'),
 	admin: adminRouter,
+	wow: wowRouter,
 	privateData: protectedProcedure.query(({ ctx }) => ({
 		message: 'This is private',
 		user: ctx.session.user,

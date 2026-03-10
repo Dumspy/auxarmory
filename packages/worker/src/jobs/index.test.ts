@@ -11,6 +11,9 @@ describe('job registry', () => {
 		expect(getJobNames()).toEqual([
 			'sync:example',
 			'sync:example:repeatable',
+			'sync:wow:profile:account:coordinator',
+			'sync:wow:profile:account',
+			'sync:wow:profile:character',
 			'sync:wow:static:weekly:coordinator',
 			'sync:wow:static:weekly:connected-realms',
 			'sync:wow:static:weekly:realms',
@@ -22,6 +25,9 @@ describe('job registry', () => {
 		])
 		expect(isJobName('sync:example')).toBe(true)
 		expect(isJobName('sync:example:repeatable')).toBe(true)
+		expect(isJobName('sync:wow:profile:account:coordinator')).toBe(true)
+		expect(isJobName('sync:wow:profile:account')).toBe(true)
+		expect(isJobName('sync:wow:profile:character')).toBe(true)
 		expect(isJobName('sync:wow:static:weekly:coordinator')).toBe(true)
 		expect(isJobName('sync:wow:static:weekly:connected-realms')).toBe(true)
 		expect(isJobName('sync:wow:static:weekly:realms')).toBe(true)

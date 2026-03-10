@@ -7,9 +7,14 @@ import {
 	getMostRecentWeeklyResetAt,
 	isRegionWeeklySyncDue,
 	parseConnectedRealmIdFromHref,
+	WOW_SYNC_REGIONS,
 } from './utils.js'
 
 describe('weekly reset helpers', () => {
+	it('uses one shared wow region list', () => {
+		expect(WOW_SYNC_REGIONS).toEqual(['us', 'eu', 'kr', 'tw'])
+	})
+
 	it('builds a stable reset key for a region and week', () => {
 		const now = new Date('2026-03-06T12:00:00.000Z')
 

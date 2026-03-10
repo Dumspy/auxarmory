@@ -1,5 +1,8 @@
-import { ApplicationClient } from '@auxarmory/battlenet'
+import type { Regions } from '@auxarmory/battlenet'
+import { ApplicationClient, RegionsConst } from '@auxarmory/battlenet'
 import { z } from 'zod'
+
+import { env } from '../../env.js'
 import { syncRunTriggerSchema } from '../shared/sync_runtime.js'
 
 export {
@@ -31,17 +34,16 @@ export const WOW_STATIC_WEEKLY_PLAYABLE_SPECIALIZATIONS_ENTITY =
 	'static-weekly-playable-specializations'
 export const WOW_STATIC_WEEKLY_PROFESSIONS_ENTITY = 'static-weekly-professions'
 
-type BattlenetRegion = ConstructorParameters<
-	typeof ApplicationClient
->[0]['region']
+export type WowSyncRegion = Exclude<Regions, 'cn'>
+
+const [US_REGION, EU_REGION, KR_REGION, TW_REGION] = RegionsConst
 
 export const WOW_SYNC_REGIONS = [
-	'us',
-	'eu',
-	'kr',
-] as const satisfies readonly BattlenetRegion[]
-
-export type WowSyncRegion = (typeof WOW_SYNC_REGIONS)[number]
+	US_REGION,
+	EU_REGION,
+	KR_REGION,
+	TW_REGION,
+] as const satisfies readonly WowSyncRegion[]
 
 export const wowStaticWeeklyCoordinatorJobPayloadSchema = z.object({
 	triggeredBy: syncRunTriggerSchema.default('scheduler'),
@@ -85,17 +87,28 @@ export const WOW_WEEKLY_RESET_UTC_BY_REGION: Record<
 	us: { dayOfWeek: 2, hour: 15, minute: 0 },
 	eu: { dayOfWeek: 3, hour: 7, minute: 0 },
 	kr: { dayOfWeek: 3, hour: 1, minute: 0 },
+	tw: { dayOfWeek: 3, hour: 1, minute: 0 },
 }
 
 function toResetKey(date: Date): string {
 	return date.toISOString().slice(0, 16)
 }
 
+function getWeeklyResetConfig(region: WowSyncRegion): WeeklyResetUtcConfig {
+	const config = WOW_WEEKLY_RESET_UTC_BY_REGION[region]
+
+	if (!config) {
+		throw new Error(`Unsupported WoW sync region: ${region}`)
+	}
+
+	return config
+}
+
 export function getMostRecentWeeklyResetAt(
 	region: WowSyncRegion,
 	at: Date = new Date(),
 ): Date {
-	const config = WOW_WEEKLY_RESET_UTC_BY_REGION[region]
+	const config = getWeeklyResetConfig(region)
 	const current = new Date(at)
 
 	const dayOffset = (current.getUTCDay() - config.dayOfWeek + 7) % 7
@@ -174,14 +187,7 @@ export function parseConnectedRealmIdFromHref(href: string): number | null {
 	return Number.isFinite(id) ? id : null
 }
 
-export const battlenetEnvSchema = z.object({
-	BATTLENET_CLIENT_ID: z.string().min(1),
-	BATTLENET_CLIENT_SECRET: z.string().min(1),
-})
-
 export function createBattlenetClient(region: WowSyncRegion) {
-	const env = battlenetEnvSchema.parse(process.env)
-
 	return new ApplicationClient({
 		clientId: env.BATTLENET_CLIENT_ID,
 		clientSecret: env.BATTLENET_CLIENT_SECRET,

@@ -18,6 +18,7 @@ export interface SyncRunScope {
 	domain: string
 	entity: string
 	region?: string
+	scopeKey?: string
 }
 
 export interface StartSyncRunInput extends SyncRunScope {
@@ -46,10 +47,15 @@ function scopeRegion(region?: string) {
 	return region ?? 'global'
 }
 
+function normalizeScopeKey(scopeKey?: string) {
+	return scopeKey ?? 'global'
+}
+
 export async function startSyncRun(input: StartSyncRunInput) {
 	const runId = crypto.randomUUID()
 	const startedAt = new Date()
 	const region = scopeRegion(input.region)
+	const scopeKey = normalizeScopeKey(input.scopeKey)
 
 	await db.insert(syncRuns).values({
 		id: runId,
@@ -57,6 +63,7 @@ export async function startSyncRun(input: StartSyncRunInput) {
 		domain: input.domain,
 		entity: input.entity,
 		region,
+		scopeKey,
 		mode: input.mode,
 		status: 'running',
 		triggeredBy: input.triggeredBy,
@@ -74,6 +81,7 @@ export async function startSyncRun(input: StartSyncRunInput) {
 			domain: input.domain,
 			entity: input.entity,
 			region,
+			scopeKey,
 			lastRunId: runId,
 			lastStatus: 'running',
 			lastStartedAt: startedAt,
@@ -84,6 +92,7 @@ export async function startSyncRun(input: StartSyncRunInput) {
 				syncState.domain,
 				syncState.entity,
 				syncState.region,
+				syncState.scopeKey,
 			],
 			set: {
 				lastRunId: runId,
@@ -102,6 +111,7 @@ export async function startSyncRun(input: StartSyncRunInput) {
 export async function completeSyncRunSuccess(input: CompleteSyncRunInput) {
 	const finishedAt = new Date()
 	const region = scopeRegion(input.region)
+	const scopeKey = normalizeScopeKey(input.scopeKey)
 
 	await db
 		.update(syncRuns)
@@ -124,6 +134,7 @@ export async function completeSyncRunSuccess(input: CompleteSyncRunInput) {
 			domain: input.domain,
 			entity: input.entity,
 			region,
+			scopeKey,
 			lastRunId: input.runId,
 			lastStatus: 'success',
 			lastFinishedAt: finishedAt,
@@ -138,6 +149,7 @@ export async function completeSyncRunSuccess(input: CompleteSyncRunInput) {
 				syncState.domain,
 				syncState.entity,
 				syncState.region,
+				syncState.scopeKey,
 			],
 			set: {
 				lastRunId: input.runId,
@@ -155,6 +167,7 @@ export async function completeSyncRunSuccess(input: CompleteSyncRunInput) {
 export async function completeSyncRunFailure(input: CompleteSyncRunInput) {
 	const finishedAt = new Date()
 	const region = scopeRegion(input.region)
+	const scopeKey = normalizeScopeKey(input.scopeKey)
 
 	await db
 		.update(syncRuns)
@@ -179,6 +192,7 @@ export async function completeSyncRunFailure(input: CompleteSyncRunInput) {
 			domain: input.domain,
 			entity: input.entity,
 			region,
+			scopeKey,
 			lastRunId: input.runId,
 			lastStatus: 'failed',
 			lastFinishedAt: finishedAt,
@@ -190,6 +204,7 @@ export async function completeSyncRunFailure(input: CompleteSyncRunInput) {
 				syncState.domain,
 				syncState.entity,
 				syncState.region,
+				syncState.scopeKey,
 			],
 			set: {
 				lastRunId: input.runId,
@@ -203,6 +218,7 @@ export async function completeSyncRunFailure(input: CompleteSyncRunInput) {
 
 export async function getSyncStateByScope(scope: SyncRunScope) {
 	const region = scopeRegion(scope.region)
+	const scopeKey = normalizeScopeKey(scope.scopeKey)
 
 	const [state] = await db
 		.select()
@@ -213,6 +229,7 @@ export async function getSyncStateByScope(scope: SyncRunScope) {
 				eq(syncState.domain, scope.domain),
 				eq(syncState.entity, scope.entity),
 				eq(syncState.region, region),
+				eq(syncState.scopeKey, scopeKey),
 			),
 		)
 		.limit(1)

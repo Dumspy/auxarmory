@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Building2, Link2, UserRound } from 'lucide-react'
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -40,6 +41,7 @@ import {
 } from '@auxarmory/ui/components/ui/tabs'
 
 import { authClient } from '../../lib/auth-client'
+import { useTRPC } from '../../lib/trpc'
 import { getUserInitial } from '../../lib/user'
 import { useOrganizationSwitcher } from '../../lib/use-organization-switcher'
 
@@ -116,6 +118,8 @@ function AccountPage() {
 	const [linkedAccountError, setLinkedAccountError] = useState<string | null>(
 		null,
 	)
+	const [wowSyncFeedback, setWowSyncFeedback] = useState<string | null>(null)
+	const trpc = useTRPC()
 
 	const loadLinkedAccounts = useCallback(async () => {
 		if (!user?.id) {
@@ -198,12 +202,95 @@ function AccountPage() {
 		)
 	}, [linkedAccountSections])
 
+	const wowSyncStatusQuery = useQuery(
+		trpc.wow.syncStatus.queryOptions(undefined, {
+			enabled: !!user?.id,
+			refetchInterval: (query) =>
+				query.state.data?.status === 'running' ||
+				query.state.data?.status === 'queued'
+					? 5_000
+					: false,
+		}),
+	)
+
+	const triggerWowSyncMutation = useMutation(
+		trpc.wow.triggerSync.mutationOptions({
+			onSuccess: async (result) => {
+				if (result.status === 'queued') {
+					setWowSyncFeedback('WoW sync queued just now.')
+				} else if (result.status === 'already_queued') {
+					setWowSyncFeedback('A WoW sync is already queued.')
+				} else if (result.status === 'already_running') {
+					setWowSyncFeedback('A WoW sync is already running.')
+				} else if (result.status === 'not_linked') {
+					setWowSyncFeedback(
+						'Link a Battle.net account before syncing.',
+					)
+				}
+
+				await Promise.all([
+					wowSyncStatusQuery.refetch(),
+					loadLinkedAccounts(),
+				])
+			},
+		}),
+	)
+
+	const wowSyncStatus = wowSyncStatusQuery.data
+	const battlenetLinkedCount = battlenetAccountsByProvider.reduce(
+		(total, region) => total + region.accounts.length,
+		0,
+	)
+	const isWowSyncRunning =
+		triggerWowSyncMutation.isPending ||
+		wowSyncStatus?.status === 'running' ||
+		wowSyncStatus?.status === 'queued'
+	const wowSyncButtonLabel = (() => {
+		if (triggerWowSyncMutation.isPending) {
+			return 'Queueing...'
+		}
+
+		if (wowSyncStatus?.status === 'queued') {
+			return 'Sync queued...'
+		}
+
+		if (wowSyncStatus?.status === 'running') {
+			return 'Sync in progress...'
+		}
+
+		if (battlenetLinkedCount === 0) {
+			return 'Link a Battle.net account first'
+		}
+
+		return 'Sync now'
+	})()
+	const wowSyncStatusLabel = (() => {
+		switch (wowSyncStatus?.status) {
+			case 'queued':
+				return 'Queued'
+			case 'running':
+				return 'Syncing'
+			case 'ready':
+				return 'Ready'
+			case 'failed':
+				return 'Failed'
+			case 'partial_failure':
+				return 'Partial failure'
+			case 'never_synced':
+				return 'Never synced'
+			case 'not_linked':
+			default:
+				return 'Not linked'
+		}
+	})()
+
 	async function handleLinkAccount(providerId: LinkableProviderId) {
 		if (typeof window === 'undefined') {
 			return
 		}
 
 		setLinkedAccountError(null)
+		setWowSyncFeedback(null)
 		setLinkingProviderId(providerId)
 
 		const callbackURL = `${window.location.origin}/account`
@@ -233,6 +320,7 @@ function AccountPage() {
 			}
 
 			await loadLinkedAccounts()
+			await wowSyncStatusQuery.refetch()
 		} finally {
 			setLinkingProviderId(null)
 		}
@@ -240,6 +328,7 @@ function AccountPage() {
 
 	async function handleUnlinkAccount(account: LinkedAccount) {
 		setLinkedAccountError(null)
+		setWowSyncFeedback(null)
 		setUnlinkingAccountId(account.id)
 
 		try {
@@ -257,8 +346,20 @@ function AccountPage() {
 			}
 
 			await loadLinkedAccounts()
+			await wowSyncStatusQuery.refetch()
 		} finally {
 			setUnlinkingAccountId(null)
+		}
+	}
+
+	async function handleTriggerWowSync() {
+		setLinkedAccountError(null)
+		setWowSyncFeedback(null)
+
+		try {
+			await triggerWowSyncMutation.mutateAsync()
+		} catch {
+			setWowSyncFeedback(null)
 		}
 	}
 
@@ -368,6 +469,56 @@ function AccountPage() {
 				</Card>
 
 				<div className='space-y-6 lg:col-span-2'>
+					<Card>
+						<CardHeader>
+							<CardTitle className='flex items-center gap-2'>
+								<Link2 className='h-5 w-5' />
+								Warcraft Sync
+							</CardTitle>
+							<CardDescription>
+								Queue a manual sync for all linked Battle.net
+								accounts.
+							</CardDescription>
+						</CardHeader>
+						<CardContent className='space-y-4'>
+							<div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+								<div className='space-y-1'>
+									<p className='text-sm font-medium'>
+										{battlenetLinkedCount} Battle.net linked
+										account
+										{battlenetLinkedCount === 1 ? '' : 's'}
+									</p>
+									<p className='text-muted-foreground text-xs'>
+										{wowSyncStatus?.lastSuccessAt
+											? `Last successful sync ${new Date(wowSyncStatus.lastSuccessAt).toLocaleString()}`
+											: 'No successful sync yet.'}
+									</p>
+								</div>
+								<div className='flex items-center gap-2'>
+									<Badge variant='outline'>
+										{wowSyncStatusLabel}
+									</Badge>
+									<Button
+										onClick={handleTriggerWowSync}
+										disabled={
+											!user?.id ||
+											battlenetLinkedCount === 0 ||
+											isWowSyncRunning
+										}
+									>
+										{wowSyncButtonLabel}
+									</Button>
+								</div>
+							</div>
+
+							{wowSyncFeedback ? (
+								<p className='text-muted-foreground text-sm'>
+									{wowSyncFeedback}
+								</p>
+							) : null}
+						</CardContent>
+					</Card>
+
 					<Card>
 						<CardHeader>
 							<CardTitle className='flex items-center gap-2'>

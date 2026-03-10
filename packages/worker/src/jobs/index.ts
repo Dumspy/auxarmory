@@ -5,6 +5,7 @@ import { syncExample, syncRepeatableExample } from './example.js'
 import {
 	syncWowProfileAccountCoordinatorJob,
 	syncWowProfileAccountJob,
+	syncWowProfileCharacterJob,
 	syncWowStaticWeeklyCoordinatorJob,
 	syncWowStaticWeeklyConnectedRealmsJob,
 	syncWowStaticWeeklyPlayableClassesJob,
@@ -21,6 +22,7 @@ export const jobRegistry = {
 	[syncWowProfileAccountCoordinatorJob.name]:
 		syncWowProfileAccountCoordinatorJob,
 	[syncWowProfileAccountJob.name]: syncWowProfileAccountJob,
+	[syncWowProfileCharacterJob.name]: syncWowProfileCharacterJob,
 	[syncWowStaticWeeklyCoordinatorJob.name]: syncWowStaticWeeklyCoordinatorJob,
 	[syncWowStaticWeeklyConnectedRealmsJob.name]:
 		syncWowStaticWeeklyConnectedRealmsJob,

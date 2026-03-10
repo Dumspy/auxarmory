@@ -1,5 +1,6 @@
 export { syncWowProfileAccountCoordinatorJob } from './profile_account_coordinator.js'
 export { syncWowProfileAccountJob } from './profile_account.js'
+export { syncWowProfileCharacterJob } from './profile_character.js'
 export { syncWowStaticWeeklyCoordinatorJob } from './static/coordinator.js'
 export { syncWowStaticWeeklyConnectedRealmsJob } from './static/connected_realms.js'
 export { syncWowStaticWeeklyPlayableClassesJob } from './static/playable_classes.js'

@@ -36,6 +36,13 @@
       "when": 1773123008680,
       "tag": "0004_easy_vector",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1773125037185,
+      "tag": "0005_typical_frightful_four",
+      "breakpoints": true
     }
   ]
 }

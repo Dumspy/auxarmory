@@ -8,6 +8,8 @@ import {
 	wowProfileAccounts,
 } from '@auxarmory/db/schema'
 
+import { createQueue } from '../../queue.js'
+import { enqueueJob } from '../../producer/index.js'
 import { defineJob } from '../../registry.js'
 import {
 	completeSyncRunFailure,
@@ -19,7 +21,9 @@ import {
 import { createWowAccountClient } from './profile_accounts.js'
 import {
 	WOW_PROFILE_ACCOUNT_ENTITY,
+	WOW_PROFILE_CHARACTER_ENTITY,
 	WOW_PROFILE_SYNC_DOMAIN,
+	formatWowProfileCharacterJobId,
 	wowProfileAccountJobPayloadSchema,
 } from './profile_utils.js'
 import type { WowProfileAccountJobPayload } from './profile_utils.js'
@@ -85,6 +89,8 @@ export const syncWowProfileAccountJob = defineJob({
 			jobId: String(job.id ?? ''),
 			scheduledFor: job.timestamp ? new Date(job.timestamp) : undefined,
 		})
+
+		const queue = createQueue()
 
 		try {
 			const { account: linkedAccount, client } =
@@ -289,6 +295,9 @@ export const syncWowProfileAccountJob = defineJob({
 						},
 					})
 
+			}
+
+			if (characterIds.length > 0) {
 				await db
 					.update(wowProfileAccountCharacters)
 					.set({
@@ -308,6 +317,20 @@ export const syncWowProfileAccountJob = defineJob({
 							),
 						),
 					)
+			} else {
+				await db
+					.update(wowProfileAccountCharacters)
+					.set({
+						isActive: false,
+						lastOwnershipSyncAt: syncedAt,
+						updatedAt: syncedAt,
+					})
+					.where(
+						eq(
+							wowProfileAccountCharacters.wowProfileAccountId,
+							wowProfileAccountId,
+						),
+					)
 			}
 
 			const insertedCount =
@@ -325,6 +348,25 @@ export const syncWowProfileAccountJob = defineJob({
 				existingCharacterIds.size +
 				existingLinkIds.size
 
+			for (const character of characterSummaries) {
+				await enqueueJob(queue, {
+					name: 'sync:wow:profile:character',
+					payload: {
+						authAccountId: linkedAccount.id,
+						characterId: String(character.characterId),
+						region: linkedAccount.region,
+						realmSlug: character.realmSlug,
+						characterName: character.name,
+						triggeredBy: job.data.triggeredBy,
+						force: job.data.force,
+					},
+					jobId: formatWowProfileCharacterJobId({
+						region: linkedAccount.region,
+						characterId: String(character.characterId),
+					}),
+				})
+			}
+
 			await completeSyncRunSuccess({
 				runId,
 				provider: SYNC_PROVIDER,
@@ -337,6 +379,8 @@ export const syncWowProfileAccountJob = defineJob({
 					region: linkedAccount.region,
 					userId: linkedAccount.userId,
 					characterCount: characterSummaries.length,
+					enqueuedCharacterSyncCount: characterSummaries.length,
+					childEntity: WOW_PROFILE_CHARACTER_ENTITY,
 					wowAccountCount: summary.wow_accounts.length,
 				},
 			})
@@ -359,6 +403,8 @@ export const syncWowProfileAccountJob = defineJob({
 			})
 
 			throw error
+		} finally {
+			await queue.close()
 		}
 	},
 })

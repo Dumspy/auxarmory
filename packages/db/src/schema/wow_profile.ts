@@ -164,8 +164,8 @@ export const wowProfileAccountCharacters = pgTable(
 	],
 )
 
-export const wowCharacterDashboard = pgTable(
-	'wow_character_dashboard',
+export const wowCharacterSnapshots = pgTable(
+	'wow_character_snapshots',
 	{
 		characterId: text('character_id')
 			.primaryKey()
@@ -190,7 +190,7 @@ export const wowCharacterDashboard = pgTable(
 			.notNull(),
 	},
 	(table) => [
-		index('wow_character_dashboard_snapshot_idx').on(table.snapshotAt),
+		index('wow_character_snapshots_snapshot_idx').on(table.snapshotAt),
 	],
 )
 

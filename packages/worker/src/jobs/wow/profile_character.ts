@@ -70,10 +70,10 @@ interface CharacterSpecializationsSummary {
 }
 
 interface CharacterMediaSummary {
-	assets: Array<{
+	assets: {
 		key: string
 		value: string
-	}>
+	}[]
 }
 
 interface CharacterMythicKeystoneProfile {
@@ -94,13 +94,13 @@ interface CharacterPvpSummary {
 }
 
 interface CharacterRaidSummary {
-	expansions?: Array<{
-		instances: Array<{
+	expansions?: {
+		instances: {
 			instance: {
 				id: number
 				name: string
 			}
-			modes: Array<{
+			modes: {
 				difficulty: {
 					type: string
 					name: string
@@ -109,9 +109,9 @@ interface CharacterRaidSummary {
 					completed_count: number
 					total_count: number
 				}
-			}>
-		}>
-	}>
+			}[]
+		}[]
+	}[]
 }
 
 function formatWowGuildId(region: string, battlenetGuildId: number) {
@@ -198,7 +198,9 @@ export const syncWowProfileCharacterJob = defineJob({
 		})
 
 		try {
-			const { client } = await createWowAccountClient(job.data.authAccountId)
+			const { client } = await createWowAccountClient(
+				job.data.authAccountId,
+			)
 			const syncedAt = new Date()
 
 			const profile = unwrap(
@@ -208,89 +210,107 @@ export const syncWowProfileCharacterJob = defineJob({
 				),
 			) as CharacterProfileSummary
 
-			const [specializations, equipment, media, mythic, pvpSummary, raid] =
-				await Promise.all([
-					fetchOptionalProfile(async () =>
+			const [
+				specializations,
+				equipment,
+				media,
+				mythic,
+				pvpSummary,
+				raid,
+			] = await Promise.all([
+				fetchOptionalProfile(
+					async () =>
 						unwrap(
 							await client.wow.CharacterSpecializationsSummary(
 								job.data.realmSlug,
 								job.data.characterName,
 							),
 						) as CharacterSpecializationsSummary,
-					),
-					fetchOptionalProfile(async () =>
-						unwrap(
-							await client.wow.CharacterEquipmentSummary(
-								job.data.realmSlug,
-								job.data.characterName,
-							),
+				),
+				fetchOptionalProfile(async () =>
+					unwrap(
+						await client.wow.CharacterEquipmentSummary(
+							job.data.realmSlug,
+							job.data.characterName,
 						),
 					),
-					fetchOptionalProfile(async () =>
+				),
+				fetchOptionalProfile(
+					async () =>
 						unwrap(
 							await client.wow.CharacterMediaSummary(
 								job.data.realmSlug,
 								job.data.characterName,
 							),
 						) as CharacterMediaSummary,
-					),
-					fetchOptionalProfile(async () =>
+				),
+				fetchOptionalProfile(
+					async () =>
 						unwrap(
 							await client.wow.CharacterMythicKeystoneProfileIndex(
 								job.data.realmSlug,
 								job.data.characterName,
 							),
 						) as CharacterMythicKeystoneProfile,
-					),
-					fetchOptionalProfile(async () =>
+				),
+				fetchOptionalProfile(
+					async () =>
 						unwrap(
 							await client.wow.CharacterPvPSummary(
 								job.data.realmSlug,
 								job.data.characterName,
 							),
 						) as CharacterPvpSummary,
-					),
-					fetchOptionalProfile(async () =>
+				),
+				fetchOptionalProfile(
+					async () =>
 						unwrap(
 							await client.wow.CharacterRaid(
 								job.data.realmSlug,
 								job.data.characterName,
 							),
 						) as CharacterRaidSummary,
-					),
-				])
+				),
+			])
 
 			const guildId = profile.guild
 				? formatWowGuildId(job.data.region, profile.guild.id)
 				: null
 
 			if (profile.guild) {
-				await db.insert(wowGuilds).values({
-					id: formatWowGuildId(job.data.region, profile.guild.id),
-					region: job.data.region,
-					battlenetGuildId: profile.guild.id,
-					realmId: profile.guild.realm.id,
-					realmSlug: profile.guild.realm.slug,
-					name: profile.guild.name,
-					factionType: profile.guild.faction.type,
-					lastSeenAt: syncedAt,
-					summaryPayload: profile.guild as unknown as Record<string, unknown>,
-				}).onConflictDoUpdate({
-					target: wowGuilds.id,
-					set: {
-						realmId: sql`excluded.realm_id`,
-						realmSlug: sql`excluded.realm_slug`,
-						name: sql`excluded.name`,
-						factionType: sql`excluded.faction_type`,
+				await db
+					.insert(wowGuilds)
+					.values({
+						id: formatWowGuildId(job.data.region, profile.guild.id),
+						region: job.data.region,
+						battlenetGuildId: profile.guild.id,
+						realmId: profile.guild.realm.id,
+						realmSlug: profile.guild.realm.slug,
+						name: profile.guild.name,
+						factionType: profile.guild.faction.type,
 						lastSeenAt: syncedAt,
-						summaryPayload: sql`excluded.summary_payload`,
-						updatedAt: syncedAt,
-					},
-				})
+						summaryPayload: profile.guild as unknown as Record<
+							string,
+							unknown
+						>,
+					})
+					.onConflictDoUpdate({
+						target: wowGuilds.id,
+						set: {
+							realmId: sql`excluded.realm_id`,
+							realmSlug: sql`excluded.realm_slug`,
+							name: sql`excluded.name`,
+							factionType: sql`excluded.faction_type`,
+							lastSeenAt: syncedAt,
+							summaryPayload: sql`excluded.summary_payload`,
+							updatedAt: syncedAt,
+						},
+					})
 			}
 
 			const avatarUrl = selectAvatarUrl(media)
-			const activeSpec = specializations?.active_specialization ?? profile.active_spec
+			const activeSpec =
+				specializations?.active_specialization ?? profile.active_spec
 			const snapshotPayload = {
 				profile,
 				specializations,
@@ -301,88 +321,105 @@ export const syncWowProfileCharacterJob = defineJob({
 				raid,
 			}
 
-			await db.insert(wowCharacters).values({
-				id: `${job.data.region}:${profile.id}`,
-				region: job.data.region,
-				battlenetCharacterId: profile.id,
-				realmId: profile.realm.id,
-				realmSlug: profile.realm.slug,
-				name: profile.name,
-				classId: profile.character_class.id,
-				className: profile.character_class.name,
-				raceId: profile.race.id,
-				raceName: profile.race.name,
-				activeSpecId: activeSpec?.id,
-				activeSpecName: activeSpec?.name,
-				level: profile.level,
-				guildId,
-				avatarUrl,
-				lastLoginAt: new Date(profile.last_login_timestamp),
-				lastSeenAt: syncedAt,
-				lastProfileSyncAt: syncedAt,
-				summaryPayload: profile as unknown as Record<string, unknown>,
-				profilePayload: snapshotPayload as unknown as Record<string, unknown>,
-			}).onConflictDoUpdate({
-				target: wowCharacters.id,
-				set: {
-					realmId: sql`excluded.realm_id`,
-					realmSlug: sql`excluded.realm_slug`,
-					name: sql`excluded.name`,
-					classId: sql`excluded.class_id`,
-					className: sql`excluded.class_name`,
-					raceId: sql`excluded.race_id`,
-					raceName: sql`excluded.race_name`,
-					activeSpecId: sql`excluded.active_spec_id`,
-					activeSpecName: sql`excluded.active_spec_name`,
-					level: sql`excluded.level`,
-					guildId: sql`excluded.guild_id`,
-					avatarUrl: sql`excluded.avatar_url`,
-					lastLoginAt: sql`excluded.last_login_at`,
+			await db
+				.insert(wowCharacters)
+				.values({
+					id: `${job.data.region}:${profile.id}`,
+					region: job.data.region,
+					battlenetCharacterId: profile.id,
+					realmId: profile.realm.id,
+					realmSlug: profile.realm.slug,
+					name: profile.name,
+					classId: profile.character_class.id,
+					className: profile.character_class.name,
+					raceId: profile.race.id,
+					raceName: profile.race.name,
+					activeSpecId: activeSpec?.id,
+					activeSpecName: activeSpec?.name,
+					level: profile.level,
+					guildId,
+					avatarUrl,
+					lastLoginAt: new Date(profile.last_login_timestamp),
 					lastSeenAt: syncedAt,
 					lastProfileSyncAt: syncedAt,
-					summaryPayload: sql`excluded.summary_payload`,
-					profilePayload: sql`excluded.profile_payload`,
-					updatedAt: syncedAt,
-				},
-			})
+					summaryPayload: profile as unknown as Record<
+						string,
+						unknown
+					>,
+					profilePayload: snapshotPayload as unknown as Record<
+						string,
+						unknown
+					>,
+				})
+				.onConflictDoUpdate({
+					target: wowCharacters.id,
+					set: {
+						realmId: sql`excluded.realm_id`,
+						realmSlug: sql`excluded.realm_slug`,
+						name: sql`excluded.name`,
+						classId: sql`excluded.class_id`,
+						className: sql`excluded.class_name`,
+						raceId: sql`excluded.race_id`,
+						raceName: sql`excluded.race_name`,
+						activeSpecId: sql`excluded.active_spec_id`,
+						activeSpecName: sql`excluded.active_spec_name`,
+						level: sql`excluded.level`,
+						guildId: sql`excluded.guild_id`,
+						avatarUrl: sql`excluded.avatar_url`,
+						lastLoginAt: sql`excluded.last_login_at`,
+						lastSeenAt: syncedAt,
+						lastProfileSyncAt: syncedAt,
+						summaryPayload: sql`excluded.summary_payload`,
+						profilePayload: sql`excluded.profile_payload`,
+						updatedAt: syncedAt,
+					},
+				})
 
-			await db.insert(wowCharacterSnapshots).values({
-				characterId: `${job.data.region}:${profile.id}`,
-				equippedItemLevel: profile.equipped_item_level,
-				activeSpecId: activeSpec?.id,
-				activeSpecName: activeSpec?.name,
-				avatarUrl,
-				lastLoginAt: new Date(profile.last_login_timestamp),
-				mythicRating: mythic?.current_mythic_rating
-					? Math.round(mythic.current_mythic_rating.rating)
-					: null,
-				mythicRatingColor: formatColorHex(
-					mythic?.current_mythic_rating?.color,
-				),
-				raidProgress: summarizeRaidProgress(raid) as unknown as Record<
-					string,
-					unknown
-				> | null,
-				pvpSummary: pvpSummary as unknown as Record<string, unknown> | null,
-				snapshotAt: syncedAt,
-				payload: snapshotPayload as unknown as Record<string, unknown>,
-			}).onConflictDoUpdate({
-				target: wowCharacterSnapshots.characterId,
-				set: {
-					equippedItemLevel: sql`excluded.equipped_item_level`,
-					activeSpecId: sql`excluded.active_spec_id`,
-					activeSpecName: sql`excluded.active_spec_name`,
-					avatarUrl: sql`excluded.avatar_url`,
-					lastLoginAt: sql`excluded.last_login_at`,
-					mythicRating: sql`excluded.mythic_rating`,
-					mythicRatingColor: sql`excluded.mythic_rating_color`,
-					raidProgress: sql`excluded.raid_progress`,
-					pvpSummary: sql`excluded.pvp_summary`,
+			await db
+				.insert(wowCharacterSnapshots)
+				.values({
+					characterId: `${job.data.region}:${profile.id}`,
+					equippedItemLevel: profile.equipped_item_level,
+					activeSpecId: activeSpec?.id,
+					activeSpecName: activeSpec?.name,
+					avatarUrl,
+					lastLoginAt: new Date(profile.last_login_timestamp),
+					mythicRating: mythic?.current_mythic_rating
+						? Math.round(mythic.current_mythic_rating.rating)
+						: null,
+					mythicRatingColor: formatColorHex(
+						mythic?.current_mythic_rating?.color,
+					),
+					raidProgress: summarizeRaidProgress(
+						raid,
+					) as unknown as Record<string, unknown> | null,
+					pvpSummary: pvpSummary as unknown as Record<
+						string,
+						unknown
+					> | null,
 					snapshotAt: syncedAt,
-					payload: sql`excluded.payload`,
-					updatedAt: syncedAt,
-				},
-			})
+					payload: snapshotPayload as unknown as Record<
+						string,
+						unknown
+					>,
+				})
+				.onConflictDoUpdate({
+					target: wowCharacterSnapshots.characterId,
+					set: {
+						equippedItemLevel: sql`excluded.equipped_item_level`,
+						activeSpecId: sql`excluded.active_spec_id`,
+						activeSpecName: sql`excluded.active_spec_name`,
+						avatarUrl: sql`excluded.avatar_url`,
+						lastLoginAt: sql`excluded.last_login_at`,
+						mythicRating: sql`excluded.mythic_rating`,
+						mythicRatingColor: sql`excluded.mythic_rating_color`,
+						raidProgress: sql`excluded.raid_progress`,
+						pvpSummary: sql`excluded.pvp_summary`,
+						snapshotAt: syncedAt,
+						payload: sql`excluded.payload`,
+						updatedAt: syncedAt,
+					},
+				})
 
 			await completeSyncRunSuccess({
 				runId,

@@ -294,7 +294,6 @@ export const syncWowProfileAccountJob = defineJob({
 							updatedAt: syncedAt,
 						},
 					})
-
 			}
 
 			if (characterIds.length > 0) {

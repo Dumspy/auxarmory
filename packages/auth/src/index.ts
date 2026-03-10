@@ -1,5 +1,10 @@
 import { betterAuth } from 'better-auth'
-import { admin, genericOAuth, organization } from 'better-auth/plugins'
+import {
+	admin,
+	genericOAuth,
+	organization,
+	username,
+} from 'better-auth/plugins'
 import { drizzleAdapter } from '@better-auth/drizzle-adapter'
 
 import { db } from '@auxarmory/db/client'
@@ -235,6 +240,7 @@ export const auth = betterAuth({
 	},
 	plugins: [
 		admin({ ac, roles }),
+		username(),
 		organization({
 			ac,
 			roles,

@@ -48,6 +48,15 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 		],
 		links: [
 			{
+				rel: 'icon',
+				type: 'image/svg+xml',
+				href: '/Auxera-A.svg',
+			},
+			{
+				rel: 'manifest',
+				href: '/manifest.json',
+			},
+			{
 				rel: 'preconnect',
 				href: 'https://fonts.googleapis.com',
 			},

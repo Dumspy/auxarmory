@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import { Calendar, ExternalLink, Server, Users } from 'lucide-react'
+import { ExternalLink, Server, Users } from 'lucide-react'
 
 import { Badge } from '@auxarmory/ui/components/ui/badge'
 import { Button } from '@auxarmory/ui/components/ui/button'
@@ -25,73 +26,11 @@ import {
 } from '../../components/index/characterCard'
 import { CharacterDetailedView } from '../../components/index/characterDetailedView'
 import type { CharacterDetail } from '../../components/index/types'
+import { useTRPC } from '../../lib/trpc'
 
 export const Route = createFileRoute('/_auth/dashboard')({
 	component: DashboardPage,
 })
-
-const mockCharacters: CharacterDetail[] = [
-	{
-		id: 1,
-		name: 'Anymus',
-		level: 80,
-		activeSpec: 'Restoration',
-		className: 'Druid',
-		equippedItemLevel: 684,
-		mythicRating: 2843,
-		mythicRatingColor: 'rgb(196, 181, 253)',
-		lastLogin: '2026-02-26T14:00:00.000Z',
-		avatarUrl: '',
-		favorite: true,
-		raidProgress: { normal: '8/8', heroic: '8/8', mythic: '3/8' },
-		mythicScore: 2843,
-		pvpRating: 1850,
-		weeklyVault: { raid: 1, mythicPlus: 2, pvp: 0 },
-		conquest: { current: 540, max: 1000 },
-	},
-	{
-		id: 2,
-		name: 'Knap',
-		level: 80,
-		activeSpec: 'Blood',
-		className: 'Death Knight',
-		equippedItemLevel: 678,
-		mythicRating: 2610,
-		mythicRatingColor: 'rgb(147, 197, 253)',
-		lastLogin: '2026-02-25T18:30:00.000Z',
-		avatarUrl: '',
-		raidProgress: { normal: '8/8', heroic: '6/8', mythic: '0/8' },
-		mythicScore: 2610,
-		pvpRating: 1320,
-		weeklyVault: { raid: 0, mythicPlus: 3, pvp: 1 },
-		conquest: { current: 220, max: 1000 },
-	},
-	{
-		id: 3,
-		name: 'Dispy',
-		level: 80,
-		activeSpec: 'Retribution',
-		className: 'Paladin',
-		equippedItemLevel: 671,
-		mythicRating: 2041,
-		mythicRatingColor: 'rgb(110, 231, 183)',
-		lastLogin: '2026-02-24T20:00:00.000Z',
-		avatarUrl: '',
-		raidProgress: { normal: '8/8', heroic: '4/8', mythic: '0/8' },
-		mythicScore: 2041,
-		pvpRating: 990,
-		weeklyVault: { raid: 2, mythicPlus: 1, pvp: 0 },
-		conquest: { current: 100, max: 1000 },
-	},
-]
-
-const guildInfo = {
-	name: 'Average Pillagers',
-	realm: 'Argent Dawn',
-	members: 127,
-	raidProgress: '8/8 H, 3/8 M',
-	nextRaid: 'Tonight 8:00 PM',
-}
 
 const weeklyResets = {
 	vault: '3 days',
@@ -100,19 +39,39 @@ const weeklyResets = {
 	raid: '3 days',
 }
 
-function DashboardPage() {
-	const [selectedCharacterId, setSelectedCharacterId] = useState<
-		number | undefined
-	>(mockCharacters[0]?.id)
-	const [currentPage, setCurrentPage] = useState(1)
+const EMPTY_CHARACTERS: CharacterDetail[] = []
 
-	const totalPages = Math.max(1, Math.ceil(mockCharacters.length / 6))
+function DashboardPage() {
+	const trpc = useTRPC()
+	const dashboardQuery = useQuery(trpc.wow.dashboard.queryOptions())
+	const [selectedCharacterId, setSelectedCharacterId] = useState<
+		string | undefined
+	>(undefined)
+	const [currentPage, setCurrentPage] = useState(1)
+	const characters = dashboardQuery.data?.characters ?? EMPTY_CHARACTERS
+
+	useEffect(() => {
+		if (characters.length === 0) {
+			setSelectedCharacterId(undefined)
+			return
+		}
+
+		setSelectedCharacterId((current) => {
+			if (current && characters.some((item) => item.id === current)) {
+				return current
+			}
+
+			return characters[0]?.id
+		})
+	}, [characters])
+
+	const totalPages = Math.max(1, Math.ceil(characters.length / 6))
 	const startIndex = (currentPage - 1) * 6
-	const paginatedItems = mockCharacters.slice(startIndex, startIndex + 6)
+	const paginatedItems = characters.slice(startIndex, startIndex + 6)
 
 	const selectedCharacter = useMemo(
-		() => mockCharacters.find((item) => item.id === selectedCharacterId),
-		[selectedCharacterId],
+		() => characters.find((item) => item.id === selectedCharacterId),
+		[characters, selectedCharacterId],
 	)
 
 	const handlePageChange = (page: number) => {
@@ -120,6 +79,12 @@ function DashboardPage() {
 			setCurrentPage(page)
 		}
 	}
+
+	useEffect(() => {
+		if (currentPage > totalPages) {
+			setCurrentPage(totalPages)
+		}
+	}, [currentPage, totalPages])
 
 	return (
 		<div className='space-y-6 p-2 md:p-4'>
@@ -136,12 +101,24 @@ function DashboardPage() {
 			</div>
 
 			<div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
-				{paginatedItems.length === 0 ? (
+				{dashboardQuery.isLoading ? (
 					<>
 						<CharacterCardSkeleton />
 						<CharacterCardSkeleton />
 						<CharacterCardSkeleton />
 					</>
+				) : paginatedItems.length === 0 ? (
+					<Card className='lg:col-span-3'>
+						<CardContent className='py-10 text-center'>
+							<p className='text-sm font-medium'>
+								No synced characters yet
+							</p>
+							<p className='text-muted-foreground mt-1 text-sm'>
+								Link a Battle.net account and run a sync from
+								account settings to populate your roster.
+							</p>
+						</CardContent>
+					</Card>
 				) : (
 					paginatedItems.map((character) => (
 						<CharacterCard
@@ -205,51 +182,42 @@ function DashboardPage() {
 							</CardTitle>
 						</CardHeader>
 						<CardContent className='space-y-4'>
-							<div>
-								<h3 className='text-foreground font-semibold'>
-									{guildInfo.name}
-								</h3>
+							{selectedCharacter?.guild ? (
+								<>
+									<div>
+										<h3 className='text-foreground font-semibold'>
+											{selectedCharacter.guild.name}
+										</h3>
+										<p className='text-muted-foreground text-sm'>
+											{selectedCharacter.guild.realm}
+										</p>
+									</div>
+									<div className='space-y-2'>
+										<div className='flex justify-between text-sm'>
+											<span className='text-muted-foreground'>
+												Members
+											</span>
+											<span className='text-foreground'>
+												{selectedCharacter.guild
+													.memberCount ?? 'Unknown'}
+											</span>
+										</div>
+									</div>
+									<Button
+										variant='outline'
+										size='sm'
+										className='w-full'
+										disabled
+									>
+										<ExternalLink className='mr-2 h-4 w-4' />
+										Guild profile soon
+									</Button>
+								</>
+							) : (
 								<p className='text-muted-foreground text-sm'>
-									{guildInfo.realm}
+									This character is not currently in a guild.
 								</p>
-							</div>
-							<div className='space-y-2'>
-								<div className='flex justify-between text-sm'>
-									<span className='text-muted-foreground'>
-										Members
-									</span>
-									<span className='text-foreground'>
-										{guildInfo.members}
-									</span>
-								</div>
-								<div className='flex justify-between text-sm'>
-									<span className='text-muted-foreground'>
-										Progress
-									</span>
-									<span className='text-foreground'>
-										{guildInfo.raidProgress}
-									</span>
-								</div>
-							</div>
-							<div className='border-border border-t pt-3'>
-								<div className='mb-2 flex items-center gap-2'>
-									<Calendar className='h-4 w-4' />
-									<span className='text-foreground text-sm font-medium'>
-										Next Raid
-									</span>
-								</div>
-								<p className='text-muted-foreground text-sm'>
-									{guildInfo.nextRaid}
-								</p>
-							</div>
-							<Button
-								variant='outline'
-								size='sm'
-								className='w-full'
-							>
-								<ExternalLink className='mr-2 h-4 w-4' />
-								View Guild Profile
-							</Button>
+							)}
 						</CardContent>
 					</Card>
 

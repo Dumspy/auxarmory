@@ -22,6 +22,7 @@ import { createWowAccountClient } from './profile_accounts.js'
 import {
 	WOW_PROFILE_ACCOUNT_ENTITY,
 	WOW_PROFILE_CHARACTER_ENTITY,
+	WOW_PROFILE_MIN_CHARACTER_LEVEL,
 	WOW_PROFILE_SYNC_DOMAIN,
 	formatWowProfileCharacterJobId,
 	wowProfileAccountJobPayloadSchema,
@@ -101,7 +102,7 @@ export const syncWowProfileAccountJob = defineJob({
 			) as AccountProfileSummary
 			const wowProfileAccountId = linkedAccount.id
 
-			const characterSummaries = summary.wow_accounts.flatMap(
+			const allCharacterSummaries = summary.wow_accounts.flatMap(
 				(wowAccount: AccountProfileSummary['wow_accounts'][number]) =>
 					wowAccount.characters.map(
 						(
@@ -124,6 +125,11 @@ export const syncWowProfileAccountJob = defineJob({
 						}),
 					),
 			)
+			const characterSummaries = allCharacterSummaries.filter(
+				(character) => character.level >= WOW_PROFILE_MIN_CHARACTER_LEVEL,
+			)
+			const filteredOutCharacterCount =
+				allCharacterSummaries.length - characterSummaries.length
 
 			const characterIds = characterSummaries.map((character) =>
 				formatWowCharacterId(
@@ -199,6 +205,8 @@ export const syncWowProfileAccountJob = defineJob({
 					metadata: {
 						wowAccountCount: summary.wow_accounts.length,
 						characterCount: characterSummaries.length,
+						filteredOutCharacterCount,
+						minCharacterLevel: WOW_PROFILE_MIN_CHARACTER_LEVEL,
 					},
 				})
 				.onConflictDoUpdate({
@@ -382,6 +390,8 @@ export const syncWowProfileAccountJob = defineJob({
 					region: linkedAccount.region,
 					userId: linkedAccount.userId,
 					characterCount: characterSummaries.length,
+					filteredOutCharacterCount,
+					minCharacterLevel: WOW_PROFILE_MIN_CHARACTER_LEVEL,
 					enqueuedCharacterSyncCount: characterSummaries.length,
 					childEntity: WOW_PROFILE_CHARACTER_ENTITY,
 					wowAccountCount: summary.wow_accounts.length,

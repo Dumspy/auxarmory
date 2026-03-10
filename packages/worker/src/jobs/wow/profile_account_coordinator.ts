@@ -10,6 +10,8 @@ import {
 	startSyncRun,
 } from './utils.js'
 import {
+	WOW_PROFILE_ACCOUNT_COORDINATOR_SCHEDULE_EVERY_MS,
+	WOW_PROFILE_ACCOUNT_COORDINATOR_SCHEDULE_ID,
 	WOW_PROFILE_ACCOUNT_COORDINATOR_ENTITY,
 	WOW_PROFILE_ACCOUNT_ENTITY,
 	WOW_PROFILE_SYNC_DOMAIN,
@@ -25,8 +27,12 @@ export const syncWowProfileAccountCoordinatorJob = defineJob({
 		'Discover linked Battle.net accounts and enqueue roster sync jobs',
 	allowManualRun: true,
 	schema: wowProfileAccountCoordinatorJobPayloadSchema,
+	schedule: {
+		id: WOW_PROFILE_ACCOUNT_COORDINATOR_SCHEDULE_ID,
+		everyMs: WOW_PROFILE_ACCOUNT_COORDINATOR_SCHEDULE_EVERY_MS,
+	},
 	data: {
-		triggeredBy: 'manual',
+		triggeredBy: 'scheduler',
 		force: false,
 	} satisfies WowProfileAccountCoordinatorJobPayload,
 	handler: async function handleSyncWowProfileAccountCoordinator(job) {

@@ -606,6 +606,13 @@ export const wowRouter = router({
 					return left.favorite ? -1 : 1
 				}
 
+				const leftLevel = left.level ?? 0
+				const rightLevel = right.level ?? 0
+
+				if (leftLevel !== rightLevel) {
+					return rightLevel - leftLevel
+				}
+
 				const leftTimestamp = left.lastLogin
 					? Date.parse(left.lastLogin)
 					: 0

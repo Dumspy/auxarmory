@@ -30,7 +30,7 @@ describe('scheduler', () => {
 
 		await registerRepeatables({ upsertJobScheduler } as never)
 
-		expect(upsertJobScheduler).toHaveBeenCalledTimes(2)
+		expect(upsertJobScheduler).toHaveBeenCalledTimes(3)
 		expect(upsertJobScheduler).toHaveBeenCalledWith(
 			'sync-example-repeatable',
 			{ every: 15 * 60 * 1000, pattern: undefined },
@@ -43,6 +43,14 @@ describe('scheduler', () => {
 			'sync-wow-static-weekly-coordinator',
 			{ every: 30 * 60 * 1000, pattern: undefined },
 			'sync:wow:static:weekly:coordinator',
+			{ triggeredBy: 'scheduler', force: false },
+			{ priority: JOB_PRIORITIES.STANDARD },
+			{ override: true },
+		)
+		expect(upsertJobScheduler).toHaveBeenCalledWith(
+			'sync-wow-profile-account-coordinator',
+			{ every: 4 * 60 * 60 * 1000, pattern: undefined },
+			'sync:wow:profile:account:coordinator',
 			{ triggeredBy: 'scheduler', force: false },
 			{ priority: JOB_PRIORITIES.STANDARD },
 			{ override: true },

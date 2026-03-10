@@ -7,6 +7,11 @@ export const WOW_PROFILE_ACCOUNT_COORDINATOR_ENTITY =
 	'profile-account-coordinator'
 export const WOW_PROFILE_ACCOUNT_ENTITY = 'profile-account'
 export const WOW_PROFILE_CHARACTER_ENTITY = 'profile-character'
+export const WOW_PROFILE_ACCOUNT_COORDINATOR_SCHEDULE_ID =
+	'sync-wow-profile-account-coordinator'
+export const WOW_PROFILE_ACCOUNT_COORDINATOR_SCHEDULE_EVERY_MS =
+	4 * 60 * 60 * 1000
+export const WOW_PROFILE_MIN_CHARACTER_LEVEL = 30
 
 export const wowProfileAccountCoordinatorJobPayloadSchema = z.object({
 	userId: z.string().min(1).optional(),

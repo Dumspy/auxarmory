@@ -1,6 +1,8 @@
 import type { Regions } from '@auxarmory/battlenet'
 import { ApplicationClient, RegionsConst } from '@auxarmory/battlenet'
 import { z } from 'zod'
+
+import { env } from '../../env.js'
 import { syncRunTriggerSchema } from '../shared/sync_runtime.js'
 
 export {
@@ -185,14 +187,7 @@ export function parseConnectedRealmIdFromHref(href: string): number | null {
 	return Number.isFinite(id) ? id : null
 }
 
-export const battlenetEnvSchema = z.object({
-	BATTLENET_CLIENT_ID: z.string().min(1),
-	BATTLENET_CLIENT_SECRET: z.string().min(1),
-})
-
 export function createBattlenetClient(region: WowSyncRegion) {
-	const env = battlenetEnvSchema.parse(process.env)
-
 	return new ApplicationClient({
 		clientId: env.BATTLENET_CLIENT_ID,
 		clientSecret: env.BATTLENET_CLIENT_SECRET,

@@ -110,7 +110,9 @@ function mapWowLinkedBattlenetAccount(
 }
 
 export async function listWowLinkedBattlenetAccounts(userId?: string) {
-	const conditions = [like(account.providerId, `${BATTLENET_PROVIDER_PREFIX}%`)]
+	const conditions = [
+		like(account.providerId, `${BATTLENET_PROVIDER_PREFIX}%`),
+	]
 
 	if (userId) {
 		conditions.push(eq(account.userId, userId))
@@ -150,13 +152,18 @@ function shouldRefreshAccessToken(args: {
 		return true
 	}
 
-	return args.accessTokenExpiresAt.getTime() <= args.now.getTime() + args.refreshBufferMs
+	return (
+		args.accessTokenExpiresAt.getTime() <=
+		args.now.getTime() + args.refreshBufferMs
+	)
 }
 
 export async function refreshWowAccessToken(
 	options: RefreshWowBattlenetAccountOptions,
 ) {
-	const current = await getWowLinkedBattlenetAccountById(options.authAccountId)
+	const current = await getWowLinkedBattlenetAccountById(
+		options.authAccountId,
+	)
 	const now = options.now ?? new Date()
 
 	if (!current.refreshToken) {
@@ -211,7 +218,9 @@ export async function refreshWowAccessToken(
 		)
 	}
 
-	const accessTokenExpiresAt = new Date(now.getTime() + payload.expires_in * 1000)
+	const accessTokenExpiresAt = new Date(
+		now.getTime() + payload.expires_in * 1000,
+	)
 	const refreshTokenExpiresAt =
 		typeof payload.refresh_token_expires_in === 'number'
 			? new Date(now.getTime() + payload.refresh_token_expires_in * 1000)

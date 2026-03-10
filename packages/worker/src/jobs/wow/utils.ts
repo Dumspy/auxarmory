@@ -1,8 +1,5 @@
-import {
-	ApplicationClient,
-	RegionsConst,
-	type Regions,
-} from '@auxarmory/battlenet'
+import type { Regions } from '@auxarmory/battlenet'
+import { ApplicationClient, RegionsConst } from '@auxarmory/battlenet'
 import { z } from 'zod'
 import { syncRunTriggerSchema } from '../shared/sync_runtime.js'
 

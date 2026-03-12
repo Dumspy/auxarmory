@@ -110,11 +110,11 @@ export async function runEndpoint<TInput, TOutput>({
 			const ignoredBattlenetMessage =
 				battlenetError && isIgnoredErrorMessage(errorMessage)
 			if (ignoredBattlenetCode) {
-				results.push({ input, output: res.raw_data })
+				results.push({ input, output: res.raw_data as TOutput })
 				continue
 			}
 			if (ignoredBattlenetMessage) {
-				results.push({ input, output: res.raw_data })
+				results.push({ input, output: res.raw_data as TOutput })
 				continue
 			}
 
@@ -133,7 +133,7 @@ export async function runEndpoint<TInput, TOutput>({
 			})
 			results.push({
 				input,
-				output: res.raw_data,
+				output: res.raw_data as TOutput,
 				zodError: res.error_type === 'zod' ? res.error : undefined,
 			})
 		} catch (error) {

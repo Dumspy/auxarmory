@@ -1,4 +1,5 @@
-import type { AccountClient, ApplicationClient } from '..'
+import type { AccountClient } from '../clients/account'
+import type { ApplicationClient } from '../clients/application'
 import {
 	Achievement,
 	AchievementCategory,

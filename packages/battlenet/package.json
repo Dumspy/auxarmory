@@ -28,13 +28,13 @@
       "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
     },
+    "./errors": {
+      "types": "./dist/errors.d.ts",
+      "default": "./src/errors.ts"
+    },
     "./types": {
       "types": "./dist/types.d.ts",
       "default": "./src/types.ts"
-    },
-    "./unwrap": {
-      "types": "./dist/unwrap.d.ts",
-      "default": "./src/unwrap.ts"
     }
   }
 }

@@ -1,5 +1,7 @@
 const DEFAULT_TRACES_SAMPLE_RATE = 0.1
 
+export * from './battlenet.js'
+
 type Runtime = 'browser' | 'node'
 
 interface BaseSentryOptionsInput {

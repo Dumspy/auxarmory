@@ -192,3 +192,9 @@ export class BattlenetUnknownError extends BattlenetClientError {
 		)
 	}
 }
+
+export function isBattlenetError(
+	error: unknown,
+): error is BattlenetClientError {
+	return error instanceof BattlenetClientError
+}

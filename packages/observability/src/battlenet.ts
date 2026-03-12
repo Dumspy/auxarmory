@@ -38,6 +38,21 @@ interface BattlenetSentryMiddlewareInput {
 	service?: string
 }
 
+export interface BattlenetJobLike {
+	name: string
+	id?: string | number | null
+	attemptsMade?: number
+	data?: unknown
+}
+
+export interface BattlenetJobMeta {
+	entity?: string
+	runId?: string
+	region?: string
+	triggeredBy?: string
+	resetKey?: string
+}
+
 function isObjectLike(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null
 }
@@ -56,6 +71,10 @@ function stringifyWithLimit(value: unknown, maxLength = MAX_PREVIEW_LENGTH) {
 	}
 
 	return `${serialized.slice(0, maxLength)}... [truncated]`
+}
+
+function getOptionalString(value: unknown): string | undefined {
+	return typeof value === 'string' ? value : undefined
 }
 
 function getFailureExtraFields(failure: BattlenetFailureLike) {
@@ -152,5 +171,33 @@ export function createBattlenetSentryMiddleware({
 			},
 			level: 'error',
 		})
+	}
+}
+
+export function createBattlenetJobCaptureContext(
+	job: BattlenetJobLike,
+	meta?: BattlenetJobMeta,
+) {
+	const payload = isObjectLike(job.data)
+		? (job.data as Record<string, unknown>)
+		: null
+	const region = meta?.region ?? getOptionalString(payload?.region)
+	const triggeredBy =
+		meta?.triggeredBy ?? getOptionalString(payload?.triggeredBy)
+	const resetKey = meta?.resetKey ?? getOptionalString(payload?.resetKey)
+
+	return {
+		tags: {
+			job_name: job.name,
+			entity: meta?.entity,
+			region,
+		},
+		extra: {
+			jobId: job.id ?? undefined,
+			attemptsMade: job.attemptsMade,
+			runId: meta?.runId,
+			triggeredBy,
+			resetKey,
+		},
 	}
 }

@@ -1,4 +1,11 @@
+import * as Sentry from '@sentry/node'
+
 import { ApplicationClient } from '@auxarmory/battlenet'
+import type { ClientReturn } from '@auxarmory/battlenet/types'
+import {
+	createBattlenetJobCaptureContext,
+	createBattlenetSentryMiddleware,
+} from '@auxarmory/observability'
 import { z } from 'zod'
 import { syncRunTriggerSchema } from '../shared/sync_runtime.js'
 
@@ -179,7 +186,12 @@ export const battlenetEnvSchema = z.object({
 	BATTLENET_CLIENT_SECRET: z.string().min(1),
 })
 
-export function createBattlenetClient(region: WowSyncRegion) {
+export function createBattlenetClient(
+	region: WowSyncRegion,
+	captureException: Parameters<
+		typeof createBattlenetSentryMiddleware
+	>[0]['captureException'] = Sentry.captureException,
+) {
 	const env = battlenetEnvSchema.parse(process.env)
 
 	return new ApplicationClient({
@@ -187,7 +199,54 @@ export function createBattlenetClient(region: WowSyncRegion) {
 		clientSecret: env.BATTLENET_CLIENT_SECRET,
 		region,
 		locale: 'en_US',
+		middleware: [
+			createBattlenetSentryMiddleware({
+				service: 'worker',
+				captureException,
+			}),
+		],
 	})
+}
+
+export function createJobBattlenetClient(
+	job: Parameters<typeof createBattlenetJobCaptureContext>[0],
+	meta?: Parameters<typeof createBattlenetJobCaptureContext>[1],
+) {
+	const context = createBattlenetJobCaptureContext(job, meta)
+	const region = meta?.region ?? context.tags.region
+	if (!region || !WOW_SYNC_REGIONS.includes(region as WowSyncRegion)) {
+		throw new Error(
+			'Job payload region missing; cannot create battlenet client',
+		)
+	}
+
+	return createBattlenetClient(
+		region as WowSyncRegion,
+		(error, baseContext) => {
+			Sentry.captureException(error, {
+				...baseContext,
+				tags: {
+					...baseContext?.tags,
+					...context.tags,
+				},
+				extra: {
+					...baseContext?.extra,
+					...context.extra,
+				},
+			})
+		},
+	)
+}
+
+export async function unwrapBattlenetResponse<T>(
+	response: Promise<ClientReturn<T>>,
+): Promise<T> {
+	const res = await response
+	if (res.success) {
+		return res.data
+	}
+
+	throw res.error
 }
 
 export function localizeName(value: unknown): string | null {

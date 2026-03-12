@@ -2,14 +2,14 @@ import { and, eq, inArray, sql } from 'drizzle-orm'
 
 import { db } from '@auxarmory/db/client'
 import { wowCachePlayableClasses } from '@auxarmory/db/schema'
-import { unwrap } from '@auxarmory/battlenet/unwrap'
 
 import { defineJob } from '../../../registry.js'
 import {
 	completeSyncRunFailure,
 	completeSyncRunSuccess,
-	createBattlenetClient,
+	createJobBattlenetClient,
 	localizeName,
+	unwrapBattlenetResponse,
 	SYNC_DOMAIN,
 	SYNC_PROVIDER,
 	startSyncRun,
@@ -51,10 +51,13 @@ export const syncWowStaticWeeklyPlayableClassesJob = defineJob({
 		})
 
 		try {
-			const client = createBattlenetClient(job.data.region)
-			const index = unwrap(
-				await client.wow.PlayableClassIndex(),
-			) as PlayableClassIndexData
+			const client = createJobBattlenetClient(job, {
+				entity: WOW_STATIC_WEEKLY_PLAYABLE_CLASSES_ENTITY,
+				runId,
+			})
+			const index = (await unwrapBattlenetResponse(
+				client.wow.PlayableClassIndex(),
+			)) as PlayableClassIndexData
 
 			const rows = index.classes.map((entry) => ({
 				battlenetId: entry.id,

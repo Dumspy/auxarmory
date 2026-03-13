@@ -19,8 +19,8 @@
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
 
-    "module": "Preserve",
-    "moduleResolution": "Bundler",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "noEmit": true
   },
   "exclude": ["node_modules", "build", "dist"]

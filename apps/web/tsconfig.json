@@ -3,8 +3,8 @@
   "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "jsx": "react-jsx",
-    "baseUrl": ".",
     "paths": {
+      "*": ["./*"],
       "#/*": ["./src/*"],
       "@auxarmory/ui": ["../../packages/ui/src/index.ts"],
       "@auxarmory/ui/*": ["../../packages/ui/src/*"]

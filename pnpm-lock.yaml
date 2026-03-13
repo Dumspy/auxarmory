@@ -62,6 +62,9 @@ importers:
       '@auxarmory/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@auxarmory/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@auxarmory/observability':
         specifier: workspace:*
         version: link:../../packages/observability

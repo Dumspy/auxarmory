@@ -2,13 +2,13 @@ import { and, eq, inArray, sql } from 'drizzle-orm'
 
 import { db } from '@auxarmory/db/client'
 import { wowCacheConnectedRealms } from '@auxarmory/db/schema'
-import { unwrap } from '@auxarmory/battlenet/unwrap'
 
 import { defineJob } from '../../../registry.js'
 import {
 	completeSyncRunFailure,
 	completeSyncRunSuccess,
-	createBattlenetClient,
+	createJobBattlenetClient,
+	unwrapBattlenetResponse,
 	SYNC_DOMAIN,
 	SYNC_PROVIDER,
 	startSyncRun,
@@ -60,10 +60,13 @@ export const syncWowStaticWeeklyConnectedRealmsJob = defineJob({
 		})
 
 		try {
-			const client = createBattlenetClient(job.data.region)
-			const index = unwrap(
-				await client.wow.ConnectedRealmIndex(),
-			) as ConnectedRealmIndexData
+			const client = createJobBattlenetClient(job, {
+				entity: WOW_STATIC_WEEKLY_CONNECTED_REALMS_ENTITY,
+				runId,
+			})
+			const index = (await unwrapBattlenetResponse(
+				client.wow.ConnectedRealmIndex(),
+			)) as ConnectedRealmIndexData
 
 			const rows: {
 				battlenetId: number
@@ -78,9 +81,9 @@ export const syncWowStaticWeeklyConnectedRealmsJob = defineJob({
 					continue
 				}
 
-				const connectedRealm = unwrap(
-					await client.wow.ConnectedRealm(id),
-				) as ConnectedRealmData
+				const connectedRealm = (await unwrapBattlenetResponse(
+					client.wow.ConnectedRealm(id),
+				)) as ConnectedRealmData
 
 				rows.push({
 					battlenetId: connectedRealm.id,

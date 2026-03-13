@@ -1,11 +1,18 @@
+import * as Sentry from '@sentry/node'
+
 import { and, eq, like } from 'drizzle-orm'
 
-import type { Regions } from '@auxarmory/battlenet'
+import type { Regions } from '@auxarmory/battlenet/types'
 import { AccountClient } from '@auxarmory/battlenet'
 import { db } from '@auxarmory/db/client'
 import { account } from '@auxarmory/db/schema'
 
 import { env } from '../../env.js'
+import {
+	createBattlenetJobCaptureContext,
+	createBattlenetSentryMiddleware,
+} from '@auxarmory/observability'
+import { persistBattlenetFailureViaInternalApi } from '../shared/battlenet_failure_sink.js'
 
 const BATTLENET_PROVIDER_PREFIX = 'battlenet-'
 const DEFAULT_REFRESH_BUFFER_MS = 5 * 60 * 1000
@@ -277,11 +284,17 @@ export async function resolveWowBattlenetAccount(
 	}
 }
 
-export async function createWowAccountClient(authAccountId: string): Promise<{
+export async function createWowAccountClient(
+	authAccountId: string,
+	job: Parameters<typeof createBattlenetJobCaptureContext>[0],
+	meta?: Parameters<typeof createBattlenetJobCaptureContext>[1],
+): Promise<{
 	account: WowResolvedBattlenetAccount
 	client: AccountClient
 }> {
 	const resolved = await resolveWowBattlenetAccount({ authAccountId })
+
+	const context = createBattlenetJobCaptureContext(job, meta)
 
 	return {
 		account: resolved,
@@ -289,6 +302,29 @@ export async function createWowAccountClient(authAccountId: string): Promise<{
 			region: resolved.region,
 			locale: 'en_US',
 			accessToken: resolved.accessToken,
+			middleware: [
+				createBattlenetSentryMiddleware({
+					service: 'worker',
+					persistFailure: persistBattlenetFailureViaInternalApi,
+					captureException: (error, baseContext) => {
+						Sentry.captureException(error, {
+							...baseContext,
+							tags: {
+								...baseContext?.tags,
+								...context.tags,
+							},
+							extra: {
+								...baseContext?.extra,
+								...context.extra,
+							},
+							contexts: {
+								...baseContext?.contexts,
+								...context.contexts,
+							},
+						})
+					},
+				}),
+			],
 		}),
 	}
 }

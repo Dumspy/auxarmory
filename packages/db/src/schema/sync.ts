@@ -107,3 +107,13 @@ export const syncState = pgTable(
 		index('sync_state_last_success_idx').on(table.lastSuccessAt),
 	],
 )
+
+export const battlenetRespSink = pgTable(
+	'battlenet_resp_sink',
+	{
+		id: text('id').primaryKey(),
+		data: jsonb('data').$type<unknown>().notNull(),
+		createdAt: timestamp('created_at').defaultNow().notNull(),
+	},
+	(table) => [index('battlenet_resp_sink_created_idx').on(table.createdAt)],
+)

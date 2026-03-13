@@ -1,8 +1,17 @@
-import type { Regions } from '@auxarmory/battlenet'
-import { ApplicationClient, RegionsConst } from '@auxarmory/battlenet'
+import * as Sentry from '@sentry/node'
+
+import { ApplicationClient } from '@auxarmory/battlenet'
+import { RegionsConst } from '@auxarmory/battlenet/types'
+import type { ClientReturn, Regions } from '@auxarmory/battlenet/types'
+import {
+	createBattlenetJobCaptureContext,
+	createBattlenetSentryMiddleware,
+} from '@auxarmory/observability'
+
 import { z } from 'zod'
 
 import { env } from '../../env.js'
+import { persistBattlenetFailureViaInternalApi } from '../shared/battlenet_failure_sink.js'
 import { syncRunTriggerSchema } from '../shared/sync_runtime.js'
 
 export {
@@ -187,13 +196,73 @@ export function parseConnectedRealmIdFromHref(href: string): number | null {
 	return Number.isFinite(id) ? id : null
 }
 
-export function createBattlenetClient(region: WowSyncRegion) {
+function createBattlenetClient(
+	region: WowSyncRegion,
+	captureException: Parameters<
+		typeof createBattlenetSentryMiddleware
+	>[0]['captureException'] = Sentry.captureException,
+	baseContext?: ReturnType<typeof createBattlenetJobCaptureContext>,
+) {
 	return new ApplicationClient({
 		clientId: env.BATTLENET_CLIENT_ID,
 		clientSecret: env.BATTLENET_CLIENT_SECRET,
 		region,
 		locale: 'en_US',
+		middleware: [
+			createBattlenetSentryMiddleware({
+				service: 'worker',
+				captureException,
+				persistFailure: persistBattlenetFailureViaInternalApi,
+				baseContext,
+			}),
+		],
 	})
+}
+
+export function createJobBattlenetClient(
+	job: Parameters<typeof createBattlenetJobCaptureContext>[0],
+	meta?: Parameters<typeof createBattlenetJobCaptureContext>[1],
+) {
+	const context = createBattlenetJobCaptureContext(job, meta)
+	const region = meta?.region ?? context.tags.region
+	if (!region || !WOW_SYNC_REGIONS.includes(region as WowSyncRegion)) {
+		throw new Error(
+			'Job payload region missing; cannot create battlenet client',
+		)
+	}
+
+	return createBattlenetClient(
+		region as WowSyncRegion,
+		(error, baseContext) => {
+			Sentry.captureException(error, {
+				...baseContext,
+				tags: {
+					...baseContext?.tags,
+					...context.tags,
+				},
+				extra: {
+					...baseContext?.extra,
+					...context.extra,
+				},
+				contexts: {
+					...baseContext?.contexts,
+					...context.contexts,
+				},
+			})
+		},
+		context,
+	)
+}
+
+export async function unwrapBattlenetResponse<T>(
+	response: Promise<ClientReturn<T>>,
+): Promise<T> {
+	const res = await response
+	if (res.success) {
+		return res.data
+	}
+
+	throw res.error
 }
 
 export function localizeName(value: unknown): string | null {

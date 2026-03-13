@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/node'
 import type { Job } from 'bullmq'
 import { Worker as BullWorker } from 'bullmq'
 
+import { isBattlenetError } from '@auxarmory/battlenet/errors'
 import {
 	createSyncJobFailureCaptureContext,
 	redactPayloadValues,
@@ -43,10 +44,12 @@ export function startWorker(): BullWorker<
 			return
 		}
 
-		Sentry.captureException(
-			error,
-			createSyncJobFailureCaptureContext(job, error),
-		)
+		if (!isBattlenetError(error)) {
+			Sentry.captureException(
+				error,
+				createSyncJobFailureCaptureContext(job, error),
+			)
+		}
 
 		console.error(`[worker] job failed: ${job.name}`, {
 			jobId: job.id,

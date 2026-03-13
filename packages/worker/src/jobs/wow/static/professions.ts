@@ -2,14 +2,14 @@ import { and, eq, inArray, sql } from 'drizzle-orm'
 
 import { db } from '@auxarmory/db/client'
 import { wowCacheProfessions } from '@auxarmory/db/schema'
-import { unwrap } from '@auxarmory/battlenet/unwrap'
 
 import { defineJob } from '../../../registry.js'
 import {
 	completeSyncRunFailure,
 	completeSyncRunSuccess,
-	createBattlenetClient,
+	createJobBattlenetClient,
 	localizeName,
+	unwrapBattlenetResponse,
 	SYNC_DOMAIN,
 	SYNC_PROVIDER,
 	startSyncRun,
@@ -51,10 +51,13 @@ export const syncWowStaticWeeklyProfessionsJob = defineJob({
 		})
 
 		try {
-			const client = createBattlenetClient(job.data.region)
-			const index = unwrap(
-				await client.wow.ProfessionIndex(),
-			) as ProfessionIndexData
+			const client = createJobBattlenetClient(job, {
+				entity: WOW_STATIC_WEEKLY_PROFESSIONS_ENTITY,
+				runId,
+			})
+			const index = (await unwrapBattlenetResponse(
+				client.wow.ProfessionIndex(),
+			)) as ProfessionIndexData
 
 			const rows = index.professions.map((entry) => ({
 				battlenetId: entry.id,

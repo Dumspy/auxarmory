@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@auxarmory/api": "workspace:*",
+    "@auxarmory/db": "workspace:*",
     "@auxarmory/observability": "workspace:*",
     "@hono/node-server": "^1.19.10",
     "@sentry/node": "^10.40.0",

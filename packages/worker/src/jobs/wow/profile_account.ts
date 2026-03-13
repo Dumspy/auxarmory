@@ -1,6 +1,5 @@
 import { and, eq, inArray, notInArray, sql } from 'drizzle-orm'
 
-import { unwrap } from '@auxarmory/battlenet/unwrap'
 import { db } from '@auxarmory/db/client'
 import {
 	wowCharacters,
@@ -17,6 +16,7 @@ import {
 	SYNC_PROVIDER,
 	toErrorPayload,
 	startSyncRun,
+	unwrapBattlenetResponse,
 } from './utils.js'
 import { createWowAccountClient } from './profile_accounts.js'
 import {
@@ -95,11 +95,14 @@ export const syncWowProfileAccountJob = defineJob({
 
 		try {
 			const { account: linkedAccount, client } =
-				await createWowAccountClient(job.data.authAccountId)
+				await createWowAccountClient(scopeKey, job, {
+					entity: WOW_PROFILE_ACCOUNT_ENTITY,
+					runId,
+				})
 			const syncedAt = new Date()
-			const summary = unwrap(
-				await client.wow.AccountProfileSummary(),
-			) as AccountProfileSummary
+			const summary = (await unwrapBattlenetResponse(
+				client.wow.AccountProfileSummary(),
+			)) as AccountProfileSummary
 			const wowProfileAccountId = linkedAccount.id
 
 			const allCharacterSummaries = summary.wow_accounts.flatMap(

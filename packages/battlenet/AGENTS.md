@@ -1,9 +1,8 @@
 # @auxarmory/battlenet
 
-Always unwrap client responses.
+Always handle client responses via `success` checks.
 
-Use `const data = unwrap(await client.wow.SomeEndpoint(...))`.
+Use `const res = await client.wow.SomeEndpoint(...)` and branch on `res.success`.
 
-`unwrap` returns `data` on success.
-`unwrap` throws `BattlenetZodUnwrapError` for zod failures with `context.request` and `context.response`.
-`unwrap` throws `BattlenetUnwrapError` for all other failures with `errorType` and full context.
+On success, use `res.data`.
+On failure, `res.error` is a typed battlenet client error and `res.normalized` indicates middleware normalization was applied.

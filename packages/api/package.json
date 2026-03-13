@@ -37,6 +37,11 @@
       "types": "./src/routers/index.ts",
       "development": "./src/routers/index.ts",
       "default": "./dist/routers/index.js"
+    },
+    "./internal/failure_sink": {
+      "types": "./src/internal/failure_sink.ts",
+      "development": "./src/internal/failure_sink.ts",
+      "default": "./dist/internal/failure_sink.js"
     }
   }
 }

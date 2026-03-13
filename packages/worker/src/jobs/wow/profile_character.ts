@@ -1,6 +1,5 @@
 import { sql } from 'drizzle-orm'
 
-import { unwrap } from '@auxarmory/battlenet/unwrap'
 import { db } from '@auxarmory/db/client'
 import {
 	wowCharacters,
@@ -13,9 +12,10 @@ import {
 	completeSyncRunFailure,
 	completeSyncRunSuccess,
 	SYNC_PROVIDER,
-	createBattlenetClient,
 	toErrorPayload,
 	startSyncRun,
+	unwrapBattlenetResponse,
+	createJobBattlenetClient,
 } from './utils.js'
 import {
 	WOW_PROFILE_CHARACTER_ENTITY,
@@ -198,15 +198,18 @@ export const syncWowProfileCharacterJob = defineJob({
 		})
 
 		try {
-			const client = createBattlenetClient(job.data.region)
+			const client = createJobBattlenetClient(job, {
+				entity: WOW_PROFILE_CHARACTER_ENTITY,
+				runId,
+			})
 			const syncedAt = new Date()
 
-			const profile = unwrap(
-				await client.wow.CharacterProfileSummary(
+			const profile = (await unwrapBattlenetResponse(
+				client.wow.CharacterProfileSummary(
 					job.data.realmSlug,
 					job.data.characterName,
 				),
-			) as CharacterProfileSummary
+			)) as CharacterProfileSummary
 
 			const [
 				specializations,
@@ -218,56 +221,57 @@ export const syncWowProfileCharacterJob = defineJob({
 			] = await Promise.all([
 				fetchOptionalProfile(
 					async () =>
-						unwrap(
-							await client.wow.CharacterSpecializationsSummary(
+						(await unwrapBattlenetResponse(
+							client.wow.CharacterSpecializationsSummary(
 								job.data.realmSlug,
 								job.data.characterName,
 							),
-						) as CharacterSpecializationsSummary,
+						)) as CharacterSpecializationsSummary,
 				),
-				fetchOptionalProfile(async () =>
-					unwrap(
-						await client.wow.CharacterEquipmentSummary(
-							job.data.realmSlug,
-							job.data.characterName,
+				fetchOptionalProfile(
+					async () =>
+						await unwrapBattlenetResponse(
+							client.wow.CharacterEquipmentSummary(
+								job.data.realmSlug,
+								job.data.characterName,
+							),
 						),
-					),
 				),
 				fetchOptionalProfile(
 					async () =>
-						unwrap(
-							await client.wow.CharacterMediaSummary(
+						(await unwrapBattlenetResponse(
+							client.wow.CharacterMediaSummary(
 								job.data.realmSlug,
 								job.data.characterName,
 							),
-						) as CharacterMediaSummary,
+						)) as CharacterMediaSummary,
 				),
 				fetchOptionalProfile(
 					async () =>
-						unwrap(
-							await client.wow.CharacterMythicKeystoneProfileIndex(
+						(await unwrapBattlenetResponse(
+							client.wow.CharacterMythicKeystoneProfileIndex(
 								job.data.realmSlug,
 								job.data.characterName,
 							),
-						) as CharacterMythicKeystoneProfile,
+						)) as CharacterMythicKeystoneProfile,
 				),
 				fetchOptionalProfile(
 					async () =>
-						unwrap(
-							await client.wow.CharacterPvPSummary(
+						(await unwrapBattlenetResponse(
+							client.wow.CharacterPvPSummary(
 								job.data.realmSlug,
 								job.data.characterName,
 							),
-						) as CharacterPvpSummary,
+						)) as CharacterPvpSummary,
 				),
 				fetchOptionalProfile(
 					async () =>
-						unwrap(
-							await client.wow.CharacterRaid(
+						(await unwrapBattlenetResponse(
+							client.wow.CharacterRaid(
 								job.data.realmSlug,
 								job.data.characterName,
 							),
-						) as CharacterRaidSummary,
+						)) as CharacterRaidSummary,
 				),
 			])
 

@@ -12,6 +12,7 @@ import {
 	createBattlenetJobCaptureContext,
 	createBattlenetSentryMiddleware,
 } from '@auxarmory/observability'
+import { persistBattlenetFailureViaInternalApi } from '../shared/battlenet_failure_sink.js'
 
 const BATTLENET_PROVIDER_PREFIX = 'battlenet-'
 const DEFAULT_REFRESH_BUFFER_MS = 5 * 60 * 1000
@@ -304,6 +305,7 @@ export async function createWowAccountClient(
 			middleware: [
 				createBattlenetSentryMiddleware({
 					service: 'worker',
+					persistFailure: persistBattlenetFailureViaInternalApi,
 					captureException: (error, baseContext) => {
 						Sentry.captureException(error, {
 							...baseContext,
@@ -314,6 +316,10 @@ export async function createWowAccountClient(
 							extra: {
 								...baseContext?.extra,
 								...context.extra,
+							},
+							contexts: {
+								...baseContext?.contexts,
+								...context.contexts,
 							},
 						})
 					},

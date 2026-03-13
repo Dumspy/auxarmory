@@ -50,6 +50,13 @@
       "when": 1773176433235,
       "tag": "0006_ordinary_loners",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1773417373007,
+      "tag": "0007_dark_power_pack",
+      "breakpoints": true
     }
   ]
 }

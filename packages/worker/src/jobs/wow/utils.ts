@@ -11,6 +11,7 @@ import {
 import { z } from 'zod'
 
 import { env } from '../../env.js'
+import { persistBattlenetFailureViaInternalApi } from '../shared/battlenet_failure_sink.js'
 import { syncRunTriggerSchema } from '../shared/sync_runtime.js'
 
 export {
@@ -200,6 +201,7 @@ function createBattlenetClient(
 	captureException: Parameters<
 		typeof createBattlenetSentryMiddleware
 	>[0]['captureException'] = Sentry.captureException,
+	baseContext?: ReturnType<typeof createBattlenetJobCaptureContext>,
 ) {
 	return new ApplicationClient({
 		clientId: env.BATTLENET_CLIENT_ID,
@@ -210,6 +212,8 @@ function createBattlenetClient(
 			createBattlenetSentryMiddleware({
 				service: 'worker',
 				captureException,
+				persistFailure: persistBattlenetFailureViaInternalApi,
+				baseContext,
 			}),
 		],
 	})
@@ -240,8 +244,13 @@ export function createJobBattlenetClient(
 					...baseContext?.extra,
 					...context.extra,
 				},
+				contexts: {
+					...baseContext?.contexts,
+					...context.contexts,
+				},
 			})
 		},
+		context,
 	)
 }
 

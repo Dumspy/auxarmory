@@ -1,9 +1,7 @@
 {
   "extends": "@auxarmory/typescript-config/internal-package.json",
   "compilerOptions": {
-    "emitDeclarationOnly": false,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext"
+    "emitDeclarationOnly": false
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

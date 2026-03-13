@@ -1,29 +1,11 @@
 import type { ClientRequestContext } from './types'
 
-const MAX_PREVIEW_LENGTH = 2000
-
 export type BattlenetErrorType = 'zod' | 'auth' | 'battlenet' | 'unknown'
 
 export interface BattlenetErrorContext {
 	request: ClientRequestContext
 	response: unknown
 	error: unknown
-}
-
-function stringifyWithLimit(value: unknown, maxLength = MAX_PREVIEW_LENGTH) {
-	let serialized: string
-
-	try {
-		serialized = JSON.stringify(value)
-	} catch {
-		serialized = JSON.stringify(String(value))
-	}
-
-	if (serialized.length <= maxLength) {
-		return serialized
-	}
-
-	return `${serialized.slice(0, maxLength)}... [truncated]`
 }
 
 export class BattlenetClientError extends Error {
@@ -66,10 +48,11 @@ export class BattlenetZodError extends BattlenetClientError {
 		rawData: unknown,
 		cause: unknown,
 	) {
-		const paramsPreview = stringifyWithLimit(request.params)
-		const responsePreview = stringifyWithLimit(rawData)
+		const namespaceLabel = request.namespace
+			? ` (${request.namespace})`
+			: ''
 		return new BattlenetZodError(
-			`Battle.net response failed schema validation for ${request.endpoint}; params=${paramsPreview}; response=${responsePreview}`,
+			`Battle.net schema validation failed for ${request.method} ${request.endpoint}${namespaceLabel}`,
 			{
 				context: {
 					request,

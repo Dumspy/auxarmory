@@ -13,6 +13,7 @@ export const env = createEnv({
 		SENTRY_ENV: z.string().default('development'),
 		SENTRY_TRACES_SAMPLE_RATE: z.coerce.number().min(0).max(1).default(0.1),
 		SENTRY_RELEASE: z.string().optional(),
+		INTERNAL_API_TOKEN: z.string().min(1).optional(),
 	},
 	runtimeEnv: process.env,
 	emptyStringAsUndefined: true,

@@ -1,6 +1,10 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 import * as Sentry from '@sentry/node'
 import { createServiceErrorCaptureContext } from '@auxarmory/observability'
+import {
+	internalFailureSinkSchema,
+	persistInternalFailureSinkEvent,
+} from '@auxarmory/api/internal/failure_sink'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { HTTPException } from 'hono/http-exception'
@@ -47,6 +51,27 @@ export function createApiApp() {
 
 	app.get('/health', (c) => {
 		return c.json({ status: 'ok', service: 'api' })
+	})
+
+	app.post('/internal/failure-sink/battlenet', async (c) => {
+		if (!env.INTERNAL_API_TOKEN) {
+			return c.json({ message: 'Internal sink is not configured' }, 503)
+		}
+
+		const internalToken = c.req.header('x-internal-token')
+		if (internalToken !== env.INTERNAL_API_TOKEN) {
+			return c.json({ message: 'Unauthorized' }, 401)
+		}
+
+		const body = await c.req.json().catch(() => null)
+		const parsed = internalFailureSinkSchema.safeParse(body)
+		if (!parsed.success) {
+			return c.json({ message: 'Invalid payload' }, 400)
+		}
+
+		const result = await persistInternalFailureSinkEvent(parsed.data)
+
+		return c.json(result, 201)
 	})
 
 	app.onError((error, c) => {

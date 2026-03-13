@@ -3,6 +3,7 @@ import { useState } from 'react'
 import {
 	Navigate,
 	createFileRoute,
+	Link,
 	useRouterState,
 } from '@tanstack/react-router'
 
@@ -27,7 +28,7 @@ function SignupPage() {
 	const { isPending: isSessionPending, isAuthenticated } = useAuthPageState()
 	const redirectTo = getRedirectFromSearchStr(location.searchStr)
 	const normalizedRedirectTo = normalizeRedirectPath(redirectTo, '/dashboard')
-	const [name, setName] = useState('')
+	const [username, setUsername] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState<string | null>(null)
@@ -47,7 +48,8 @@ function SignupPage() {
 		setIsSubmitting(true)
 
 		const result = await authClient.signUp.email({
-			name,
+			name: username,
+			username,
 			email,
 			password,
 		})
@@ -62,21 +64,24 @@ function SignupPage() {
 		window.location.assign(normalizedRedirectTo)
 	}
 
-	const safeRedirect = encodeURIComponent(normalizedRedirectTo)
-
 	return (
 		<AuthFormCard
 			mode='signup'
 			error={error}
 			isSubmitting={isSubmitting}
 			onSubmit={onSubmit}
-			name={name}
+			username={username}
 			email={email}
 			password={password}
-			onNameChange={setName}
+			onUsernameChange={setUsername}
 			onEmailChange={setEmail}
 			onPasswordChange={setPassword}
-			switchHref={`/auth/login?redirect=${safeRedirect}`}
+			switchRender={
+				<Link
+					to='/auth/login'
+					search={{ redirect: normalizedRedirectTo }}
+				/>
+			}
 			switchLabel='Already have an account? Log in'
 		/>
 	)

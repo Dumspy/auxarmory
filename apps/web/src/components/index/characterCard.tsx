@@ -12,7 +12,11 @@ import { Skeleton } from '@auxarmory/ui/components/ui/skeleton'
 
 import type { CharacterSummary } from './types'
 
-function relativeTime(value: string) {
+function relativeTime(value: string | null) {
+	if (!value) {
+		return 'Unknown'
+	}
+
 	const diffMs = Date.now() - new Date(value).getTime()
 	const hours = Math.max(1, Math.floor(diffMs / (1000 * 60 * 60)))
 
@@ -99,8 +103,9 @@ export function CharacterCard({
 							</h3>
 						</div>
 						<p className='text-muted-foreground text-sm'>
-							Level {character.level} {character.activeSpec}{' '}
-							{character.className}
+							Level {character.level ?? '--'}{' '}
+							{character.activeSpec ?? 'Unknown'}{' '}
+							{character.className ?? 'Class'}
 						</p>
 					</div>
 				</div>
@@ -111,7 +116,7 @@ export function CharacterCard({
 							Item Level
 						</span>
 						<span className='text-foreground text-sm font-medium'>
-							{character.equippedItemLevel}
+							{character.equippedItemLevel ?? 'N/A'}
 						</span>
 					</div>
 					<div className='flex items-center justify-between'>
@@ -121,7 +126,9 @@ export function CharacterCard({
 						{character.mythicRating ? (
 							<span
 								style={{
-									color: character.mythicRatingColor,
+									color:
+										character.mythicRatingColor ??
+										undefined,
 								}}
 								className='text-sm font-medium'
 							>

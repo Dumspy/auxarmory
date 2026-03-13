@@ -1,5 +1,4 @@
-import { Shield } from 'lucide-react'
-import type { FormEvent } from 'react'
+import type { FormEvent, ReactElement } from 'react'
 
 import { Button } from '@auxarmory/ui/components/ui/button'
 import {
@@ -17,136 +16,159 @@ export function AuthFormCard({
 	error,
 	isSubmitting,
 	onSubmit,
-	name,
+	username,
 	email,
 	password,
-	onNameChange,
+	onUsernameChange,
 	onEmailChange,
 	onPasswordChange,
-	switchHref,
+	switchRender,
 	switchLabel,
 }: {
 	mode: 'login' | 'signup'
 	error: string | null
 	isSubmitting: boolean
 	onSubmit: (event: FormEvent<HTMLFormElement>) => void
-	name: string
+	username: string
 	email: string
 	password: string
-	onNameChange: (value: string) => void
+	onUsernameChange: (value: string) => void
 	onEmailChange: (value: string) => void
 	onPasswordChange: (value: string) => void
-	switchHref: string
+	switchRender: ReactElement
 	switchLabel: string
 }) {
 	const isSignup = mode === 'signup'
 
 	return (
-		<main className='from-background via-muted/40 to-background flex min-h-screen items-center justify-center bg-gradient-to-br px-4 py-10'>
-			<div className='w-full max-w-md space-y-4'>
-				<div className='text-center'>
-					<div className='bg-primary/10 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl'>
-						<Shield className='text-primary h-6 w-6' />
-					</div>
-					<h1 className='text-foreground text-2xl font-semibold'>
-						{isSignup
-							? 'Create your account'
-							: 'Sign in to AuxArmory'}
-					</h1>
-					<p className='text-muted-foreground text-sm'>
-						{isSignup
-							? 'Join and start tracking your characters.'
-							: 'Use your Better Auth account to access your dashboard.'}
-					</p>
-				</div>
+		<main className='relative h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_28%),linear-gradient(180deg,color-mix(in_oklab,var(--background)_97%,white_3%)_0%,var(--background)_100%)] px-4'>
+			<div className='bg-primary/15 absolute top-20 left-[-5rem] h-56 w-56 rounded-full blur-3xl' />
+			<div className='bg-chart-2/10 absolute right-[-4rem] bottom-12 h-48 w-48 rounded-full blur-3xl' />
+			<div className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,color-mix(in_oklab,var(--foreground)_6%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_oklab,var(--foreground)_6%,transparent)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(circle_at_center,black_30%,transparent_78%)] opacity-30' />
 
-				<Card>
-					<CardHeader>
-						<CardTitle>
-							{isSignup ? 'Sign up' : 'Welcome back'}
-						</CardTitle>
-						<CardDescription>
+			<div className='relative mx-auto flex h-screen max-w-5xl items-center justify-center px-4 sm:px-6'>
+				<section className='animate-in fade-in slide-in-from-bottom-4 w-full max-w-md text-center duration-700'>
+					<div className='mx-auto mb-8 flex justify-center'>
+						<img
+							src='/Auxera-A.svg'
+							alt='AuxArmory logo'
+							className='h-20 w-20 sm:h-24 sm:w-24'
+						/>
+					</div>
+
+					<div className='mb-8 space-y-3'>
+						<h1 className='text-foreground text-4xl leading-none font-semibold tracking-tight text-balance sm:text-5xl'>
+							{isSignup ? 'Create your account' : 'Welcome back'}
+						</h1>
+						<p className='text-muted-foreground mx-auto max-w-sm text-sm leading-6 sm:text-base'>
 							{isSignup
-								? 'Create an account to continue.'
-								: 'Enter your credentials to continue.'}
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<form onSubmit={onSubmit} className='space-y-4'>
-							{isSignup ? (
+								? 'Set up your account and get into AuxArmory.'
+								: 'Sign in to continue to your dashboard.'}
+						</p>
+					</div>
+
+					<Card className='border-border/60 bg-card/85 py-0 shadow-[0_28px_90px_color-mix(in_oklab,var(--foreground)_10%,transparent)] backdrop-blur'>
+						<CardHeader className='space-y-2 px-6 pt-6 pb-0 text-left'>
+							<CardTitle className='text-lg font-semibold tracking-tight'>
+								{isSignup ? 'Account details' : 'Sign in'}
+							</CardTitle>
+							<CardDescription className='text-sm leading-6'>
+								{isSignup
+									? 'Use a username, email, and password to get started.'
+									: 'Enter your email and password.'}
+							</CardDescription>
+						</CardHeader>
+						<CardContent className='px-6 pt-6 pb-6'>
+							<form
+								onSubmit={onSubmit}
+								className='space-y-4 text-left'
+							>
+								{isSignup ? (
+									<div className='space-y-2'>
+										<Label htmlFor='username'>
+											Username
+										</Label>
+										<Input
+											id='username'
+											type='text'
+											value={username}
+											onChange={(event) =>
+												onUsernameChange(
+													event.target.value,
+												)
+											}
+											placeholder='yourname'
+											className='h-11 border-border/70 bg-background/80 px-4 text-sm'
+											required
+										/>
+									</div>
+								) : null}
+
 								<div className='space-y-2'>
-									<Label htmlFor='name'>Name</Label>
+									<Label htmlFor='email'>Email</Label>
 									<Input
-										id='name'
-										type='text'
-										value={name}
+										id='email'
+										type='email'
+										value={email}
 										onChange={(event) =>
-											onNameChange(event.target.value)
+											onEmailChange(event.target.value)
 										}
+										placeholder='you@example.com'
+										className='h-11 border-border/70 bg-background/80 px-4 text-sm'
 										required
 									/>
 								</div>
-							) : null}
 
-							<div className='space-y-2'>
-								<Label htmlFor='email'>Email</Label>
-								<Input
-									id='email'
-									type='email'
-									value={email}
-									onChange={(event) =>
-										onEmailChange(event.target.value)
-									}
-									required
-								/>
-							</div>
+								<div className='space-y-2'>
+									<Label htmlFor='password'>Password</Label>
+									<Input
+										id='password'
+										type='password'
+										value={password}
+										onChange={(event) =>
+											onPasswordChange(event.target.value)
+										}
+										placeholder='Enter your password'
+										className='h-11 border-border/70 bg-background/80 px-4 text-sm'
+										required
+									/>
+								</div>
 
-							<div className='space-y-2'>
-								<Label htmlFor='password'>Password</Label>
-								<Input
-									id='password'
-									type='password'
-									value={password}
-									onChange={(event) =>
-										onPasswordChange(event.target.value)
-									}
-									required
-								/>
-							</div>
+								{error ? (
+									<p
+										className='text-sm text-red-500'
+										role='alert'
+									>
+										{error}
+									</p>
+								) : null}
 
-							{error ? (
-								<p
-									className='text-sm text-red-500'
-									role='alert'
+								<Button
+									type='submit'
+									disabled={isSubmitting}
+									className='h-11 w-full text-sm'
 								>
-									{error}
-								</p>
-							) : null}
+									{isSubmitting
+										? isSignup
+											? 'Creating account...'
+											: 'Signing in...'
+										: isSignup
+											? 'Create account'
+											: 'Sign in'}
+								</Button>
 
-							<Button
-								type='submit'
-								disabled={isSubmitting}
-								className='w-full'
-							>
-								{isSubmitting
-									? isSignup
-										? 'Creating account...'
-										: 'Signing in...'
-									: isSignup
-										? 'Create account'
-										: 'Sign in'}
-							</Button>
-							<Button
-								render={<a href={switchHref} />}
-								nativeButton={false}
-								variant='ghost'
-								className='w-full'
-							>
-								{switchLabel}
-							</Button>
-						</form>
-					</CardContent>
-				</Card>
+								<Button
+									render={switchRender}
+									nativeButton={false}
+									variant='ghost'
+									className='h-11 w-full text-sm'
+								>
+									{switchLabel}
+								</Button>
+							</form>
+						</CardContent>
+					</Card>
+				</section>
 			</div>
 		</main>
 	)

@@ -4,6 +4,7 @@ import {
 	adminClient,
 	genericOAuthClient,
 	organizationClient,
+	usernameClient,
 } from 'better-auth/client/plugins'
 
 import { ac, roles } from '@auxarmory/auth/permissions'
@@ -22,6 +23,7 @@ export const authClient = createAuthClient({
 	plugins: [
 		adminClient({ ac, roles }),
 		organizationClient({ ac, roles }),
+		usernameClient(),
 		genericOAuthClient(),
 	],
 })

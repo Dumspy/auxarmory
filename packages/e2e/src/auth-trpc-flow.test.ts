@@ -124,6 +124,7 @@ describe('auth + trpc integration flow', () => {
 
 	it('allows privateData with a real Better Auth session cookie', async () => {
 		const email = `e2e-${Date.now()}-${Math.random().toString(16).slice(2)}@example.com`
+		const username = `e2e_${Date.now()}_${Math.random().toString(16).slice(2, 8)}`
 		let cookieHeader = ''
 
 		const signUpResponse = await authApp.request(
@@ -137,7 +138,8 @@ describe('auth + trpc integration flow', () => {
 				body: JSON.stringify({
 					email,
 					password: TEST_PASSWORD,
-					name: 'E2E User',
+					name: username,
+					username,
 				}),
 			},
 		)
@@ -184,6 +186,7 @@ describe('auth + trpc integration flow', () => {
 
 	it('supports multiple organizations and teams per user', async () => {
 		const email = `e2e-orgs-${Date.now()}-${Math.random().toString(16).slice(2)}@example.com`
+		const username = `e2e_orgs_${Date.now()}_${Math.random().toString(16).slice(2, 8)}`
 		let cookieHeader = ''
 
 		const signUpResponse = await authApp.request(
@@ -197,7 +200,8 @@ describe('auth + trpc integration flow', () => {
 				body: JSON.stringify({
 					email,
 					password: TEST_PASSWORD,
-					name: 'E2E Org User',
+					name: username,
+					username,
 				}),
 			},
 		)

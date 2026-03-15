@@ -1,7 +1,7 @@
 import type { Job } from 'bullmq'
 import { z } from 'zod'
 
-import { syncExample, syncRepeatableExample } from './example.js'
+import { syncExample, syncRepeatableExample } from './example'
 import {
 	syncWowProfileAccountCoordinatorJob,
 	syncWowProfileAccountJob,
@@ -14,7 +14,7 @@ import {
 	syncWowStaticWeeklyProfessionsJob,
 	syncWowStaticWeeklyRegionJob,
 	syncWowStaticWeeklyRealmsJob,
-} from './wow/index.js'
+} from './wow/index'
 
 export const jobRegistry = {
 	[syncExample.name]: syncExample,

@@ -3,7 +3,7 @@ import { and, eq, inArray, sql } from 'drizzle-orm'
 import { db } from '@auxarmory/db/client'
 import { wowCachePlayableSpecializations } from '@auxarmory/db/schema'
 
-import { defineJob } from '../../../registry.js'
+import { defineJob } from '../../../registry'
 import {
 	completeSyncRunFailure,
 	completeSyncRunSuccess,
@@ -16,8 +16,8 @@ import {
 	toErrorPayload,
 	WOW_STATIC_WEEKLY_PLAYABLE_SPECIALIZATIONS_ENTITY,
 	wowStaticWeeklyEntityJobPayloadSchema,
-} from '../utils.js'
-import type { WowStaticWeeklyEntityJobPayload } from '../utils.js'
+} from '../utils'
+import type { WowStaticWeeklyEntityJobPayload } from '../utils'
 
 interface PlayableSpecializationIndexData {
 	character_specializations: {

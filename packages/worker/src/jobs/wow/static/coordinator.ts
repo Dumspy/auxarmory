@@ -1,7 +1,7 @@
-import { createFlowProducer, createQueue } from '../../../queue.js'
-import { defineJob } from '../../../registry.js'
+import { createFlowProducer, createQueue } from '../../../queue'
+import { defineJob } from '../../../registry'
 
-import { ensureWowStaticWeeklyRegionFlow } from './flow.js'
+import { ensureWowStaticWeeklyRegionFlow } from './flow'
 import {
 	completeSyncRunFailure,
 	completeSyncRunSuccess,
@@ -15,8 +15,8 @@ import {
 	WOW_STATIC_WEEKLY_REGION_ENTITY,
 	wowStaticWeeklyCoordinatorJobPayloadSchema,
 	startSyncRun,
-} from '../utils.js'
-import type { WowStaticWeeklyCoordinatorJobPayload } from '../utils.js'
+} from '../utils'
+import type { WowStaticWeeklyCoordinatorJobPayload } from '../utils'
 
 export const syncWowStaticWeeklyCoordinatorJob = defineJob({
 	name: 'sync:wow:static:weekly:coordinator',

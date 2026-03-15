@@ -2,7 +2,7 @@ import type {
 	BattlenetFailureSinkEvent,
 	BattlenetFailureSinkResult,
 	BattlenetMiddlewareEnvelope,
-} from './types.js'
+} from './types'
 
 export interface BattlenetFailureSinkMiddlewareInput {
 	service: string

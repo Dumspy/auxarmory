@@ -1,7 +1,7 @@
 import { serve } from '@hono/node-server'
 
-import { createApiApp } from './app.js'
-import { env } from './env.js'
+import { createApiApp } from './app'
+import { env } from './env'
 
 const app = createApiApp()
 

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { getJobNames, handleJob, isJobName, parseJobPayload } from './index.js'
+import { getJobNames, handleJob, isJobName, parseJobPayload } from './index'
 
 describe('job registry', () => {
 	beforeEach(() => {

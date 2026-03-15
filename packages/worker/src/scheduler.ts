@@ -1,8 +1,8 @@
 import type { JobScheduler } from 'bullmq'
 
-import { JOB_PRIORITIES } from './types.js'
-import { getRecurringJobDefinitions } from './contracts.js'
-import { createJobScheduler } from './queue.js'
+import { JOB_PRIORITIES } from './types'
+import { getRecurringJobDefinitions } from './contracts'
+import { createJobScheduler } from './queue'
 
 type RepeatOptions = Parameters<JobScheduler['upsertJobScheduler']>[1]
 type UpsertOptions = Parameters<JobScheduler['upsertJobScheduler']>[4]

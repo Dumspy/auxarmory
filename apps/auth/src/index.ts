@@ -1,7 +1,7 @@
 import { serve } from '@hono/node-server'
 
-import { createAuthApp } from './app.js'
-import { env } from './env.js'
+import { createAuthApp } from './app'
+import { env } from './env'
 
 const app = createAuthApp()
 

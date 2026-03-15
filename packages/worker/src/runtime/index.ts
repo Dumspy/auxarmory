@@ -1,3 +1,3 @@
-export { registerRepeatables, startScheduler } from '../scheduler.js'
-export { startWorkerService, type WorkerService } from '../service.js'
-export { startWorker } from '../worker.js'
+export { registerRepeatables, startScheduler } from '../scheduler'
+export { startWorkerService, type WorkerService } from '../service'
+export { startWorker } from '../worker'

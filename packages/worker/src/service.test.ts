@@ -16,19 +16,19 @@ const mocks = vi.hoisted(() => {
 	}
 })
 
-vi.mock('./env.js', () => ({}))
-vi.mock('./worker.js', () => ({
+vi.mock('./env', () => ({}))
+vi.mock('./worker', () => ({
 	startWorker: mocks.startWorker,
 }))
-vi.mock('./scheduler.js', () => ({
+vi.mock('./scheduler', () => ({
 	startScheduler: mocks.startScheduler,
 	registerRepeatables: mocks.registerRepeatables,
 }))
-vi.mock('./queue.js', () => ({
+vi.mock('./queue', () => ({
 	createQueue: mocks.createQueue,
 }))
 
-import { startWorkerService } from './service.js'
+import { startWorkerService } from './service'
 
 describe('startWorkerService', () => {
 	beforeEach(() => {

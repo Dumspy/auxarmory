@@ -5,8 +5,8 @@ import {
 	getJobDependencyDetails,
 	getQueueOverview,
 	LISTABLE_JOB_STATUSES,
-} from './index.js'
-import type { ListableJobStatus } from './index.js'
+} from './index'
+import type { ListableJobStatus } from './index'
 
 describe('producer job status visibility', () => {
 	it('does not expose weekly region parent as manually runnable', () => {

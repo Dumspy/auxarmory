@@ -10,9 +10,9 @@ import {
 
 import { z } from 'zod'
 
-import { env } from '../../env.js'
-import { persistBattlenetFailureViaInternalApi } from '../shared/battlenet_failure_sink.js'
-import { syncRunTriggerSchema } from '../shared/sync_runtime.js'
+import { env } from '../../env'
+import { persistBattlenetFailureViaInternalApi } from '../shared/battlenet_failure_sink'
+import { syncRunTriggerSchema } from '../shared/sync_runtime'
 
 export {
 	completeSyncRunFailure,
@@ -24,7 +24,7 @@ export {
 	type SyncRunTrigger,
 	type StartSyncRunInput,
 	type SyncRunScope,
-} from '../shared/sync_runtime.js'
+} from '../shared/sync_runtime'
 
 export { syncRunTriggerSchema }
 

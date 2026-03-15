@@ -1,10 +1,10 @@
 const DEFAULT_TRACES_SAMPLE_RATE = 0.1
 
-export * from './battlenet.js'
-export * from './middlewares/battlenet-failure-sink.middleware.js'
-export * from './middlewares/battlenet-normalize-context.middleware.js'
-export * from './middlewares/battlenet-sentry.middleware.js'
-export * from './middlewares/types.js'
+export * from './battlenet'
+export * from './middlewares/battlenet-failure-sink.middleware'
+export * from './middlewares/battlenet-normalize-context.middleware'
+export * from './middlewares/battlenet-sentry.middleware'
+export * from './middlewares/types'
 
 type Runtime = 'browser' | 'node'
 

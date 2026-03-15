@@ -1,9 +1,9 @@
 import { FlowProducer, JobScheduler, Queue } from 'bullmq'
 
-import type { JobName, JobPayloads } from './contracts.js'
-import { env } from './env.js'
-import { JOB_PRIORITIES } from './types.js'
-import type { JobPriority } from './types.js'
+import type { JobName, JobPayloads } from './contracts'
+import { env } from './env'
+import { JOB_PRIORITIES } from './types'
+import type { JobPriority } from './types'
 
 export const queueName = 'battlenet-sync'
 

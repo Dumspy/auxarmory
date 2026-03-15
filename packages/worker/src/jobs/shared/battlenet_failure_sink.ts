@@ -1,6 +1,6 @@
 import type { BattlenetFailureSinkEvent } from '@auxarmory/observability'
 
-import { env } from '../../env.js'
+import { env } from '../../env'
 
 interface PersistFailureResult {
 	ref: string

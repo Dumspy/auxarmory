@@ -1,6 +1,6 @@
-import { createQueue } from '../../queue.js'
-import { enqueueUniqueJob } from '../../producer/index.js'
-import { defineJob } from '../../registry.js'
+import { createQueue } from '../../queue'
+import { enqueueUniqueJob } from '../../producer/index'
+import { defineJob } from '../../registry'
 
 import {
 	completeSyncRunFailure,
@@ -8,7 +8,7 @@ import {
 	SYNC_PROVIDER,
 	toErrorPayload,
 	startSyncRun,
-} from './utils.js'
+} from './utils'
 import {
 	WOW_PROFILE_ACCOUNT_COORDINATOR_SCHEDULE_EVERY_MS,
 	WOW_PROFILE_ACCOUNT_COORDINATOR_SCHEDULE_ID,
@@ -17,9 +17,9 @@ import {
 	WOW_PROFILE_SYNC_DOMAIN,
 	formatWowProfileAccountJobId,
 	wowProfileAccountCoordinatorJobPayloadSchema,
-} from './profile_utils.js'
-import { listWowLinkedBattlenetAccounts } from './profile_accounts.js'
-import type { WowProfileAccountCoordinatorJobPayload } from './profile_utils.js'
+} from './profile_utils'
+import { listWowLinkedBattlenetAccounts } from './profile_accounts'
+import type { WowProfileAccountCoordinatorJobPayload } from './profile_utils'
 
 export const syncWowProfileAccountCoordinatorJob = defineJob({
 	name: 'sync:wow:profile:account:coordinator',

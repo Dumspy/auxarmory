@@ -14,7 +14,7 @@ import {
 } from '@auxarmory/worker/producer'
 import { JOB_PRIORITIES } from '@auxarmory/worker'
 
-import { authorizedProcedure, router } from '../index.js'
+import { authorizedProcedure, router } from '../index'
 
 const jobNameSchema = z
 	.string()

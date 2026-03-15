@@ -8,9 +8,9 @@ import {
 	redactPayloadValues,
 } from '@auxarmory/observability'
 
-import type { JobName, JobPayloads } from './contracts.js'
-import { handleJob } from './contracts.js'
-import { connection, queueName } from './queue.js'
+import type { JobName, JobPayloads } from './contracts'
+import { handleJob } from './contracts'
+import { connection, queueName } from './queue'
 
 type WorkerJob = Job<JobPayloads[JobName], unknown, JobName>
 

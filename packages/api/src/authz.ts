@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 
 import { auth } from '@auxarmory/auth'
 
-import type { Context } from './context.js'
+import type { Context } from './context'
 
 export type PermissionStatement = Readonly<Record<string, readonly string[]>>
 

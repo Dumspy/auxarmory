@@ -2,7 +2,7 @@ import type {
 	BattlenetFailureLike,
 	BattlenetMiddlewareEnvelope,
 	BattlenetResponseMeta,
-} from './types.js'
+} from './types'
 
 function isObjectLike(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null

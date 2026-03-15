@@ -7,9 +7,9 @@ import {
 	wowProfileAccounts,
 } from '@auxarmory/db/schema'
 
-import { createQueue } from '../../queue.js'
-import { enqueueUniqueJob } from '../../producer/index.js'
-import { defineJob } from '../../registry.js'
+import { createQueue } from '../../queue'
+import { enqueueUniqueJob } from '../../producer/index'
+import { defineJob } from '../../registry'
 import {
 	completeSyncRunFailure,
 	completeSyncRunSuccess,
@@ -17,8 +17,8 @@ import {
 	toErrorPayload,
 	startSyncRun,
 	unwrapBattlenetResponse,
-} from './utils.js'
-import { createWowAccountClient } from './profile_accounts.js'
+} from './utils'
+import { createWowAccountClient } from './profile_accounts'
 import {
 	WOW_PROFILE_ACCOUNT_ENTITY,
 	WOW_PROFILE_CHARACTER_ENTITY,
@@ -26,8 +26,8 @@ import {
 	WOW_PROFILE_SYNC_DOMAIN,
 	formatWowProfileCharacterJobId,
 	wowProfileAccountJobPayloadSchema,
-} from './profile_utils.js'
-import type { WowProfileAccountJobPayload } from './profile_utils.js'
+} from './profile_utils'
+import type { WowProfileAccountJobPayload } from './profile_utils'
 
 function formatWowCharacterId(region: string, battlenetCharacterId: number) {
 	return `${region}:${battlenetCharacterId}`

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { syncRunTriggerSchema } from './utils.js'
+import { syncRunTriggerSchema } from './utils'
 
 export const WOW_PROFILE_SYNC_DOMAIN = 'wow-user'
 export const WOW_PROFILE_ACCOUNT_COORDINATOR_ENTITY =

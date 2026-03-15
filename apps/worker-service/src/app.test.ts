@@ -8,7 +8,7 @@ vi.mock('@auxarmory/worker/runtime', () => ({
 	startWorkerService: mocks.startWorkerService,
 }))
 
-import { createWorkerService } from './app.js'
+import { createWorkerService } from './app'
 
 describe('createWorkerService', () => {
 	beforeEach(() => {

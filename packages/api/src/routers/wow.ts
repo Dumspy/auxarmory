@@ -19,7 +19,7 @@ import {
 	isPendingJobState,
 } from '@auxarmory/worker/producer'
 
-import { protectedProcedure, router } from '../index.js'
+import { protectedProcedure, router } from '../index'
 
 const WOW_PROVIDER_PREFIX = 'battlenet-'
 const WOW_SYNC_PROVIDER = 'battlenet'

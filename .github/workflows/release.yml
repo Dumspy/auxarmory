@@ -1,0 +1,266 @@
+name: Release
+
+on:
+    workflow_dispatch:
+        inputs:
+            release_type:
+                description: Select which semver component to bump
+                required: true
+                type: choice
+                options:
+                    - patch
+                    - minor
+                    - major
+
+concurrency:
+    group: ${{ github.workflow }}-master
+    cancel-in-progress: false
+
+permissions:
+    contents: write
+    packages: write
+
+env:
+    NODE_VERSION: 22.14.0
+    PNPM_VERSION: 10.11.0
+    REGISTRY: ghcr.io
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Fetch tags
+              run: git fetch --force --tags
+
+            - name: Validate release branch
+              run: |
+                  if [ "${GITHUB_REF_TYPE}" != "branch" ] || [ "${GITHUB_REF_NAME}" != "master" ]; then
+                    echo "Releases must be run from the master branch."
+                    exit 1
+                  fi
+
+            - name: Compute release version
+              id: release_meta
+              env:
+                  RELEASE_TYPE: ${{ inputs.release_type }}
+              run: |
+                  latest_tag=$(git tag --list 'v*' --sort=-version:refname | while read -r tag; do
+                    if [[ "$tag" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+                      echo "$tag"
+                      break
+                    fi
+                  done)
+
+                  if [ -n "$latest_tag" ]; then
+                    version="${latest_tag#v}"
+                  else
+                    version="0.0.0"
+                  fi
+
+                  IFS='.' read -r major minor patch <<< "$version"
+
+                  case "$RELEASE_TYPE" in
+                    major)
+                      major=$((major + 1))
+                      minor=0
+                      patch=0
+                      ;;
+                    minor)
+                      minor=$((minor + 1))
+                      patch=0
+                      ;;
+                    patch)
+                      patch=$((patch + 1))
+                      ;;
+                    *)
+                      echo "Invalid release type '$RELEASE_TYPE'. Expected major, minor, or patch."
+                      exit 1
+                      ;;
+                  esac
+
+                  VERSION="${major}.${minor}.${patch}"
+                  major_minor="${major}.${minor}"
+
+                  if [ -n "$latest_tag" ]; then
+                    echo "Latest tag: $latest_tag"
+                  else
+                    echo "No existing semver tags found; starting from $VERSION"
+                  fi
+
+                  if git ls-remote --exit-code --tags origin "refs/tags/v${VERSION}" >/dev/null 2>&1; then
+                    echo "Computed tag v${VERSION} already exists on origin."
+                    exit 1
+                  fi
+
+                  printf 'major_minor=%s\n' "$major_minor" >> "$GITHUB_OUTPUT"
+                  printf 'version=%s\n' "$VERSION" >> "$GITHUB_OUTPUT"
+                  printf 'tag=v%s\n' "$VERSION" >> "$GITHUB_OUTPUT"
+
+            - name: Check existing tag and release state
+              id: release_state
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  TAG: ${{ steps.release_meta.outputs.tag }}
+              run: |
+                  if gh release view "$TAG" >/dev/null 2>&1; then
+                    echo "GitHub release $TAG already exists."
+                    exit 1
+                  fi
+
+                  if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+                    tag_commit=$(git rev-list -n 1 "$TAG")
+                    head_commit=$(git rev-parse HEAD)
+
+                    if [ "$tag_commit" != "$head_commit" ]; then
+                      echo "Tag $TAG already exists but does not point at the current master HEAD."
+                      exit 1
+                    fi
+
+                    echo "tag_exists=true" >> "$GITHUB_OUTPUT"
+                    echo "Tag $TAG already exists on origin; continuing with release creation."
+                  else
+                    echo "tag_exists=false" >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: ${{ env.PNPM_VERSION }}
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: pnpm
+                  cache-dependency-path: pnpm-lock.yaml
+
+            - name: Install dependencies
+              env:
+                  HUSKY: 0
+              run: pnpm install --frozen-lockfile
+
+            - name: Check formatting
+              run: pnpm format
+
+            - name: Run lint
+              run: pnpm lint
+
+            - name: Build workspace
+              env:
+                  SENTRY_RELEASE: ${{ steps.release_meta.outputs.version }}
+                  VITE_SENTRY_RELEASE: ${{ steps.release_meta.outputs.version }}
+              run: pnpm build
+
+            - name: Compute image repository
+              id: image_meta
+              env:
+                  REPOSITORY: ${{ github.repository }}
+              run: |
+                  image_repository="${REGISTRY}/${REPOSITORY,,}"
+                  printf 'repository=%s\n' "$image_repository" >> "$GITHUB_OUTPUT"
+
+            - name: Prepare Docker build contexts
+              run: |
+                  rm -rf .docker/contexts
+                  mkdir -p .docker/contexts
+
+                  pnpm turbo prune --docker @auxarmory/web --out-dir .docker/contexts/web
+                  pnpm turbo prune --docker @auxarmory/api-service --out-dir .docker/contexts/api
+                  pnpm turbo prune --docker @auxarmory/auth-service --out-dir .docker/contexts/auth
+                  pnpm turbo prune --docker @auxarmory/worker-service --out-dir .docker/contexts/worker-service
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Log in to the container registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ github.token }}
+
+            - name: Build and push web image
+              uses: docker/build-push-action@v6
+              with:
+                  context: .docker/contexts/web
+                  file: apps/web/Dockerfile
+                  push: true
+                  build-args: |
+                      RELEASE_VERSION=${{ steps.release_meta.outputs.version }}
+                  tags: |
+                      ${{ steps.image_meta.outputs.repository }}-web:${{ steps.release_meta.outputs.version }}
+                      ${{ steps.image_meta.outputs.repository }}-web:${{ steps.release_meta.outputs.major_minor }}
+                      ${{ steps.image_meta.outputs.repository }}-web:latest
+                  cache-from: type=gha,scope=web
+                  cache-to: type=gha,mode=max,scope=web
+
+            - name: Build and push api image
+              uses: docker/build-push-action@v6
+              with:
+                  context: .docker/contexts/api
+                  file: apps/api/Dockerfile
+                  push: true
+                  build-args: |
+                      RELEASE_VERSION=${{ steps.release_meta.outputs.version }}
+                  tags: |
+                      ${{ steps.image_meta.outputs.repository }}-api:${{ steps.release_meta.outputs.version }}
+                      ${{ steps.image_meta.outputs.repository }}-api:${{ steps.release_meta.outputs.major_minor }}
+                      ${{ steps.image_meta.outputs.repository }}-api:latest
+                  cache-from: type=gha,scope=api
+                  cache-to: type=gha,mode=max,scope=api
+
+            - name: Build and push auth image
+              uses: docker/build-push-action@v6
+              with:
+                  context: .docker/contexts/auth
+                  file: apps/auth/Dockerfile
+                  push: true
+                  build-args: |
+                      RELEASE_VERSION=${{ steps.release_meta.outputs.version }}
+                  tags: |
+                      ${{ steps.image_meta.outputs.repository }}-auth:${{ steps.release_meta.outputs.version }}
+                      ${{ steps.image_meta.outputs.repository }}-auth:${{ steps.release_meta.outputs.major_minor }}
+                      ${{ steps.image_meta.outputs.repository }}-auth:latest
+                  cache-from: type=gha,scope=auth
+                  cache-to: type=gha,mode=max,scope=auth
+
+            - name: Build and push worker-service image
+              uses: docker/build-push-action@v6
+              with:
+                  context: .docker/contexts/worker-service
+                  file: apps/worker-service/Dockerfile
+                  push: true
+                  build-args: |
+                      RELEASE_VERSION=${{ steps.release_meta.outputs.version }}
+                  tags: |
+                      ${{ steps.image_meta.outputs.repository }}-worker-service:${{ steps.release_meta.outputs.version }}
+                      ${{ steps.image_meta.outputs.repository }}-worker-service:${{ steps.release_meta.outputs.major_minor }}
+                      ${{ steps.image_meta.outputs.repository }}-worker-service:latest
+                  cache-from: type=gha,scope=worker-service
+                  cache-to: type=gha,mode=max,scope=worker-service
+
+            - name: Create git tag
+              if: steps.release_state.outputs.tag_exists != 'true'
+              env:
+                  TAG: ${{ steps.release_meta.outputs.tag }}
+              run: git tag "$TAG"
+
+            - name: Push git tag
+              if: steps.release_state.outputs.tag_exists != 'true'
+              env:
+                  TAG: ${{ steps.release_meta.outputs.tag }}
+              run: git push origin "$TAG"
+
+            - name: Create GitHub release
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  TAG: ${{ steps.release_meta.outputs.tag }}
+                  VERSION: ${{ steps.release_meta.outputs.version }}
+              run: |
+                  gh release create "$TAG" --title "$TAG" --verify-tag --notes "Published container images:\n- ${{ steps.image_meta.outputs.repository }}-web:$VERSION\n- ${{ steps.image_meta.outputs.repository }}-api:$VERSION\n- ${{ steps.image_meta.outputs.repository }}-auth:$VERSION\n- ${{ steps.image_meta.outputs.repository }}-worker-service:$VERSION"

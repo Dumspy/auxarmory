@@ -56,4 +56,4 @@ USER node
 
 EXPOSE 4001
 
-CMD ["node", "--import", "apps/api/instrument.mjs", "apps/api/dist/index.js"]
+CMD ["npm", "--prefix", "apps/api", "run", "start"]

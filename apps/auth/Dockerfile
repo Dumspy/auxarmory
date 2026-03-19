@@ -56,4 +56,4 @@ USER node
 
 EXPOSE 4000
 
-CMD ["node", "--import", "apps/auth/instrument.mjs", "apps/auth/dist/index.js"]
+CMD ["npm", "--prefix", "apps/auth", "run", "start"]

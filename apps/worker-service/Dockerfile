@@ -53,4 +53,4 @@ COPY --from=builder --chown=node:node /app/tooling ./tooling
 
 USER node
 
-CMD ["node", "--import", "apps/worker-service/instrument.mjs", "apps/worker-service/dist/index.js"]
+CMD ["npm", "--prefix", "apps/worker-service", "run", "start"]

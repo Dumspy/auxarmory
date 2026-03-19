@@ -60,4 +60,4 @@ USER node
 
 EXPOSE 3000
 
-CMD ["node", "--import", "apps/web/.output/server/instrument.server.mjs", "apps/web/.output/server/index.mjs"]
+CMD ["npm", "--prefix", "apps/web", "run", "start"]

@@ -10,8 +10,8 @@ import { drizzleAdapter } from '@better-auth/drizzle-adapter'
 import { db } from '@auxarmory/db/client'
 import * as schema from '@auxarmory/db/schema'
 
-import { env } from './env.js'
-import { ac, roles } from './permissions.js'
+import { env } from './env'
+import { ac, roles } from './permissions'
 
 const trustedOrigins = env.AUTH_TRUSTED_ORIGINS.split(',').map(
 	(origin: string) => origin.trim(),

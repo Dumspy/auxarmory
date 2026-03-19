@@ -20,7 +20,7 @@ const mocks = vi.hoisted(() => ({
 	enqueueUniqueJob: vi.fn(),
 }))
 
-let wowRouter: typeof import('./wow.js').wowRouter
+let wowRouter: typeof import('./wow').wowRouter
 let db: typeof import('@auxarmory/db/client').db
 let schema: typeof import('@auxarmory/db/schema')
 
@@ -107,7 +107,7 @@ describe('wowRouter.syncStatus', () => {
 
 		;({ db } = await import('@auxarmory/db/client'))
 		schema = await import('@auxarmory/db/schema')
-		;({ wowRouter } = await import('./wow.js'))
+		;({ wowRouter } = await import('./wow'))
 	})
 
 	afterAll(async () => {

@@ -1,4 +1,4 @@
-import { defineJob } from '../../../registry.js'
+import { defineJob } from '../../../registry'
 
 import {
 	completeSyncRunFailure,
@@ -9,8 +9,8 @@ import {
 	startSyncRun,
 	WOW_STATIC_WEEKLY_REGION_ENTITY,
 	wowStaticWeeklyRegionJobPayloadSchema,
-} from '../utils.js'
-import type { WowStaticWeeklyRegionJobPayload } from '../utils.js'
+} from '../utils'
+import type { WowStaticWeeklyRegionJobPayload } from '../utils'
 
 export const syncWowStaticWeeklyRegionJob = defineJob({
 	name: 'sync:wow:static:weekly:region',

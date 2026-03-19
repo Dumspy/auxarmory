@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { isWowProviderId, parseWowProviderRegion } from './profile_accounts.js'
+import { isWowProviderId, parseWowProviderRegion } from './profile_accounts'
 
 describe('wow profile account helpers', () => {
 	it('parses supported battlenet provider regions', () => {

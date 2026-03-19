@@ -7,7 +7,7 @@ import { logger } from 'hono/logger'
 
 import { auth } from '@auxarmory/auth'
 
-import { env } from './env.js'
+import { env } from './env'
 
 export function createAuthApp() {
 	const app = new Hono()

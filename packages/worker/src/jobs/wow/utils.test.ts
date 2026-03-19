@@ -8,7 +8,7 @@ import {
 	isRegionWeeklySyncDue,
 	parseConnectedRealmIdFromHref,
 	WOW_SYNC_REGIONS,
-} from './utils.js'
+} from './utils'
 
 describe('weekly reset helpers', () => {
 	it('uses one shared wow region list', () => {

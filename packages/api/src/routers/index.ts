@@ -1,6 +1,6 @@
-import { protectedProcedure, publicProcedure, router } from '../index.js'
-import { adminRouter } from './admin.js'
-import { wowRouter } from './wow.js'
+import { protectedProcedure, publicProcedure, router } from '../index'
+import { adminRouter } from './admin'
+import { wowRouter } from './wow'
 import { createQueue, enqueueJob } from '@auxarmory/worker/producer'
 
 export const appRouter = router({

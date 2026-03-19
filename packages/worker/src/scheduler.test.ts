@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { JOB_PRIORITIES } from './types.js'
+import { JOB_PRIORITIES } from './types'
 
 const mocks = vi.hoisted(() => ({
 	createJobScheduler: vi.fn(),
 }))
 
-vi.mock('./queue.js', () => ({
+vi.mock('./queue', () => ({
 	createJobScheduler: mocks.createJobScheduler,
 }))
 
-import { registerRepeatables, startScheduler } from './scheduler.js'
+import { registerRepeatables, startScheduler } from './scheduler'
 
 describe('scheduler', () => {
 	beforeEach(() => {

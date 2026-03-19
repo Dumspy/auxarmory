@@ -1,8 +1,8 @@
 import { TRPCError, initTRPC } from '@trpc/server'
 
-import { assertProcedurePermission } from './authz.js'
-import type { AuthzMeta } from './authz.js'
-import type { Context } from './context.js'
+import { assertProcedurePermission } from './authz'
+import type { AuthzMeta } from './authz'
+import type { Context } from './context'
 
 const t = initTRPC.context<Context>().meta<AuthzMeta>().create()
 

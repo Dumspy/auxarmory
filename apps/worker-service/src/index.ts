@@ -1,3 +1,3 @@
-import { createWorkerService } from './app.js'
+import { createWorkerService } from './app'
 
 void createWorkerService()

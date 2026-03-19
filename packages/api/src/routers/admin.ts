@@ -4,8 +4,8 @@ import { TRPCError } from '@trpc/server'
 import { auth } from '@auxarmory/auth'
 import { platformPermissions } from '@auxarmory/auth/permissions'
 
-import { authorizedProcedure, router } from '../index.js'
-import { adminJobsRouter } from './admin.jobs.js'
+import { authorizedProcedure, router } from '../index'
+import { adminJobsRouter } from './admin.jobs'
 
 const listUsersInput = z.object({
 	limit: z.number().int().min(1).max(100).default(20),

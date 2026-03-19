@@ -7,12 +7,12 @@ import { AccountClient } from '@auxarmory/battlenet'
 import { db } from '@auxarmory/db/client'
 import { account } from '@auxarmory/db/schema'
 
-import { env } from '../../env.js'
+import { env } from '../../env'
 import {
 	createBattlenetJobCaptureContext,
 	createBattlenetSentryMiddleware,
 } from '@auxarmory/observability'
-import { persistBattlenetFailureViaInternalApi } from '../shared/battlenet_failure_sink.js'
+import { persistBattlenetFailureViaInternalApi } from '../shared/battlenet_failure_sink'
 
 const BATTLENET_PROVIDER_PREFIX = 'battlenet-'
 const DEFAULT_REFRESH_BUFFER_MS = 5 * 60 * 1000

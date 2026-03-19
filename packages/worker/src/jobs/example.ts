@@ -1,5 +1,5 @@
-import { defineJob } from '../registry.js'
-import { JOB_PRIORITIES } from '../types.js'
+import { defineJob } from '../registry'
+import { JOB_PRIORITIES } from '../types'
 import { z } from 'zod'
 
 export interface ExampleJobPayload {

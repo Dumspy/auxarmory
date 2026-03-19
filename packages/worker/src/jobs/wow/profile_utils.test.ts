@@ -4,7 +4,7 @@ import {
 	formatWowProfileAccountJobId,
 	formatWowProfileCharacterJobId,
 	formatWowProfileCoordinatorJobId,
-} from './profile_utils.js'
+} from './profile_utils'
 
 describe('profile sync job id helpers', () => {
 	it('builds deterministic coordinator and account job ids', () => {

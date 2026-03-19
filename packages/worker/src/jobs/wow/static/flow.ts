@@ -1,19 +1,19 @@
 import type { FlowJob, FlowProducer } from 'bullmq'
 
-import type { WorkerQueue } from '../../../queue.js'
-import { queueName } from '../../../queue.js'
+import type { WorkerQueue } from '../../../queue'
+import { queueName } from '../../../queue'
 import {
 	formatWowStaticWeeklyEntityJobId,
 	formatWowStaticWeeklyRegionJobId,
-} from '../utils.js'
-import type { WowStaticWeeklyRegionJobPayload } from '../utils.js'
-import { syncWowStaticWeeklyConnectedRealmsJob } from './connected_realms.js'
-import { syncWowStaticWeeklyPlayableClassesJob } from './playable_classes.js'
-import { syncWowStaticWeeklyPlayableRacesJob } from './playable_races.js'
-import { syncWowStaticWeeklyPlayableSpecializationsJob } from './playable_specializations.js'
-import { syncWowStaticWeeklyProfessionsJob } from './professions.js'
-import { syncWowStaticWeeklyRealmsJob } from './realms.js'
-import { syncWowStaticWeeklyRegionJob } from './region.js'
+} from '../utils'
+import type { WowStaticWeeklyRegionJobPayload } from '../utils'
+import { syncWowStaticWeeklyConnectedRealmsJob } from './connected_realms'
+import { syncWowStaticWeeklyPlayableClassesJob } from './playable_classes'
+import { syncWowStaticWeeklyPlayableRacesJob } from './playable_races'
+import { syncWowStaticWeeklyPlayableSpecializationsJob } from './playable_specializations'
+import { syncWowStaticWeeklyProfessionsJob } from './professions'
+import { syncWowStaticWeeklyRealmsJob } from './realms'
+import { syncWowStaticWeeklyRegionJob } from './region'
 
 const WEEKLY_FLOW_CHILDREN = [
 	{

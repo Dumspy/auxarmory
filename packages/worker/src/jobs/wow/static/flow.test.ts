@@ -4,7 +4,7 @@ import {
 	buildWowStaticWeeklyRegionFlow,
 	ensureWowStaticWeeklyRegionFlow,
 	getWowStaticWeeklyFlowJobIds,
-} from './flow.js'
+} from './flow'
 
 type EnsureFlowArgs = Parameters<typeof ensureWowStaticWeeklyRegionFlow>[0]
 

@@ -1,7 +1,7 @@
 import type { Job } from 'bullmq'
 import type { ZodType } from 'zod'
 
-import type { JobPriority } from './types.js'
+import type { JobPriority } from './types'
 
 export interface JobScheduleDefinition {
 	id: string

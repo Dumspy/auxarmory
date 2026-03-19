@@ -1,13 +1,13 @@
-import { normalizeBattlenetFailureEnvelope } from './middlewares/battlenet-normalize-context.middleware.js'
-import { persistBattlenetFailure } from './middlewares/battlenet-failure-sink.middleware.js'
-import { captureBattlenetFailureToSentry } from './middlewares/battlenet-sentry.middleware.js'
-import type { BattlenetFailureSinkMiddlewareInput } from './middlewares/battlenet-failure-sink.middleware.js'
+import { normalizeBattlenetFailureEnvelope } from './middlewares/battlenet-normalize-context.middleware'
+import { persistBattlenetFailure } from './middlewares/battlenet-failure-sink.middleware'
+import { captureBattlenetFailureToSentry } from './middlewares/battlenet-sentry.middleware'
+import type { BattlenetFailureSinkMiddlewareInput } from './middlewares/battlenet-failure-sink.middleware'
 import type {
 	BattlenetCaptureException,
 	BattlenetCaptureScope,
 	BattlenetMiddlewareContextLike,
 	BattlenetFailureSinkEvent,
-} from './middlewares/types.js'
+} from './middlewares/types'
 
 type BattlenetMiddlewareLike = (
 	context: BattlenetMiddlewareContextLike,

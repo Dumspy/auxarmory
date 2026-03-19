@@ -3,7 +3,7 @@ import type {
 	BattlenetCaptureScope,
 	BattlenetFailureSinkResult,
 	BattlenetMiddlewareEnvelope,
-} from './types.js'
+} from './types'
 
 export interface BattlenetSentryCaptureInput {
 	captureException: BattlenetCaptureException

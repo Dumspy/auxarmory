@@ -1,8 +1,8 @@
-import './env.js'
+import './env'
 
-import { createQueue } from './queue.js'
-import { registerRepeatables, startScheduler } from './scheduler.js'
-import { startWorker } from './worker.js'
+import { createQueue } from './queue'
+import { registerRepeatables, startScheduler } from './scheduler'
+import { startWorker } from './worker'
 
 export interface WorkerService {
 	stop: () => Promise<void>

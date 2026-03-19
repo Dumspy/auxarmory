@@ -7,7 +7,7 @@ import {
 	wowGuilds,
 } from '@auxarmory/db/schema'
 
-import { defineJob } from '../../registry.js'
+import { defineJob } from '../../registry'
 import {
 	completeSyncRunFailure,
 	completeSyncRunSuccess,
@@ -16,13 +16,13 @@ import {
 	startSyncRun,
 	unwrapBattlenetResponse,
 	createJobBattlenetClient,
-} from './utils.js'
+} from './utils'
 import {
 	WOW_PROFILE_CHARACTER_ENTITY,
 	WOW_PROFILE_SYNC_DOMAIN,
 	wowProfileCharacterJobPayloadSchema,
-} from './profile_utils.js'
-import type { WowProfileCharacterJobPayload } from './profile_utils.js'
+} from './profile_utils'
+import type { WowProfileCharacterJobPayload } from './profile_utils'
 
 interface CharacterProfileGuild {
 	id: number

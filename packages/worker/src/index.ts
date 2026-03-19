@@ -6,7 +6,7 @@ export {
 	parseJobPayload,
 	type JobName,
 	type JobPayloads,
-} from './contracts.js'
+} from './contracts'
 export {
 	addJob,
 	connection,
@@ -15,7 +15,7 @@ export {
 	createQueue,
 	queueName,
 	type WorkerQueue,
-} from './queue.js'
+} from './queue'
 export {
 	enqueueJob,
 	enqueueJobFromInput,
@@ -27,6 +27,6 @@ export {
 	type EnqueueUnknownJobInput,
 	type ListJobsInput,
 	type ListableJobStatus,
-} from './producer/index.js'
-export { startWorkerService, type WorkerService } from './service.js'
-export { JOB_PRIORITIES, type JobPriority } from './types.js'
+} from './producer/index'
+export { startWorkerService, type WorkerService } from './service'
+export { JOB_PRIORITIES, type JobPriority } from './types'

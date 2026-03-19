@@ -153,7 +153,14 @@
           }
         ],
         "@typescript-eslint/no-non-null-assertion": "error",
-        "import/consistent-type-specifier-style": ["error", "prefer-top-level"]
+        "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+        "import/extensions": [
+          "error",
+          {
+            "js": "never",
+            "ignorePackages": true
+          }
+        ]
       },
       "plugins": ["typescript", "import"]
     },

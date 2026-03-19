@@ -1,13 +1,13 @@
-import { JOB_PRIORITIES } from '../types.js'
-import type { JobPriority } from '../types.js'
+import { JOB_PRIORITIES } from '../types'
+import type { JobPriority } from '../types'
 import {
 	getJobDefinitions,
 	isJobName,
 	parseJobPayload,
-} from '../contracts/index.js'
-import type { JobName, JobPayloads } from '../contracts/index.js'
-import { createQueue } from '../queue.js'
-import type { WorkerQueue } from '../queue.js'
+} from '../contracts/index'
+import type { JobName, JobPayloads } from '../contracts/index'
+import { createQueue } from '../queue'
+import type { WorkerQueue } from '../queue'
 
 const LISTABLE_JOB_STATUSES = [
 	'waiting',

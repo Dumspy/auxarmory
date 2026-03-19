@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@auxarmory/db": "workspace:*",
-    "@better-auth/drizzle-adapter": "^1.5.3",
+    "@better-auth/drizzle-adapter": "^1.5.5",
     "@t3-oss/env-core": "catalog:",
-    "better-auth": "^1.3.17",
+    "better-auth": "^1.5.5",
     "zod": "catalog:"
   },
   "devDependencies": {

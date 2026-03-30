@@ -40,6 +40,7 @@ export type ArchonViewModels = {
   characterPageContent: Maybe<Scalars['JSON']['output']>;
   cmsNavigation: Maybe<Scalars['JSON']['output']>;
   contactPage: Maybe<Scalars['JSON']['output']>;
+  downloadPage: Maybe<Scalars['JSON']['output']>;
   fightPage: Maybe<Scalars['JSON']['output']>;
   fightPageContent: Maybe<Scalars['JSON']['output']>;
   footer: Maybe<Scalars['JSON']['output']>;
@@ -1185,12 +1186,18 @@ export type Guild = {
   members: CharacterPagination;
   /** The name of the guild. */
   name: Scalars['String']['output'];
+  /** The owning parent guild for this team, if one exists. */
+  parentGuild: Maybe<Guild>;
   /** The server that the guild belongs to. */
   server: Server;
   /** Whether or not the guild has stealth mode enabled. */
   stealthMode: Scalars['Boolean']['output'];
   /** The tags used to label reports. In the site UI, these are called raid teams. */
   tags: Maybe<Array<Maybe<GuildTag>>>;
+  /** The raid/mythic+ teams that belong to this guild. */
+  teams: Array<Maybe<Guild>>;
+  /** The type of the guild. A value of 0 indicates a guild. A value of 1 indicates a raid/mythic+ team. */
+  type: Scalars['Int']['output'];
   /** The guild's ranking for a zone. If `zoneId` is unset or null, uses the latest zone. */
   zoneRanking: GuildZoneRankings;
 };
@@ -2029,12 +2036,16 @@ export type ReportFight = {
   enemyPlayers: Maybe<Array<Maybe<Scalars['Int']['output']>>>;
   /** The actual completion percentage of the fight. This is the field used to indicate how far into a fight a wipe was, since fights can be complicated and have multiple bosses, no bosses, bosses that heal, etc. */
   fightPercentage: Maybe<Scalars['Float']['output']>;
+  /** The item levels of all players involved in a fight. These item levels match with the friendlyPlayers array exactly. */
+  friendlyItemLevels: Maybe<Array<Maybe<Scalars['Int']['output']>>>;
   /** Information about friendly NPCs involved in the fight. Includes report IDs, instance counts, and instance group counts for each NPC. */
   friendlyNPCs: Maybe<Array<Maybe<ReportFightNpc>>>;
   /** Information about friendly pets involved in the fight. Includes report IDs, instance counts, and instance group counts for each pet. */
   friendlyPets: Maybe<Array<Maybe<ReportFightNpc>>>;
   /** The IDs of all players involved in a fight. These players can be referenced in the master data actors table to get detailed information about each participant. */
   friendlyPlayers: Maybe<Array<Maybe<Scalars['Int']['output']>>>;
+  /** The specs of all players involved in a fight. These specs match with the friendlyPlayers array exactly. */
+  friendlySpecs: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** The game zone the fight takes place in. This should not be confused with the zones used by the sites for rankings. This is the actual in-game zone info. */
   gameZone: Maybe<GameZone>;
   /** The hard mode level of the fight. Most fights don't support optional hard modes. This only applies to bosses like Sartharion. */

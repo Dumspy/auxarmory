@@ -6,9 +6,9 @@ import type {
 	BattlenetUnknownError,
 	BattlenetZodError,
 } from './errors'
-import { BattlenetError } from './validators'
+import type { BattlenetError } from './validators'
 
-import { RegionsEnum } from './validators'
+import type { RegionsEnum } from './validators'
 export * from './validators'
 
 export type Regions = z.infer<typeof RegionsEnum>

@@ -18,7 +18,7 @@
     "@auxarmory/typescript-config": "workspace:*",
     "@auxarmory/vitest-config": "workspace:*",
     "@types/node": "catalog:",
-    "openapi-typescript": "^7.13.0",
+    "openapi-typescript": "^7.10.1",
     "typescript": "catalog:",
     "vitest": "^3.2.4"
   },

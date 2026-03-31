@@ -4,7 +4,7 @@ export * from './battlenet'
 export * from './middlewares/battlenet-failure-sink.middleware'
 export * from './middlewares/battlenet-normalize-context.middleware'
 export * from './middlewares/battlenet-sentry.middleware'
-export * from './middlewares/types'
+export type * from './middlewares/types'
 
 type Runtime = 'browser' | 'node'
 

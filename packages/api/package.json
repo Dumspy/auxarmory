@@ -42,6 +42,11 @@
       "types": "./src/internal/failure_sink.ts",
       "development": "./src/internal/failure_sink.ts",
       "default": "./dist/internal/failure_sink.js"
+    },
+    "./health": {
+      "types": "./src/health.ts",
+      "development": "./src/health.ts",
+      "default": "./dist/health.js"
     }
   }
 }

@@ -9,6 +9,8 @@ import {
 	LocaleString,
 } from '../../types'
 
+import { TimeZone } from '../types'
+
 export const RealmIndexResponse = LinkSelfResponse.extend({
 	realms: z.array(
 		KeyNameIdResponse.extend({
@@ -31,16 +33,7 @@ export const RealmResponse = LinkSelfResponse.extend({
 	name: LocaleResponse,
 	category: LocaleResponse,
 	locale: LocaleString,
-	timezone: z.enum([
-		'America/Los_Angeles',
-		'America/New_York',
-		'America/Denver',
-		'America/Chicago',
-		'America/Sao_Paulo',
-		'Australia/Melbourne',
-		'Europe/Paris',
-		'Asia/Seoul',
-	]),
+	timezone: TimeZone,
 	type: z.strictObject({
 		type: z.enum(['NORMAL', 'RP']),
 		name: LocaleResponse,

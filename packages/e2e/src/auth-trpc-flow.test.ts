@@ -99,12 +99,24 @@ describe('auth + trpc integration flow', () => {
 	it('returns service health responses', async () => {
 		const authHealth = await authApp.request('http://auth.localhost/health')
 		const apiHealth = await apiApp.request('http://api.localhost/health')
+		const authReady = await authApp.request('http://auth.localhost/ready')
+		const apiReady = await apiApp.request('http://api.localhost/ready')
 
 		expect(authHealth.status).toBe(200)
 		expect(await authHealth.json()).toMatchObject({ service: 'auth' })
+		expect(authReady.status).toBe(200)
+		expect(await authReady.json()).toMatchObject({
+			service: 'auth',
+			status: 'ready',
+		})
 
 		expect(apiHealth.status).toBe(200)
 		expect(await apiHealth.json()).toMatchObject({ service: 'api' })
+		expect(apiReady.status).toBe(200)
+		expect(await apiReady.json()).toMatchObject({
+			service: 'api',
+			status: 'ready',
+		})
 	})
 
 	it('rejects privateData without a session cookie', async () => {

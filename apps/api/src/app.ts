@@ -11,6 +11,7 @@ import { HTTPException } from 'hono/http-exception'
 import { logger } from 'hono/logger'
 
 import { createContext } from '@auxarmory/api/context'
+import { checkApiReadiness } from '@auxarmory/api/health'
 import { appRouter } from '@auxarmory/api/routers'
 
 import { env } from './env'
@@ -51,6 +52,27 @@ export function createApiApp() {
 
 	app.get('/health', (c) => {
 		return c.json({ status: 'ok', service: 'api' })
+	})
+
+	app.get('/ready', async (c) => {
+		const result = await checkApiReadiness()
+
+		if (!result.ready) {
+			return c.json(
+				{
+					status: 'not_ready',
+					service: 'api',
+					checks: result.checks,
+				},
+				503,
+			)
+		}
+
+		return c.json({
+			status: 'ready',
+			service: 'api',
+			checks: result.checks,
+		})
 	})
 
 	app.post('/internal/failure-sink/battlenet', async (c) => {

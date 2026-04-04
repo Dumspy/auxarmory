@@ -6,6 +6,7 @@ import { HTTPException } from 'hono/http-exception'
 import { logger } from 'hono/logger'
 
 import { auth } from '@auxarmory/auth'
+import { checkAuthReadiness } from '@auxarmory/auth/health'
 
 import { env } from './env'
 
@@ -27,6 +28,27 @@ export function createAuthApp() {
 
 	app.get('/health', (c) => {
 		return c.json({ status: 'ok', service: 'auth' })
+	})
+
+	app.get('/ready', async (c) => {
+		const result = await checkAuthReadiness()
+
+		if (!result.ready) {
+			return c.json(
+				{
+					status: 'not_ready',
+					service: 'auth',
+					checks: result.checks,
+				},
+				503,
+			)
+		}
+
+		return c.json({
+			status: 'ready',
+			service: 'auth',
+			checks: result.checks,
+		})
 	})
 
 	app.onError((error, c) => {

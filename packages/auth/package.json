@@ -30,6 +30,11 @@
       "types": "./src/permissions.ts",
       "development": "./src/permissions.ts",
       "default": "./dist/permissions.js"
+    },
+    "./health": {
+      "types": "./src/health.ts",
+      "development": "./src/health.ts",
+      "default": "./dist/health.js"
     }
   }
 }

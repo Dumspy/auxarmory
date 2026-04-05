@@ -1,0 +1,29 @@
+name: Release api image
+
+on:
+    workflow_dispatch:
+        inputs:
+            tag:
+                description: Existing release tag to publish
+                required: true
+                type: string
+    workflow_call:
+        inputs:
+            tag:
+                required: true
+                type: string
+
+permissions:
+    contents: read
+    packages: write
+
+jobs:
+    release-api:
+        uses: ./.github/workflows/_release-app.yml
+        with:
+            app_name: api
+            dockerfile: apps/api/Dockerfile
+            image_suffix: api
+            tag: ${{ inputs.tag }}
+            turbo_package: '@auxarmory/api-service'
+        secrets: inherit

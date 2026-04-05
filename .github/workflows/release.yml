@@ -1,0 +1,152 @@
+name: Release
+
+on:
+    workflow_dispatch:
+        inputs:
+            release_type:
+                description: Select which semver component to bump
+                required: true
+                type: choice
+                options:
+                    - patch
+                    - minor
+                    - major
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref_name }}
+    cancel-in-progress: false
+
+permissions:
+    actions: write
+    contents: write
+
+jobs:
+    orchestrate-release:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Fetch tags
+              run: git fetch --force --tags
+
+            - name: Validate release branch
+              env:
+                  DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+              run: |
+                  if [ "${GITHUB_REF_TYPE}" != "branch" ] || [ "${GITHUB_REF_NAME}" != "${DEFAULT_BRANCH}" ]; then
+                    echo "Releases must be run from the ${DEFAULT_BRANCH} branch."
+                    exit 1
+                  fi
+
+            - name: Compute release tag
+              id: release_meta
+              env:
+                  RELEASE_TYPE: ${{ inputs.release_type }}
+              run: |
+                  head_tag=$(git tag --points-at HEAD --list 'v*' --sort=-version:refname | while read -r tag; do
+                    if [[ "$tag" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+                      echo "$tag"
+                      break
+                    fi
+                  done)
+
+                  if [ -n "$head_tag" ]; then
+                    tag="$head_tag"
+                    version="${tag#v}"
+                    echo "Reusing existing semver tag on HEAD: $tag"
+                  else
+                    latest_tag=$(git tag --list 'v*' --sort=-version:refname | while read -r tag; do
+                      if [[ "$tag" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+                        echo "$tag"
+                        break
+                      fi
+                    done)
+
+                    if [ -n "$latest_tag" ]; then
+                      version="${latest_tag#v}"
+                    else
+                      version="0.0.0"
+                    fi
+
+                    IFS='.' read -r major minor patch <<< "$version"
+
+                    case "$RELEASE_TYPE" in
+                      major)
+                        major=$((major + 1))
+                        minor=0
+                        patch=0
+                        ;;
+                      minor)
+                        minor=$((minor + 1))
+                        patch=0
+                        ;;
+                      patch)
+                        patch=$((patch + 1))
+                        ;;
+                      *)
+                        echo "Invalid release type '$RELEASE_TYPE'. Expected major, minor, or patch."
+                        exit 1
+                        ;;
+                    esac
+
+                    version="${major}.${minor}.${patch}"
+                    tag="v${version}"
+                  fi
+
+                  printf 'tag=%s\n' "$tag" >> "$GITHUB_OUTPUT"
+                  printf 'version=%s\n' "$version" >> "$GITHUB_OUTPUT"
+
+            - name: Ensure tag exists on current HEAD
+              id: tag_state
+              env:
+                  TAG: ${{ steps.release_meta.outputs.tag }}
+              run: |
+                  head_commit=$(git rev-parse HEAD)
+
+                  if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+                    tag_commit=$(git rev-list -n 1 "$TAG")
+
+                    if [ "$tag_commit" != "$head_commit" ]; then
+                      echo "Tag $TAG already exists but does not point at the current ${GITHUB_REF_NAME} HEAD."
+                      exit 1
+                    fi
+
+                    echo "tag_exists=true" >> "$GITHUB_OUTPUT"
+                    echo "Tag $TAG already exists on origin; reusing it."
+                  else
+                    echo "tag_exists=false" >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Create git tag
+              if: steps.tag_state.outputs.tag_exists != 'true'
+              env:
+                  TAG: ${{ steps.release_meta.outputs.tag }}
+              run: git tag "$TAG"
+
+            - name: Push git tag
+              if: steps.tag_state.outputs.tag_exists != 'true'
+              env:
+                  TAG: ${{ steps.release_meta.outputs.tag }}
+              run: git push origin "$TAG"
+
+            - name: Dispatch app release workflows
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  RELEASE_REF: ${{ github.ref_name }}
+                  TAG: ${{ steps.release_meta.outputs.tag }}
+              run: |
+                  workflows=(
+                    release-web.yml
+                    release-api.yml
+                    release-auth.yml
+                    release-worker-service.yml
+                  )
+
+                  for workflow in "${workflows[@]}"; do
+                    gh workflow run "$workflow" --ref "$RELEASE_REF" -f tag="$TAG"
+                    echo "Dispatched $workflow for $TAG"
+                  done

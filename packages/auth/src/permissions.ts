@@ -97,4 +97,10 @@ export const platformPermissions = {
 			job: ['retry'],
 		},
 	},
+	adminDiagnosticsRead: {
+		scope: 'platform',
+		permissions: {
+			job: ['read'],
+		},
+	},
 } satisfies Record<string, PermissionPolicy>

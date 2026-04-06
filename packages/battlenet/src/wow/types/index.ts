@@ -34,3 +34,15 @@ export const SpellTooltips = z.strictObject({
 	range: LocaleResponse.optional(),
 	cooldown: LocaleResponse.optional(),
 })
+
+export const TimeZone = z.enum([
+	'America/Los_Angeles',
+	'America/New_York',
+	'America/Denver',
+	'America/Chicago',
+	'America/Sao_Paulo',
+	'Australia/Melbourne',
+	'Europe/Paris',
+	'Asia/Seoul',
+	'Asia/Taipei',
+])

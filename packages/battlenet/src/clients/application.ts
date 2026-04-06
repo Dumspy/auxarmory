@@ -26,7 +26,7 @@ export class ApplicationClient extends BaseClient {
 		this.authUrl =
 			this.region === 'cn'
 				? 'https://www.battlenet.com.cn/oauth/token'
-				: `https://${this.region}.battle.net/oauth/token`
+				: 'https://oauth.battle.net/token'
 		this.wow = new WoWGameDataClient(this)
 	}
 
@@ -92,7 +92,7 @@ export class ApplicationClient extends BaseClient {
 			}
 
 			if (!res.ok) {
-				if (res.status === 401) {
+				if (res.status >= 400 && res.status < 500) {
 					return {
 						success: false,
 						error_type: 'auth',

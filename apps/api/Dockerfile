@@ -35,7 +35,7 @@ ENV SENTRY_RELEASE=$RELEASE_VERSION
 
 RUN pnpm turbo run build --filter=@auxarmory/api-service
 
-FROM node:22-bookworm-slim AS runner
+FROM base AS runner
 
 WORKDIR /app
 

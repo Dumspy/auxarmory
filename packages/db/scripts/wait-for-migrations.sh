@@ -35,8 +35,8 @@ while true; do
 		exec "$@"
 	fi
 
-	if [ "$status" -eq 2 ]; then
-		printf '%s\n' '[wait-for-migrations] fatal migration checker error'
+	if [ "$status" -ne 3 ]; then
+		printf '%s\n' "[wait-for-migrations] fatal migration checker exit code: ${status}"
 		exit 1
 	fi
 

@@ -3,6 +3,10 @@ import {
 	getExpectedDatabaseMigration,
 } from './migrations'
 
+const MIGRATIONS_CURRENT_EXIT_CODE = 0
+const MIGRATIONS_WAITING_EXIT_CODE = 3
+const MIGRATIONS_FATAL_EXIT_CODE = 2
+
 function formatMigrationValue(value: number | null): string {
 	return value === null ? 'none' : String(value)
 }
@@ -16,13 +20,13 @@ async function main(): Promise<number> {
 			console.log(
 				'[db-migrations] no migration entries found; continuing startup',
 			)
-			return 0
+			return MIGRATIONS_CURRENT_EXIT_CODE
 		}
 
 		console.log(
 			`[db-migrations] database is current for ${expected.tag} (${expected.when})`,
 		)
-		return 0
+		return MIGRATIONS_CURRENT_EXIT_CODE
 	}
 
 	console.log(
@@ -38,7 +42,7 @@ async function main(): Promise<number> {
 			.join(' '),
 	)
 
-	return 1
+	return MIGRATIONS_WAITING_EXIT_CODE
 }
 
 try {
@@ -46,5 +50,5 @@ try {
 	process.exit(exitCode)
 } catch (error) {
 	console.error('[db-migrations] fatal migration checker error', error)
-	process.exit(2)
+	process.exit(MIGRATIONS_FATAL_EXIT_CODE)
 }

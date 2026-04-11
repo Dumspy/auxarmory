@@ -1,0 +1,29 @@
+name: Release db-migrations image
+
+on:
+    workflow_dispatch:
+        inputs:
+            tag:
+                description: Existing release tag to publish
+                required: true
+                type: string
+    workflow_call:
+        inputs:
+            tag:
+                required: true
+                type: string
+
+permissions:
+    contents: read
+    packages: write
+
+jobs:
+    release-db-migrations:
+        uses: ./.github/workflows/_release-app.yml
+        with:
+            app_name: db-migrations
+            dockerfile: packages/db/Dockerfile
+            image_suffix: db-migrations
+            tag: ${{ inputs.tag }}
+            turbo_package: '@auxarmory/db'
+        secrets: inherit

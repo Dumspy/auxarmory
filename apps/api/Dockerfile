@@ -38,7 +38,7 @@ ENV SENTRY_RELEASE=$RELEASE_VERSION
 
 RUN pnpm turbo run build --filter=@auxarmory/api-service
 
-FROM base AS runner
+FROM node:22-bookworm-slim AS runner
 
 WORKDIR /app
 
@@ -59,4 +59,5 @@ USER node
 
 EXPOSE 4001
 
+ENTRYPOINT ["sh", "packages/db/scripts/wait-for-migrations.sh"]
 CMD ["npm", "--prefix", "apps/api", "run", "start"]

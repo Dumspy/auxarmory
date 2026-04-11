@@ -41,6 +41,11 @@
       "development": "./src/client.ts",
       "default": "./dist/client.js"
     },
+    "./migrations": {
+      "types": "./src/migrations.ts",
+      "development": "./src/migrations.ts",
+      "default": "./dist/migrations.js"
+    },
     "./schema": {
       "types": "./src/schema.ts",
       "development": "./src/schema.ts",

@@ -1,6 +1,5 @@
 import { drizzle } from 'drizzle-orm/node-postgres'
 import pg from 'pg'
-import type { QueryResult, QueryResultRow } from 'pg'
 
 import { env } from './env'
 import * as schema from './schema/index'
@@ -39,16 +38,5 @@ export async function checkDatabaseConnection(
 		pool.query('select 1'),
 		timeoutMs,
 		`database check timed out after ${timeoutMs}ms`,
-	)
-}
-
-export async function queryDatabase<T extends QueryResultRow = QueryResultRow>(
-	queryText: string,
-	timeoutMs = 1_500,
-): Promise<QueryResult<T>> {
-	return withTimeout(
-		pool.query<T>(queryText),
-		timeoutMs,
-		`database query timed out after ${timeoutMs}ms`,
 	)
 }

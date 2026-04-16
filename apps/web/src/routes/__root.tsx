@@ -77,6 +77,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 	}),
 	shellComponent: RootDocument,
 	errorComponent: RootErrorComponent,
+	notFoundComponent: RootNotFoundComponent,
 })
 
 function RootErrorComponent({ error }: { error: Error }) {
@@ -109,6 +110,30 @@ function RootErrorComponent({ error }: { error: Error }) {
 						onClick={() => window.location.reload()}
 					>
 						Try again
+					</Button>
+				</CardContent>
+			</Card>
+		</div>
+	)
+}
+
+function RootNotFoundComponent() {
+	return (
+		<div className='flex min-h-screen items-center justify-center bg-muted/40 px-4'>
+			<Card className='w-full max-w-md'>
+				<CardHeader>
+					<CardTitle>Page not found</CardTitle>
+					<CardDescription>
+						The page you requested does not exist.
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<Button
+						render={<Link to='/' />}
+						nativeButton={false}
+						className='w-full'
+					>
+						Go to home
 					</Button>
 				</CardContent>
 			</Card>

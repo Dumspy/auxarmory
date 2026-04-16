@@ -5,6 +5,7 @@ import { auth } from '@auxarmory/auth'
 import { platformPermissions } from '@auxarmory/auth/permissions'
 
 import { authorizedProcedure, router } from '../index'
+import { adminFailuresRouter } from './admin.failures'
 import { adminJobsRouter } from './admin.jobs'
 
 const listUsersInput = z.object({
@@ -69,4 +70,5 @@ export const adminRouter = router({
 			}),
 	}),
 	jobs: adminJobsRouter,
+	failures: adminFailuresRouter,
 })

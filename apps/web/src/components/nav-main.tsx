@@ -1,6 +1,12 @@
 import { useMemo } from 'react'
 import type { LucideIcon } from 'lucide-react'
-import { Activity, HomeIcon, Shield, UserRound } from 'lucide-react'
+import {
+	Activity,
+	FlaskConical,
+	HomeIcon,
+	Shield,
+	UserRound,
+} from 'lucide-react'
 import { useQueries } from '@tanstack/react-query'
 import { Link, useRouterState } from '@tanstack/react-router'
 
@@ -23,7 +29,7 @@ interface NavItem {
 	title: string
 	path: keyof FileRoutesByTo
 	icon: LucideIcon
-	section: 'personal' | 'admin'
+	section: 'personal' | 'admin' | 'dev'
 	requiredPermission?: PermissionCheckInput
 }
 
@@ -53,6 +59,13 @@ const navItems: NavItem[] = [
 		icon: Activity,
 		section: 'admin',
 		requiredPermission: platformPermissions.adminJobsRead,
+	},
+	{
+		title: 'Failure Sink',
+		path: '/dev/failure-sink',
+		icon: FlaskConical,
+		section: 'dev',
+		requiredPermission: platformPermissions.adminDiagnosticsRead,
 	},
 ]
 
@@ -97,6 +110,7 @@ export function NavMain() {
 		(item) => item.section === 'personal',
 	)
 	const adminItems = visibleItems.filter((item) => item.section === 'admin')
+	const devItems = visibleItems.filter((item) => item.section === 'dev')
 
 	return (
 		<>
@@ -127,6 +141,30 @@ export function NavMain() {
 					<SidebarGroupLabel>Admin</SidebarGroupLabel>
 					<SidebarMenu>
 						{adminItems.map((item) => {
+							const isActive = currentPath === item.path
+
+							return (
+								<SidebarMenuItem key={item.path}>
+									<SidebarMenuButton
+										tooltip={item.title}
+										isActive={isActive}
+										render={<Link to={item.path} />}
+									>
+										<item.icon />
+										<span>{item.title}</span>
+									</SidebarMenuButton>
+								</SidebarMenuItem>
+							)
+						})}
+					</SidebarMenu>
+				</SidebarGroup>
+			) : null}
+
+			{devItems.length > 0 ? (
+				<SidebarGroup>
+					<SidebarGroupLabel>Developer</SidebarGroupLabel>
+					<SidebarMenu>
+						{devItems.map((item) => {
 							const isActive = currentPath === item.path
 
 							return (

@@ -48,7 +48,7 @@ describe('job registry', () => {
 				profileId: 'profile-1',
 				region: 'us',
 			},
-		} as never)
+		} as unknown as Parameters<typeof handleJob>[0])
 
 		expect(result).toEqual({ ok: true })
 	})
@@ -58,7 +58,7 @@ describe('job registry', () => {
 			handleJob({
 				name: 'sync:unknown',
 				data: {},
-			} as never),
+			} as unknown as Parameters<typeof handleJob>[0]),
 		).rejects.toThrow('No handler registered for job: sync:unknown')
 	})
 

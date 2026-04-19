@@ -227,7 +227,7 @@ function AdminJobsPage() {
 			status,
 			limit: PAGE_SIZE,
 			offset,
-			jobName: jobName.length > 0 ? (jobName as never) : undefined,
+			jobName: jobName.length > 0 ? jobName : undefined,
 		}),
 		[status, offset, jobName],
 	)
@@ -293,7 +293,7 @@ function AdminJobsPage() {
 		}
 
 		await enqueueMutation.mutateAsync({
-			name: jobName as never,
+			name: jobName,
 			payload: parsedPayload,
 			priority: 'STANDARD',
 		})

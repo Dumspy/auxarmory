@@ -31,7 +31,7 @@ import { useTRPC } from '../../lib/trpc'
 
 const PAGE_SIZE = 20
 
-export const Route = createFileRoute('/_auth/admin/users' as never)({
+export const Route = createFileRoute('/_auth/admin/users')({
 	beforeLoad: async ({ context }) => {
 		const queryClient = (context as { queryClient: QueryClient })
 			.queryClient

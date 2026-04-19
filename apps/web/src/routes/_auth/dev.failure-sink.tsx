@@ -33,7 +33,7 @@ interface JsonLine {
 const IS_STRUCTURAL_CLOSE_LINE = /^[\]}],?$/
 const IS_CONTAINER_START = /(:\s*[[{]\s*|^[[{]\s*),?$/
 
-export const Route = createFileRoute('/_auth/dev/failure-sink' as never)({
+export const Route = createFileRoute('/_auth/dev/failure-sink')({
 	beforeLoad: async ({ context }) => {
 		const queryClient = (context as { queryClient: QueryClient })
 			.queryClient

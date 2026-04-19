@@ -201,7 +201,7 @@ function WaitingChildrenDependencyDetails({
 	)
 }
 
-export const Route = createFileRoute('/_auth/admin/jobs' as never)({
+export const Route = createFileRoute('/_auth/admin/jobs')({
 	beforeLoad: async ({ context }) => {
 		const queryClient = (context as { queryClient: QueryClient })
 			.queryClient

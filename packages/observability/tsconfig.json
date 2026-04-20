@@ -1,6 +1,7 @@
 {
   "extends": "@auxarmory/typescript-config/internal-package.json",
   "compilerOptions": {
+    "types": ["node"],
     "emitDeclarationOnly": false
   },
   "include": ["src"],

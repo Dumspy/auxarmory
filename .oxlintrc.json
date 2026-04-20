@@ -1,6 +1,13 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react"],
+  "plugins": ["react", "typescript"],
+  "jsPlugins": [
+    "./tooling/oxlint-rules/no-literal-unsafe-assertions-plugin.mjs"
+  ],
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  },
   "categories": {
     "correctness": "off"
   },
@@ -141,6 +148,7 @@
         "@typescript-eslint/consistent-type-assertions": "error",
         "@typescript-eslint/consistent-type-definitions": "error",
         "@typescript-eslint/no-confusing-non-null-assertion": "error",
+        "custom/no-literal-unsafe-assertions": "error",
         "no-empty-function": "error",
         "@typescript-eslint/no-inferrable-types": "error",
         "@typescript-eslint/prefer-for-of": "error",

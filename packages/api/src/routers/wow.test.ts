@@ -281,7 +281,7 @@ describe('wowRouter.syncStatus', () => {
 					email: 'wow-sync-test@example.com',
 				},
 			},
-		} as never)
+		} as unknown as Parameters<typeof wowRouter.createCaller>[0])
 
 		await expect(caller.syncStatus()).resolves.toMatchObject({
 			status: 'ready',

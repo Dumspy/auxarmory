@@ -28,7 +28,9 @@ describe('scheduler', () => {
 	it('registers expected repeatable jobs', async () => {
 		const upsertJobScheduler = vi.fn().mockResolvedValue(undefined)
 
-		await registerRepeatables({ upsertJobScheduler } as never)
+		await registerRepeatables({
+			upsertJobScheduler,
+		} as unknown as Parameters<typeof registerRepeatables>[0])
 
 		expect(upsertJobScheduler).toHaveBeenCalledTimes(3)
 		expect(upsertJobScheduler).toHaveBeenCalledWith(

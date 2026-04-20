@@ -31,10 +31,10 @@ export const ConnectedRealmResponse = LinkSelfResponse.extend({
 	}),
 	population: z.strictObject({
 		type: z.enum([
+			'LOCKED',
 			'FULL',
 			'HIGH',
 			'RECOMMENDED',
-			'NORMAL',
 			'MEDIUM',
 			'LOW',
 		]),

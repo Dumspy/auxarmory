@@ -1,10 +1,16 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+	buildEventsByDay,
+	eventsInRange,
 	eventsForDay,
+	formatHourLabelForCalendar,
 	formatRangeLabel,
+	getDayKey,
 	getHourForTimeZone,
 	getMonthGridDays,
+	getVisibleRangeForTimeZone,
+	isSameCalendarDay,
 	getVisibleRange,
 	resolveEvents,
 } from './utils'
@@ -94,5 +100,43 @@ describe('calendar utils', () => {
 
 		expect(label).toMatch(/Apr/)
 		expect(label).toMatch(/2026/)
+	})
+
+	it('formats hour labels from wall-clock hour without timezone drift', () => {
+		expect(formatHourLabelForCalendar(0, '24h')).toBe('00')
+		expect(formatHourLabelForCalendar(13, '24h')).toBe('13')
+	})
+
+	it('compares calendar days using configured timezone keys', () => {
+		const now = new Date('2026-04-20T00:30:00.000Z')
+		const candidate = new Date('2026-04-19T12:00:00.000Z')
+
+		expect(isSameCalendarDay(candidate, now, 'America/Los_Angeles')).toBe(
+			true,
+		)
+		expect(isSameCalendarDay(candidate, now, 'UTC')).toBe(false)
+	})
+
+	it('computes week range in timezone and preserves boundary events', () => {
+		const targetDate = new Date('2026-04-20T12:00:00.000Z')
+		const range = getVisibleRangeForTimeZone('week', targetDate, 1, 'UTC')
+
+		expect(getDayKey(range.start, 'UTC')).toBe('2026-04-20')
+		expect(getDayKey(range.end, 'UTC')).toBe('2026-04-26')
+
+		const events = resolveEvents([
+			{
+				id: 'e1',
+				title: 'Late Sunday event',
+				startUtc: '2026-04-26T23:30:00.000Z',
+				endUtc: '2026-04-26T23:45:00.000Z',
+			},
+		])
+
+		const visible = eventsInRange(events, range.start, range.end)
+		expect(visible).toHaveLength(1)
+
+		const byDay = buildEventsByDay(visible, range.start, range.end, 'UTC')
+		expect(byDay.get('2026-04-26')).toHaveLength(1)
 	})
 })

@@ -32,6 +32,7 @@ import type {
 const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const dayKeyFormatterCache = new Map<string, Intl.DateTimeFormat>()
 const hourFormatterCache = new Map<string, Intl.DateTimeFormat>()
+const zonedPartsFormatterCache = new Map<string, Intl.DateTimeFormat>()
 
 function getCachedDayKeyFormatter(timeZone: string): Intl.DateTimeFormat {
 	const cached = dayKeyFormatterCache.get(timeZone)
@@ -64,6 +65,142 @@ function getCachedHourFormatter(timeZone: string): Intl.DateTimeFormat {
 
 	hourFormatterCache.set(timeZone, formatter)
 	return formatter
+}
+
+function getCachedZonedPartsFormatter(timeZone: string): Intl.DateTimeFormat {
+	const cached = zonedPartsFormatterCache.get(timeZone)
+	if (cached) {
+		return cached
+	}
+
+	const formatter = new Intl.DateTimeFormat('en-US', {
+		timeZone,
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit',
+		hour12: false,
+	})
+
+	zonedPartsFormatterCache.set(timeZone, formatter)
+	return formatter
+}
+
+function parseDayKey(dayKey: string): {
+	year: number
+	month: number
+	day: number
+} {
+	const [yearPart, monthPart, dayPart] = dayKey.split('-')
+
+	return {
+		year: Number(yearPart ?? '0'),
+		month: Number(monthPart ?? '0'),
+		day: Number(dayPart ?? '0'),
+	}
+}
+
+function addDaysToDayKey(dayKey: string, days: number): string {
+	const { year, month, day } = parseDayKey(dayKey)
+	const date = new Date(Date.UTC(year, month - 1, day))
+	const next = addDays(date, days)
+
+	return `${next.getUTCFullYear()}-${`${next.getUTCMonth() + 1}`.padStart(2, '0')}-${`${next.getUTCDate()}`.padStart(2, '0')}`
+}
+
+function getZonedDateParts(
+	date: Date,
+	timeZone: string,
+): {
+	year: number
+	month: number
+	day: number
+	hour: number
+	minute: number
+	second: number
+} {
+	const parts = getCachedZonedPartsFormatter(timeZone).formatToParts(date)
+
+	const byType = (type: Intl.DateTimeFormatPartTypes): number =>
+		Number(parts.find((part) => part.type === type)?.value ?? '0')
+
+	return {
+		year: byType('year'),
+		month: byType('month'),
+		day: byType('day'),
+		hour: byType('hour'),
+		minute: byType('minute'),
+		second: byType('second'),
+	}
+}
+
+function zonedDateTimeToUtc(
+	timeZone: string,
+	year: number,
+	month: number,
+	day: number,
+	hour: number,
+	minute: number,
+	second: number,
+	millisecond: number,
+): Date {
+	const target = Date.UTC(year, month - 1, day, hour, minute, second, 0)
+	let candidate = new Date(target)
+
+	for (let index = 0; index < 3; index += 1) {
+		const zoned = getZonedDateParts(candidate, timeZone)
+		const observed = Date.UTC(
+			zoned.year,
+			zoned.month - 1,
+			zoned.day,
+			zoned.hour,
+			zoned.minute,
+			zoned.second,
+			0,
+		)
+		const delta = observed - target
+
+		if (delta === 0) {
+			break
+		}
+
+		candidate = new Date(candidate.valueOf() - delta)
+	}
+
+	if (millisecond !== 0) {
+		candidate = new Date(candidate.valueOf() + millisecond)
+	}
+
+	return candidate
+}
+
+function dayKeyBoundary(
+	dayKey: string,
+	timeZone: string,
+	kind: 'start' | 'end',
+): Date {
+	const { year, month, day } = parseDayKey(dayKey)
+
+	if (kind === 'start') {
+		return zonedDateTimeToUtc(timeZone, year, month, day, 0, 0, 0, 0)
+	}
+
+	const nextDayKey = addDaysToDayKey(dayKey, 1)
+	const next = parseDayKey(nextDayKey)
+	return new Date(
+		zonedDateTimeToUtc(
+			timeZone,
+			next.year,
+			next.month,
+			next.day,
+			0,
+			0,
+			0,
+			0,
+		).valueOf() - 1,
+	)
 }
 
 function asDate(value: CalendarDateInput): Date {
@@ -136,6 +273,73 @@ export function getVisibleRange(
 	return {
 		start: startOfWeek(monthStart, { weekStartsOn }),
 		end: endOfWeek(monthEnd, { weekStartsOn }),
+	}
+}
+
+export function getVisibleRangeForTimeZone(
+	view: CalendarView,
+	date: Date,
+	weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6,
+	timeZone?: string,
+): CalendarVisibleRange {
+	if (!timeZone) {
+		return getVisibleRange(view, date, weekStartsOn)
+	}
+
+	const dateKey = getDayKey(date, timeZone)
+	const { year, month } = parseDayKey(dateKey)
+	const dateAsUtc = new Date(
+		Date.UTC(year, month - 1, parseDayKey(dateKey).day),
+	)
+
+	if (view === 'agenda') {
+		const endKey = addDaysToDayKey(dateKey, 90)
+		return {
+			start: dayKeyBoundary(dateKey, timeZone, 'start'),
+			end: dayKeyBoundary(endKey, timeZone, 'end'),
+		}
+	}
+
+	if (view === 'day') {
+		return {
+			start: dayKeyBoundary(dateKey, timeZone, 'start'),
+			end: dayKeyBoundary(dateKey, timeZone, 'end'),
+		}
+	}
+
+	if (view === 'week') {
+		const delta = (dateAsUtc.getUTCDay() - weekStartsOn + 7) % 7
+		const weekStartDate = addDays(dateAsUtc, -delta)
+		const weekStartKey = `${weekStartDate.getUTCFullYear()}-${`${weekStartDate.getUTCMonth() + 1}`.padStart(2, '0')}-${`${weekStartDate.getUTCDate()}`.padStart(2, '0')}`
+		const weekEndKey = addDaysToDayKey(weekStartKey, 6)
+		return {
+			start: dayKeyBoundary(weekStartKey, timeZone, 'start'),
+			end: dayKeyBoundary(weekEndKey, timeZone, 'end'),
+		}
+	}
+
+	if (view === 'year') {
+		const yearStartKey = `${year}-01-01`
+		const yearEndKey = `${year}-12-31`
+		return {
+			start: dayKeyBoundary(yearStartKey, timeZone, 'start'),
+			end: dayKeyBoundary(yearEndKey, timeZone, 'end'),
+		}
+	}
+
+	const monthStart = new Date(Date.UTC(year, month - 1, 1))
+	const monthEnd = new Date(Date.UTC(year, month, 0))
+	const monthStartDelta = (monthStart.getUTCDay() - weekStartsOn + 7) % 7
+	const monthGridStart = addDays(monthStart, -monthStartDelta)
+	const monthGridEndDelta = (weekStartsOn + 6 - monthEnd.getUTCDay() + 7) % 7
+	const monthGridEnd = addDays(monthEnd, monthGridEndDelta)
+
+	const monthGridStartKey = `${monthGridStart.getUTCFullYear()}-${`${monthGridStart.getUTCMonth() + 1}`.padStart(2, '0')}-${`${monthGridStart.getUTCDate()}`.padStart(2, '0')}`
+	const monthGridEndKey = `${monthGridEnd.getUTCFullYear()}-${`${monthGridEnd.getUTCMonth() + 1}`.padStart(2, '0')}-${`${monthGridEnd.getUTCDate()}`.padStart(2, '0')}`
+
+	return {
+		start: dayKeyBoundary(monthGridStartKey, timeZone, 'start'),
+		end: dayKeyBoundary(monthGridEndKey, timeZone, 'end'),
 	}
 }
 
@@ -279,6 +483,27 @@ export function getHourForTimeZone(date: Date, timeZone?: string): number {
 	return Number.isNaN(parsed) ? 0 : parsed
 }
 
+export function formatHourLabelForCalendar(
+	hour: number,
+	timeFormat: 'locale' | '12h' | '24h' = 'locale',
+): string {
+	const date = new Date(Date.UTC(2000, 0, 1, hour, 0, 0, 0))
+
+	return new Intl.DateTimeFormat(undefined, {
+		hour: 'numeric',
+		timeZone: 'UTC',
+		hour12: timeFormat === 'locale' ? undefined : timeFormat === '12h',
+	}).format(date)
+}
+
+export function isSameCalendarDay(
+	a: Date,
+	b: Date,
+	timeZone?: string,
+): boolean {
+	return getDayKey(a, timeZone) === getDayKey(b, timeZone)
+}
+
 export function buildEventsByDay(
 	events: CalendarResolvedEvent[],
 	start: Date,
@@ -387,8 +612,14 @@ export function formatRangeLabel(
 	}
 
 	const weekDays = getWeekDays(date, weekStartsOn)
-	const start = weekDays[0] ?? date
-	const end = weekDays[6] ?? date
+	const range = getVisibleRangeForTimeZone(
+		'week',
+		date,
+		weekStartsOn,
+		timeZone,
+	)
+	const start = range.start ?? weekDays[0] ?? date
+	const end = range.end ?? weekDays[6] ?? date
 
 	if (timeZone) {
 		const formatter = new Intl.DateTimeFormat(undefined, {

@@ -1,8 +1,13 @@
-import { isSameDay, isSameMonth } from 'date-fns'
+import { isSameMonth } from 'date-fns'
 
 import { useCalendar } from '../context'
 import { cn } from '../../../lib/utils'
-import { getDayKey, getMonthGridDays, getWeekdayLabels } from '../utils'
+import {
+	getDayKey,
+	getMonthGridDays,
+	getWeekdayLabels,
+	isSameCalendarDay,
+} from '../utils'
 
 export function MonthView({ className }: { className?: string }) {
 	const {
@@ -67,8 +72,11 @@ export function MonthView({ className }: { className?: string }) {
 							<div
 								className={cn(
 									'flex h-6 w-6 items-center justify-center rounded-none text-xs tabular-nums',
-									isSameDay(day, new Date()) &&
-										'bg-primary text-primary-foreground',
+									isSameCalendarDay(
+										day,
+										new Date(),
+										timeZone,
+									) && 'bg-primary text-primary-foreground',
 								)}
 							>
 								{day.getDate()}

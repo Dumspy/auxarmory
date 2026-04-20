@@ -22,7 +22,7 @@ import {
 	formatRangeLabel,
 	getNextDate,
 	getPrevDate,
-	getVisibleRange,
+	getVisibleRangeForTimeZone,
 	resolveEvents,
 } from './utils'
 
@@ -152,8 +152,14 @@ export function CalendarProvider({
 	const allEvents = useMemo(() => resolveEvents(events), [events])
 
 	const range = useMemo(
-		() => getVisibleRange(currentView, currentDate, weekStartsOn),
-		[currentDate, currentView, weekStartsOn],
+		() =>
+			getVisibleRangeForTimeZone(
+				currentView,
+				currentDate,
+				weekStartsOn,
+				resolvedTimeZone,
+			),
+		[currentDate, currentView, resolvedTimeZone, weekStartsOn],
 	)
 
 	const visibleEvents = useMemo(

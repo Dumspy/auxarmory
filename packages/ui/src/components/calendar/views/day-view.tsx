@@ -1,26 +1,16 @@
 import { Fragment } from 'react'
-import { addHours, startOfDay } from 'date-fns'
 
 import { useCalendar } from '../context'
 import { EventChip } from '../parts/event-chip'
 import { cn } from '../../../lib/utils'
-import { getDayKey, getHourForTimeZone } from '../utils'
+import {
+	formatHourLabelForCalendar,
+	getDayKey,
+	getHourForTimeZone,
+} from '../utils'
 
 const HOURS = Array.from({ length: 24 }, (_, index) => index)
 const MAX_VISIBLE_ALL_DAY_EVENTS = 2
-
-function formatHourLabel(
-	hour: number,
-	timeZone?: string,
-	timeFormat: 'locale' | '12h' | '24h' = 'locale',
-) {
-	const date = addHours(startOfDay(new Date()), hour)
-	return new Intl.DateTimeFormat(undefined, {
-		hour: 'numeric',
-		timeZone,
-		hour12: timeFormat === 'locale' ? undefined : timeFormat === '12h',
-	}).format(date)
-}
 
 export function DayView({ className }: { className?: string }) {
 	const {
@@ -89,7 +79,7 @@ export function DayView({ className }: { className?: string }) {
 			) : null}
 
 			{HOURS.map((hour) => {
-				const hourLabel = formatHourLabel(hour, timeZone, timeFormat)
+				const hourLabel = formatHourLabelForCalendar(hour, timeFormat)
 				const hourEvents = dayEvents
 					.filter(
 						(event) =>

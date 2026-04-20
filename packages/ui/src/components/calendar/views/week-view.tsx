@@ -1,36 +1,20 @@
 import { Fragment, useMemo } from 'react'
-import {
-	addHours,
-	differenceInCalendarDays,
-	isSameDay,
-	startOfDay,
-} from 'date-fns'
+import { differenceInCalendarDays, endOfDay, startOfDay } from 'date-fns'
 
 import { useCalendar } from '../context'
 import { EventChip } from '../parts/event-chip'
 import { cn } from '../../../lib/utils'
 import {
+	formatHourLabelForCalendar,
 	getDayKey,
 	getHourForTimeZone,
 	getWeekDays,
 	getWeekdayLabels,
+	isSameCalendarDay,
 } from '../utils'
 
 const HOURS = Array.from({ length: 24 }, (_, index) => index)
 const MAX_VISIBLE_ALL_DAY_EVENTS = 2
-
-function formatHourLabel(
-	hour: number,
-	timeZone?: string,
-	timeFormat: 'locale' | '12h' | '24h' = 'locale',
-) {
-	const date = addHours(startOfDay(new Date()), hour)
-	return new Intl.DateTimeFormat(undefined, {
-		hour: 'numeric',
-		timeZone,
-		hour12: timeFormat === 'locale' ? undefined : timeFormat === '12h',
-	}).format(date)
-}
 
 export function WeekView({ className }: { className?: string }) {
 	const {
@@ -49,9 +33,10 @@ export function WeekView({ className }: { className?: string }) {
 	const weekdayLabels = getWeekdayLabels(weekStartsOn)
 	const weekStart = days[0]
 	const weekEnd = days[days.length - 1]
+	const weekEndInclusive = weekEnd ? endOfDay(weekEnd) : undefined
 
 	const allDayEvents = useMemo(() => {
-		if (!weekStart || !weekEnd) {
+		if (!weekStart || !weekEndInclusive) {
 			return []
 		}
 
@@ -60,9 +45,12 @@ export function WeekView({ className }: { className?: string }) {
 				return false
 			}
 
-			return event.startDate <= weekEnd && event.endDate >= weekStart
+			return (
+				event.startDate <= weekEndInclusive &&
+				event.endDate >= weekStart
+			)
 		})
-	}, [visibleEvents, weekEnd, weekStart])
+	}, [visibleEvents, weekEndInclusive, weekStart])
 	const visibleAllDayEvents = allDayEvents.slice(
 		0,
 		MAX_VISIBLE_ALL_DAY_EVENTS,
@@ -91,7 +79,8 @@ export function WeekView({ className }: { className?: string }) {
 					<div
 						className={cn(
 							'mt-1 text-sm tabular-nums',
-							isSameDay(day, new Date()) && 'text-primary',
+							isSameCalendarDay(day, new Date(), timeZone) &&
+								'text-primary',
 						)}
 					>
 						{day.getDate()}
@@ -169,7 +158,7 @@ export function WeekView({ className }: { className?: string }) {
 			) : null}
 
 			{HOURS.map((hour) => {
-				const hourLabel = formatHourLabel(hour, timeZone, timeFormat)
+				const hourLabel = formatHourLabelForCalendar(hour, timeFormat)
 				return (
 					<Fragment key={`row-${hour}`}>
 						<div

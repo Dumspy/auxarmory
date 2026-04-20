@@ -53,4 +53,5 @@ COPY --from=builder --chown=node:node /app/tooling ./tooling
 
 USER node
 
+ENTRYPOINT ["sh", "packages/db/scripts/wait-for-migrations.sh"]
 CMD ["npm", "--prefix", "apps/worker-service", "run", "start"]

@@ -7,15 +7,15 @@
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "build": "tsc",
-    "db:generate": "pnpm --dir ../.. exec drizzle-kit generate --config drizzle.config.ts",
-    "db:migrate": "pnpm --dir ../.. exec drizzle-kit migrate --config drizzle.config.ts",
-    "db:migrate:test": "DATABASE_URL=${DATABASE_URL_TEST:-$DATABASE_URL} pnpm --dir ../.. exec drizzle-kit migrate --config drizzle.config.ts",
+    "db:generate": "pnpm --dir ../.. exec drizzle-kit generate --config packages/db/drizzle.config.ts",
+    "db:migrate": "pnpm --dir ../.. exec drizzle-kit migrate --config packages/db/drizzle.config.ts",
+    "db:migrate:test": "DATABASE_URL=${DATABASE_URL_TEST:-$DATABASE_URL} pnpm --dir ../.. exec drizzle-kit migrate --config packages/db/drizzle.config.ts",
     "db:reset": "node ./scripts/reset.mjs && pnpm run db:migrate",
     "db:reset:test": "DATABASE_URL=${DATABASE_URL_TEST:-$DATABASE_URL} pnpm run db:reset",
-    "db:sync": "pnpm --dir ../.. exec drizzle-kit push --config drizzle.config.ts",
-    "db:sync:test": "DATABASE_URL=${DATABASE_URL_TEST:-$DATABASE_URL} pnpm --dir ../.. exec drizzle-kit push --config drizzle.config.ts",
-    "db:push": "pnpm --dir ../.. exec drizzle-kit push --config drizzle.config.ts",
-    "db:studio": "pnpm --dir ../.. exec drizzle-kit studio --config drizzle.config.ts"
+    "db:sync": "pnpm --dir ../.. exec drizzle-kit push --config packages/db/drizzle.config.ts",
+    "db:sync:test": "DATABASE_URL=${DATABASE_URL_TEST:-$DATABASE_URL} pnpm --dir ../.. exec drizzle-kit push --config packages/db/drizzle.config.ts",
+    "db:push": "pnpm --dir ../.. exec drizzle-kit push --config packages/db/drizzle.config.ts",
+    "db:studio": "pnpm --dir ../.. exec drizzle-kit studio --config packages/db/drizzle.config.ts"
   },
   "dependencies": {
     "@t3-oss/env-core": "catalog:",

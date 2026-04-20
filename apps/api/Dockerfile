@@ -56,4 +56,5 @@ USER node
 
 EXPOSE 4001
 
+ENTRYPOINT ["sh", "packages/db/scripts/wait-for-migrations.sh"]
 CMD ["npm", "--prefix", "apps/api", "run", "start"]

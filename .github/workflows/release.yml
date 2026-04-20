@@ -144,6 +144,7 @@ jobs:
                     release-api.yml
                     release-auth.yml
                     release-worker-service.yml
+                    release-db-migrations.yml
                   )
 
                   for workflow in "${workflows[@]}"; do

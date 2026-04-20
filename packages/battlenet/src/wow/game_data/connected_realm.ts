@@ -30,7 +30,14 @@ export const ConnectedRealmResponse = LinkSelfResponse.extend({
 		name: LocaleResponse,
 	}),
 	population: z.strictObject({
-		type: z.enum(['FULL', 'HIGH', 'RECOMMENDED', 'MEDIUM', 'LOW']),
+		type: z.enum([
+			'FULL',
+			'HIGH',
+			'RECOMMENDED',
+			'NORMAL',
+			'MEDIUM',
+			'LOW',
+		]),
 		name: LocaleResponse,
 	}),
 	realms: z.array(

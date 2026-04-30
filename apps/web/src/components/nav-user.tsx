@@ -5,6 +5,7 @@ import {
 	CreditCard,
 	LogOut,
 	Sparkles,
+	UserX,
 } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 
@@ -45,6 +46,7 @@ export function NavUser() {
 		avatar: session?.user?.image ?? '',
 	}
 	const userInitial = getUserInitial(user.name)
+	const isImpersonating = !!session?.session?.impersonatedBy
 
 	async function handleAuthClick() {
 		if (loggedIn) {
@@ -56,6 +58,11 @@ export function NavUser() {
 
 	async function handleAccountClick() {
 		await navigate({ to: '/account' })
+	}
+
+	async function handleStopImpersonating() {
+		await authClient.admin.stopImpersonating()
+		window.location.assign('/dashboard')
 	}
 
 	return (
@@ -136,6 +143,21 @@ export function NavUser() {
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<ModeToggle />
+						{isImpersonating ? (
+							<>
+								<DropdownMenuSeparator />
+								<DropdownMenuGroup>
+									<DropdownMenuItem
+										onClick={() =>
+											void handleStopImpersonating()
+										}
+									>
+										<UserX />
+										Stop Impersonating
+									</DropdownMenuItem>
+								</DropdownMenuGroup>
+							</>
+						) : null}
 						<DropdownMenuSeparator />
 						<DropdownMenuItem onClick={handleAuthClick}>
 							<LogOut />

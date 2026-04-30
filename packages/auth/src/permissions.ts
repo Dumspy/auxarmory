@@ -27,6 +27,10 @@ export const roles = {
 	admin: ac.newRole({
 		...platformAdminAc.statements,
 		...organizationAdminAc.statements,
+		user: [
+			'impersonate-admins',
+			...(platformAdminAc.statements.user ?? []),
+		],
 		job: ['read', 'enqueue', 'retry'],
 	}),
 	user: ac.newRole({

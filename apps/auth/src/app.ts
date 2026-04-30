@@ -24,6 +24,26 @@ export function createAuthApp() {
 		}),
 	)
 
+	app.use('/api/auth/admin/impersonate-user', async (c, next) => {
+		if (env.NODE_ENV === 'production') {
+			return c.json(
+				{ error: 'Impersonation is not allowed in production' },
+				403,
+			)
+		}
+		await next()
+	})
+
+	app.use('/api/auth/admin/stop-impersonating', async (c, next) => {
+		if (env.NODE_ENV === 'production') {
+			return c.json(
+				{ error: 'Impersonation is not allowed in production' },
+				403,
+			)
+		}
+		await next()
+	})
+
 	app.on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw))
 
 	app.get('/health', (c) => {

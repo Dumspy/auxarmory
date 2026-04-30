@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import {
 	Activity,
+	Eye,
 	FlaskConical,
 	HomeIcon,
 	Shield,
@@ -31,6 +32,7 @@ interface NavItem {
 	icon: LucideIcon
 	section: 'personal' | 'admin' | 'dev'
 	requiredPermission?: PermissionCheckInput
+	devOnly?: boolean
 }
 
 const navItems: NavItem[] = [
@@ -67,6 +69,14 @@ const navItems: NavItem[] = [
 		section: 'dev',
 		requiredPermission: platformPermissions.adminDiagnosticsRead,
 	},
+	{
+		title: 'Impersonate',
+		path: '/dev/impersonate',
+		icon: Eye,
+		section: 'dev',
+		requiredPermission: platformPermissions.adminUsersList,
+		devOnly: true,
+	},
 ]
 
 export function NavMain() {
@@ -99,6 +109,10 @@ export function NavMain() {
 	)
 
 	const visibleItems = navItems.filter((item) => {
+		if (item.devOnly && !import.meta.env.DEV) {
+			return false
+		}
+
 		if (!item.requiredPermission) {
 			return true
 		}

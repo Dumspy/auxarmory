@@ -24,7 +24,7 @@
     "@hono/node-server": "^1.19.13",
     "@sentry/node": "^10.40.0",
     "@t3-oss/env-core": "catalog:",
-    "hono": "^4.12.7",
+    "hono": "^4.12.18",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -32,6 +32,6 @@
     "@types/node": "catalog:",
     "tsx": "^4.21.0",
     "typescript": "catalog:",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.0"
   }
 }
